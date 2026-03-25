@@ -1931,100 +1931,59 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-[#f8fafc] font-sans text-slate-800 p-3 md:p-6 lg:p-10 flex flex-col items-center">
+    <div className="min-h-screen bg-slate-50/30 font-sans text-slate-800 p-4 md:p-8 lg:p-12 flex flex-col items-center selection:bg-indigo-100 selection:text-indigo-900">
+      {/* Background Ornaments */}
+      <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
+        <div className="absolute top-[-10%] right-[-10%] w-[400px] h-[400px] bg-indigo-100/50 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-[-10%] left-[-10%] w-[300px] h-[300px] bg-violet-100/50 rounded-full blur-3xl"></div>
+      </div>
+
       {/* Header */}
-      <div className="w-full max-w-5xl mb-6 md:mb-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-indigo-700 flex items-center gap-2">
-            <BookOpen className="w-6 h-6" /> 
-            Luyện Ngữ Pháp N3
+      <div className="w-full max-w-5xl mb-8 md:mb-12 flex flex-col md:flex-row items-center justify-between gap-6">
+        <div className="text-center md:text-left">
+          <h1 className="text-3xl md:text-4xl font-extrabold bg-gradient-to-r from-indigo-700 to-violet-600 bg-clip-text text-transparent flex items-center justify-center md:justify-start gap-3">
+            <div className="bg-indigo-600 text-white p-2 rounded-xl shadow-lg shadow-indigo-200">
+              <BookOpen className="w-6 h-6 md:w-8 md:h-8" /> 
+            </div>
+            NH3 Practice
           </h1>
-          <p className="text-slate-500 text-sm">
-            {selectedUnit === 'all' ? 'Tổng hợp tất cả các Unit' : `Đang học Unit 0${selectedUnit}`}
+          <p className="text-slate-500 font-medium mt-2 flex items-center justify-center md:justify-start gap-2">
+            <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span>
+            {selectedUnit === 'all' ? 'Comprehensive Practice Hub' : `Focusing on Unit ${selectedUnit}`}
           </p>
         </div>
         {activeMode !== 'menu' && (
           <button 
             onClick={() => switchMode('menu')}
-            className="px-4 py-2 bg-white border border-slate-200 rounded-lg shadow-sm hover:bg-slate-100 transition-colors flex items-center gap-2"
+            className="group px-6 py-2.5 bg-white border border-slate-200 rounded-full shadow-sm hover:shadow-md hover:border-indigo-200 transition-all flex items-center gap-2 text-indigo-600 font-bold"
           >
-            <RotateCcw className="w-4 h-4" /> Trang chủ
+            <RotateCcw className="w-4 h-4 group-hover:rotate-180 transition-transform duration-500" /> Trang chủ
           </button>
         )}
       </div>
 
       {/* Main Content Area */}
-      <div className="w-full max-w-5xl bg-white rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.05)] overflow-hidden border border-slate-100 min-h-[600px] flex flex-col transition-all">
+      <div className="w-full max-w-5xl bg-white/80 backdrop-blur-xl rounded-[2.5rem] shadow-[0_25px_60px_-15px_rgba(0,0,0,0.1)] overflow-hidden border border-white/50 min-h-[600px] flex flex-col transition-all">
         
         {/* MENU MODE */}
         {activeMode === 'menu' && (
-          <div className="p-4 md:p-10 flex flex-col items-center justify-center flex-grow gap-8">
+          <div className="p-6 md:p-12 flex flex-col items-center justify-center flex-grow gap-12">
             
             {/* Unit Selector */}
-            <div className="w-full bg-slate-50/50 backdrop-blur-sm p-3 rounded-2xl grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-11 gap-2 border border-slate-200/60 shadow-inner">
-              <button 
-                onClick={() => setSelectedUnit(1)}
-                className={`py-2 px-2 rounded-lg text-sm font-medium transition-all ${selectedUnit === 1 ? 'bg-indigo-600 text-white shadow-md' : 'text-slate-600 hover:bg-slate-200'}`}
-              >
-                Unit 01
-              </button>
-              <button 
-                onClick={() => setSelectedUnit(2)}
-                className={`py-2 px-2 rounded-lg text-sm font-medium transition-all ${selectedUnit === 2 ? 'bg-indigo-600 text-white shadow-md' : 'text-slate-600 hover:bg-slate-200'}`}
-              >
-                Unit 02
-              </button>
-              <button 
-                onClick={() => setSelectedUnit(3)}
-                className={`py-2 px-2 rounded-lg text-sm font-medium transition-all ${selectedUnit === 3 ? 'bg-indigo-600 text-white shadow-md' : 'text-slate-600 hover:bg-slate-200'}`}
-              >
-                Unit 03
-              </button>
-              <button 
-                onClick={() => setSelectedUnit(4)}
-                className={`py-2 px-2 rounded-lg text-sm font-medium transition-all ${selectedUnit === 4 ? 'bg-indigo-600 text-white shadow-md' : 'text-slate-600 hover:bg-slate-200'}`}
-              >
-                Unit 04
-              </button>
-              <button 
-                onClick={() => setSelectedUnit(5)}
-                className={`py-2 px-2 rounded-lg text-sm font-medium transition-all ${selectedUnit === 5 ? 'bg-indigo-600 text-white shadow-md' : 'text-slate-600 hover:bg-slate-200'}`}
-              >
-                Unit 05
-              </button>
-              <button 
-                onClick={() => setSelectedUnit(6)}
-                className={`py-2 px-2 rounded-lg text-sm font-medium transition-all ${selectedUnit === 6 ? 'bg-indigo-600 text-white shadow-md' : 'text-slate-600 hover:bg-slate-200'}`}
-              >
-                Unit 06
-              </button>
-              <button 
-                onClick={() => setSelectedUnit(7)}
-                className={`py-2 px-2 rounded-lg text-sm font-medium transition-all ${selectedUnit === 7 ? 'bg-indigo-600 text-white shadow-md' : 'text-slate-600 hover:bg-slate-200'}`}
-              >
-                Unit 07
-              </button>
-              <button 
-                onClick={() => setSelectedUnit(8)}
-                className={`py-2 px-2 rounded-lg text-sm font-medium transition-all ${selectedUnit === 8 ? 'bg-indigo-600 text-white shadow-md' : 'text-slate-600 hover:bg-slate-200'}`}
-              >
-                Unit 08
-              </button>
-              <button 
-                onClick={() => setSelectedUnit(9)}
-                className={`py-2 px-2 rounded-lg text-sm font-medium transition-all ${selectedUnit === 9 ? 'bg-indigo-600 text-white shadow-md' : 'text-slate-600 hover:bg-slate-200'}`}
-              >
-                Unit 09
-              </button>
-              <button 
-                onClick={() => setSelectedUnit(10)}
-                className={`py-2 px-2 rounded-lg text-sm font-medium transition-all ${selectedUnit === 10 ? 'bg-indigo-600 text-white shadow-md' : 'text-slate-600 hover:bg-slate-200'}`}
-              >
-                Unit 10
-              </button>
+            <div className="w-full bg-slate-100/50 p-2 rounded-[2rem] flex flex-wrap items-center justify-center gap-2 border border-slate-200/50">
+              {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => (
+                <button 
+                  key={num}
+                  onClick={() => setSelectedUnit(num)}
+                  className={`py-2 px-6 rounded-2xl text-sm font-bold transition-all duration-300 ${selectedUnit === num ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-200 -translate-y-0.5' : 'text-slate-500 hover:bg-white hover:text-indigo-600 hover:shadow-sm'}`}
+                >
+                  U{num < 10 ? `0${num}` : num}
+                </button>
+              ))}
+              <div className="w-px h-8 bg-slate-300/50 mx-2 hidden sm:block"></div>
               <button 
                 onClick={() => setSelectedUnit('all')}
-                className={`col-span-2 md:col-span-2 lg:col-span-2 py-2 px-2 rounded-lg text-sm font-medium transition-all flex items-center justify-center gap-1 ${selectedUnit === 'all' ? 'bg-indigo-600 text-white shadow-md' : 'text-slate-600 hover:bg-slate-200'}`}
+                className={`py-2 px-6 rounded-2xl text-sm font-bold transition-all duration-300 flex items-center gap-2 ${selectedUnit === 'all' ? 'bg-violet-600 text-white shadow-lg shadow-violet-200 -translate-y-0.5' : 'text-slate-500 hover:bg-white hover:text-violet-600 hover:shadow-sm'}`}
               >
                 <Layers className="w-4 h-4"/> Tất cả
               </button>
@@ -2035,27 +1994,31 @@ export default function Home() {
               <p className="text-sm text-slate-500 mt-1">Sẽ có {activeData.length} mẫu ngữ pháp trong phần này</p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-4xl">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-4xl">
               <button 
                 onClick={() => switchMode('flashcard')}
-                className="group p-6 border-2 border-indigo-50 rounded-xl hover:border-indigo-400 hover:bg-indigo-50 transition-all flex flex-col items-center text-center gap-3"
+                className="group p-8 bg-indigo-50/30 border border-indigo-100/50 rounded-[2rem] hover:bg-indigo-600 transition-all duration-500 flex flex-col items-center text-center gap-4 hover:-translate-y-2 hover:shadow-2xl hover:shadow-indigo-200"
               >
-                <div className="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600 group-hover:scale-110 transition-transform">
-                  <Brain className="w-6 h-6" />
+                <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center text-indigo-600 group-hover:scale-110 group-hover:bg-indigo-500 group-hover:text-white transition-all duration-500 shadow-sm">
+                  <Brain className="w-8 h-8" />
                 </div>
-                <h3 className="font-bold text-lg">Ghi nhớ (Flashcards)</h3>
-                <p className="text-sm text-slate-500">Xem cấu trúc, ý nghĩa và ví dụ để làm quen.</p>
+                <div>
+                  <h3 className="font-extrabold text-2xl mb-2 group-hover:text-white transition-colors">Ghi nhớ</h3>
+                  <p className="text-slate-500 group-hover:text-indigo-100 transition-colors text-sm">Học cấu trúc & ví dụ qua Flashcards</p>
+                </div>
               </button>
               
               <button 
                 onClick={() => switchMode('quiz')}
-                className="group p-6 border-2 border-emerald-50 rounded-xl hover:border-emerald-400 hover:bg-emerald-50 transition-all flex flex-col items-center text-center gap-3"
+                className="group p-8 bg-emerald-50/30 border border-emerald-100/50 rounded-[2rem] hover:bg-emerald-600 transition-all duration-500 flex flex-col items-center text-center gap-4 hover:-translate-y-2 hover:shadow-2xl hover:shadow-emerald-200"
               >
-                <div className="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center text-emerald-600 group-hover:scale-110 transition-transform">
-                  <CheckCircle className="w-6 h-6" />
+                <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center text-emerald-600 group-hover:scale-110 group-hover:bg-emerald-500 group-hover:text-white transition-all duration-500 shadow-sm">
+                  <CheckCircle className="w-8 h-8" />
                 </div>
-                <h3 className="font-bold text-lg">Luyện tập (Quiz)</h3>
-                <p className="text-sm text-slate-500">Điền ngữ pháp vào câu để kiểm tra trình độ.</p>
+                <div>
+                  <h3 className="font-extrabold text-2xl mb-2 group-hover:text-white transition-colors">Luyện tập</h3>
+                  <p className="text-slate-500 group-hover:text-emerald-100 transition-colors text-sm">Thử thách trí nhớ qua bài tập điền từ</p>
+                </div>
               </button>
             </div>
           </div>
