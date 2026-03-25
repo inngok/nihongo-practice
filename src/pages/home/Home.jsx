@@ -1931,9 +1931,9 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 font-sans text-slate-800 p-4 md:p-8 flex flex-col items-center">
+    <div className="min-h-screen bg-[#f8fafc] font-sans text-slate-800 p-3 md:p-6 lg:p-10 flex flex-col items-center">
       {/* Header */}
-      <div className="w-full max-w-2xl mb-8 flex items-center justify-between">
+      <div className="w-full max-w-5xl mb-6 md:mb-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-indigo-700 flex items-center gap-2">
             <BookOpen className="w-6 h-6" /> 
@@ -1954,14 +1954,14 @@ export default function Home() {
       </div>
 
       {/* Main Content Area */}
-      <div className="w-full max-w-2xl bg-white rounded-2xl shadow-xl overflow-hidden border border-slate-100 min-h-[500px] flex flex-col">
+      <div className="w-full max-w-5xl bg-white rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.05)] overflow-hidden border border-slate-100 min-h-[600px] flex flex-col transition-all">
         
         {/* MENU MODE */}
         {activeMode === 'menu' && (
-          <div className="p-6 md:p-8 flex flex-col items-center justify-center flex-grow gap-6">
+          <div className="p-4 md:p-10 flex flex-col items-center justify-center flex-grow gap-8">
             
             {/* Unit Selector */}
-            <div className="w-full bg-slate-50 p-2 rounded-xl grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2 border border-slate-200">
+            <div className="w-full bg-slate-50/50 backdrop-blur-sm p-3 rounded-2xl grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-11 gap-2 border border-slate-200/60 shadow-inner">
               <button 
                 onClick={() => setSelectedUnit(1)}
                 className={`py-2 px-2 rounded-lg text-sm font-medium transition-all ${selectedUnit === 1 ? 'bg-indigo-600 text-white shadow-md' : 'text-slate-600 hover:bg-slate-200'}`}
@@ -2035,7 +2035,7 @@ export default function Home() {
               <p className="text-sm text-slate-500 mt-1">Sẽ có {activeData.length} mẫu ngữ pháp trong phần này</p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-4xl">
               <button 
                 onClick={() => switchMode('flashcard')}
                 className="group p-6 border-2 border-indigo-50 rounded-xl hover:border-indigo-400 hover:bg-indigo-50 transition-all flex flex-col items-center text-center gap-3"
@@ -2072,25 +2072,27 @@ export default function Home() {
             </div>
 
             <div 
-              className={`relative w-full h-72 cursor-pointer perspective-1000 transition-all duration-500 transform-style-3d ${isFlipped ? 'rotate-y-180' : ''}`}
+              className={`relative w-full h-[450px] cursor-pointer perspective-2000 transition-all duration-700 transform-style-3d ${isFlipped ? 'rotate-y-180' : ''}`}
               onClick={() => setIsFlipped(!isFlipped)}
             >
               {/* Front Side */}
-              <div className={`absolute inset-0 bg-gradient-to-br from-indigo-500 to-indigo-700 text-white rounded-xl shadow-lg flex flex-col items-center justify-center backface-hidden ${isFlipped ? 'invisible' : ''} p-6 text-center`}>
-                <h2 className="text-3xl md:text-4xl font-bold mb-2">～{activeData[currentIndex].pattern}</h2>
-                <p className="text-indigo-100 text-sm mt-8 opacity-75">Click để xem ý nghĩa</p>
+              <div className={`absolute inset-0 bg-gradient-to-br from-indigo-600 via-indigo-600 to-violet-700 text-white rounded-[2rem] shadow-2xl flex flex-col items-center justify-center backface-hidden ${isFlipped ? 'invisible' : ''} p-8 text-center`}>
+                <h2 className="text-4xl md:text-6xl font-bold mb-4 tracking-tight">～{activeData[currentIndex].pattern}</h2>
+                <div className="w-16 h-1 w-full bg-white/20 rounded-full mb-8 max-w-[100px]"></div>
+                <p className="text-indigo-100 text-base font-medium animate-pulse">Nhấn vào thẻ để xem giải nghĩa</p>
               </div>
 
               {/* Back Side */}
-              <div className={`absolute inset-0 bg-white border-2 border-indigo-200 rounded-xl shadow-lg p-6 flex flex-col items-center justify-start overflow-auto backface-hidden transform rotate-y-180 custom-scrollbar ${!isFlipped ? 'invisible' : ''}`}>
-                <h3 className="text-xl font-bold text-indigo-700 mb-2 mt-2">{activeData[currentIndex].meaning}</h3>
-                <p className="text-slate-600 text-center mb-4 text-sm">{activeData[currentIndex].explanation}</p>
+              <div className={`absolute inset-0 bg-white border border-slate-100 rounded-[2rem] shadow-2xl p-8 md:p-12 flex flex-col items-center justify-start overflow-auto backface-hidden transform rotate-y-180 custom-scrollbar ${!isFlipped ? 'invisible' : ''}`}>
+                <h3 className="text-2xl md:text-3xl font-bold text-indigo-700 mb-4 mt-2">{activeData[currentIndex].meaning}</h3>
+                <div className="w-full h-px bg-slate-100 mb-6"></div>
+                <p className="text-slate-600 text-center mb-8 text-base md:text-lg leading-relaxed max-w-2xl">{activeData[currentIndex].explanation}</p>
                 
-                <div className="w-full space-y-3 mt-auto">
+                <div className="w-full space-y-4 mt-auto max-w-2xl mx-auto">
                   {activeData[currentIndex].examples.map((ex, i) => (
-                    <div key={i} className="bg-slate-50 p-3 rounded-lg border-l-4 border-indigo-400">
-                      <p className="text-sm font-semibold">{ex.jp}</p>
-                      <p className="text-xs text-slate-500 mt-1">{ex.vn}</p>
+                    <div key={i} className="bg-indigo-50/50 p-5 rounded-2xl border-l-4 border-indigo-500 transition-all hover:bg-indigo-50">
+                      <p className="text-base md:text-lg font-semibold text-slate-800">{ex.jp}</p>
+                      <p className="text-sm md:text-base text-slate-600 mt-2 italic">{ex.vn}</p>
                     </div>
                   ))}
                 </div>
@@ -2152,7 +2154,7 @@ export default function Home() {
                 </h3>
               </div>
 
-              <div className="w-full space-y-4 max-w-sm mt-4">
+              <div className="w-full space-y-6 max-w-2xl mt-4">
                 <input 
                   ref={inputRef}
                   type="text"
