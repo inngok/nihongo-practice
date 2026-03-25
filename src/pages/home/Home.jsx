@@ -2168,7 +2168,7 @@ export default function Home() {
                       e.preventDefault(); // Ngăn chặn hành vi mặc định
                       if (e.repeat) return; // Chống việc đè giữ phím Enter khiến câu hỏi nhảy liên tục
 
-                      if (!feedback && userInput) {
+                      if (!feedback) {
                         checkAnswer();
                       } else if (feedback !== null) {
                         handleNext();
@@ -2203,10 +2203,9 @@ export default function Home() {
                       </button>
                       <button 
                         onClick={checkAnswer}
-                        disabled={!userInput}
-                        className="flex-grow py-3 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700 transition-colors disabled:opacity-50"
+                        className="flex-grow py-3 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700 transition-colors"
                       >
-                        Kiểm tra
+                        {userInput ? 'Kiểm tra' : 'Xem đáp án'}
                       </button>
                     </>
                   ) : feedback === 'correct' ? (
