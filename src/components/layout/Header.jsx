@@ -1,36 +1,48 @@
 import React from 'react';
-import { GraduationCap, BookOpen, Languages } from 'lucide-react';
+import { User } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 
 export default function Header() {
   const { pathname } = useLocation();
-  const isHome = pathname === '/';
-
-  if (isHome) return null; // Home has its own portal-style header
 
   return (
-    <header className="sticky top-0 z-50 w-full bg-white/80 backdrop-blur-md border-b border-slate-100 px-6 py-4 flex items-center justify-between">
-      <Link to="/" className="flex items-center gap-2 group">
-        <div className="bg-indigo-600 p-1.5 rounded-lg text-white shadow-indigo-100 shadow-lg group-hover:scale-110 transition-transform">
-          <GraduationCap className="w-5 h-5" />
-        </div>
-        <span className="font-bold text-slate-800 text-lg group-hover:text-indigo-600 transition-colors">NH3 Hub</span>
+    <header className="fixed top-0 z-50 w-full bg-white px-12 py-6 flex items-center justify-between pointer-events-auto">
+      <Link to="/" className="font-bold text-xl tracking-tight text-black">
+        NIHONGO
       </Link>
       
-      <nav className="flex items-center gap-2">
+      <nav className="absolute left-1/2 -translate-x-1/2 flex items-center gap-8 text-sm font-medium text-slate-400">
+        <Link 
+          to="/" 
+          className={`hover:text-black transition-colors ${pathname === '/' ? 'text-black' : ''}`}
+        >
+          Trang chủ
+        </Link>
         <Link 
           to="/grammar" 
-          className={`px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2 transition-all ${pathname === '/grammar' ? 'bg-indigo-50 text-indigo-700' : 'text-slate-500 hover:bg-slate-50'}`}
+          className={`hover:text-black transition-colors ${pathname.startsWith('/grammar') ? 'text-black' : ''}`}
         >
-          <BookOpen className="w-4 h-4" /> <span className="hidden sm:inline">Ngữ Pháp</span>
+          Ngữ pháp
         </Link>
         <Link 
           to="/vocabulary" 
-          className={`px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2 transition-all ${pathname === '/vocabulary' ? 'bg-emerald-50 text-emerald-700' : 'text-slate-500 hover:bg-slate-50'}`}
+          className={`hover:text-black transition-colors ${pathname === '/vocabulary' ? 'text-black' : ''}`}
         >
-          <Languages className="w-4 h-4" /> <span className="hidden sm:inline">Từ Vựng</span>
+          Từ vựng
+        </Link>
+        <Link 
+          to="/kanji" 
+          className={`hover:text-black transition-colors ${pathname === '/kanji' ? 'text-black' : ''}`}
+        >
+          Hán tự
         </Link>
       </nav>
+
+      <div className="flex items-center">
+        <div className="w-6 h-6 rounded-full border border-black flex items-center justify-center text-black cursor-pointer">
+          <User className="w-3.5 h-3.5" />
+        </div>
+      </div>
     </header>
   );
 }

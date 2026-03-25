@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 
-export default function Vocabulary() {
+export default function Kanji() {
   const navigate = useNavigate();
 
   return (
@@ -10,7 +10,7 @@ export default function Vocabulary() {
       
       {/* Background Watermark */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[35vw] font-black text-slate-100 opacity-[0.03] pointer-events-none select-none leading-none z-0 whitespace-nowrap">
-        Từ vựng
+        Hán tự
       </div>
 
       <div className="w-full max-w-5xl relative z-10">
@@ -24,7 +24,7 @@ export default function Vocabulary() {
 
         <div className="mb-20">
           <h1 className="text-6xl md:text-7xl font-black text-slate-900 tracking-tighter mb-4 leading-none">
-            Từ vựng
+            Hán tự
           </h1>
           <p className="text-lg text-slate-500 max-w-2xl leading-relaxed font-medium">
             Tính năng đang phát triển...

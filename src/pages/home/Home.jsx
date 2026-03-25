@@ -1,76 +1,71 @@
 import React from 'react';
-import { BookOpen, Languages, ChevronRight, Brain, CheckCircle, GraduationCap } from 'lucide-react';
+import { Book, Languages, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-[#F8FAFC] p-6 md:p-12 flex flex-col items-center justify-center font-sans">
+    <div className="min-h-screen bg-white flex flex-col items-center pt-24 pb-20 px-6 font-sans relative overflow-hidden">
 
-      {/* Header Section */}
-      <div className="w-full max-w-3xl flex flex-col items-center text-center gap-5 mb-14">
-        <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-indigo-100 text-indigo-600 mb-2 shadow-sm">
-          <GraduationCap className="w-8 h-8" strokeWidth={2.5} />
-        </div>
-        <h1 className="text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight">
-          Nihongo <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-violet-600">N3</span> Hub
+      {/* Background Watermark */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[35vw] font-black text-slate-100 opacity-[0.03] pointer-events-none select-none leading-none z-0 whitespace-nowrap">
+        日本語
+      </div>
+
+      {/* Hero Section */}
+      <div className="w-full max-w-4xl flex flex-col items-center text-center gap-4 mb-20 relative z-10">
+        <span className="text-[10px] tracking-[0.4em] font-bold text-slate-400 uppercase">
+          Trình độ N3
+        </span>
+        <h1 className="text-6xl md:text-7xl font-black text-slate-900 tracking-tighter">
+          N3 Study Hub
         </h1>
-        <p className="text-lg text-slate-500 max-w-xl mx-auto leading-relaxed">
-          Hệ thống luyện tập học tiếng Nhật N3 toàn diện với lộ trình khoa học và kho dữ liệu phong phú.
+        <p className="text-lg text-slate-500 max-w-lg mx-auto leading-relaxed mt-2 font-medium">
+          Môi trường học tập chuyên sâu cho hành trình chinh phục tiếng Nhật. Tập trung vào những điều quan trọng nhất.
         </p>
       </div>
 
-      {/* Cards Section */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-4xl">
+      {/* Portal Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-10 w-full max-w-5xl relative z-10 px-4">
 
-        {/* Grammar Portal */}
+        {/* Grammar Card */}
         <Link
           to="/grammar"
-          className="group bg-white p-8 rounded-3xl border border-slate-200/60 shadow-sm hover:shadow-xl hover:shadow-indigo-500/10 hover:border-indigo-200 transition-all duration-300 hover:-translate-y-1 flex flex-col"
+          className="group bg-white p-12 rounded-[3rem] border border-slate-100 shadow-[0_10px_40px_-15px_rgba(0,0,0,0.05)] hover:shadow-[0_30px_70px_-20px_rgba(0,0,0,0.08)] hover:border-slate-200 transition-all duration-500 flex flex-col items-start gap-8"
         >
-          <div className="flex justify-between items-start mb-6">
-            <div className="w-14 h-14 bg-indigo-50/80 rounded-2xl flex items-center justify-center text-indigo-600 group-hover:bg-indigo-600 group-hover:text-white transition-colors duration-300">
-              <BookOpen className="w-7 h-7" strokeWidth={2} />
-            </div>
-            <div className="w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 group-hover:bg-indigo-50 group-hover:text-indigo-600 transition-colors duration-300">
-              <ChevronRight className="w-5 h-5 group-hover:translate-x-0.5 transition-transform" />
-            </div>
+          <div className="w-14 h-14 bg-slate-50 rounded-2xl flex items-center justify-center text-slate-800 border border-slate-100 group-hover:bg-slate-900 group-hover:text-white transition-all duration-500">
+            <Book className="w-7 h-7" strokeWidth={1.5} />
           </div>
-          <div>
-            <h3 className="text-2xl font-bold text-slate-800 mb-2">Ngữ Pháp</h3>
-            <p className="text-slate-500 leading-relaxed">Luyện tập cấu trúc ngữ pháp qua Flashcards & Quiz thiết kế trực quan.</p>
+          <div className="space-y-3">
+            <h3 className="text-3xl font-black text-slate-900">Ngữ Pháp</h3>
+            <p className="text-slate-500 leading-relaxed max-w-[280px]">
+              Khám phá các cấu trúc và mẫu câu phức tạp với các phân tích chi tiết và khoa học.
+            </p>
+          </div>
+          <div className="mt-4 flex items-center gap-2 text-[10px] font-black tracking-[0.2em] text-slate-900 uppercase">
+            Bắt đầu học <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
           </div>
         </Link>
 
-        {/* Vocabulary Portal */}
+        {/* Vocabulary Card */}
         <Link
           to="/vocabulary"
-          className="group bg-white p-8 rounded-3xl border border-slate-200/60 shadow-sm hover:shadow-xl hover:shadow-emerald-500/10 hover:border-emerald-200 transition-all duration-300 hover:-translate-y-1 flex flex-col"
+          className="group bg-white p-12 rounded-[3rem] border border-slate-100 shadow-[0_10px_40px_-15px_rgba(0,0,0,0.05)] hover:shadow-[0_30px_70px_-20px_rgba(0,0,0,0.08)] hover:border-slate-200 transition-all duration-500 flex flex-col items-start gap-8"
         >
-          <div className="flex justify-between items-start mb-6">
-            <div className="w-14 h-14 bg-emerald-50/80 rounded-2xl flex items-center justify-center text-emerald-600 group-hover:bg-emerald-600 group-hover:text-white transition-colors duration-300">
-              <Languages className="w-7 h-7" strokeWidth={2} />
-            </div>
-            <div className="w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 group-hover:bg-emerald-50 group-hover:text-emerald-600 transition-colors duration-300">
-              <ChevronRight className="w-5 h-5 group-hover:translate-x-0.5 transition-transform" />
-            </div>
+          <div className="w-14 h-14 bg-slate-50 rounded-2xl flex items-center justify-center text-slate-800 border border-slate-100 group-hover:bg-slate-900 group-hover:text-white transition-all duration-500">
+            <Languages className="w-7 h-7" strokeWidth={1.5} />
           </div>
-          <div>
-            <h3 className="text-2xl font-bold text-slate-800 mb-2">Từ Vựng</h3>
-            <p className="text-slate-500 leading-relaxed">Mở rộng vốn từ vựng cấp độ N3 theo từng chủ đề thực tế.</p>
+          <div className="space-y-3">
+            <h3 className="text-3xl font-black text-slate-900">Từ Vựng</h3>
+            <p className="text-slate-500 leading-relaxed max-w-[280px]">
+              Mở rộng vốn từ vựng thông qua các danh sách chọn lọc và ứng dụng Kanji N3 vào thực tế.
+            </p>
+          </div>
+          <div className="mt-4 flex items-center gap-2 text-[10px] font-black tracking-[0.2em] text-slate-900 uppercase">
+            Bắt đầu học <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
           </div>
         </Link>
-      </div>
 
-      {/* Feature Tags */}
-      <div className="mt-14 flex flex-wrap justify-center gap-4">
-        <span className="flex items-center gap-2 px-5 py-2.5 bg-white rounded-full text-slate-500 text-sm font-medium border border-slate-200/60 shadow-sm hover:bg-slate-50 transition-colors cursor-default">
-          <Brain className="w-4 h-4 text-indigo-500" /> Phương pháp Memorize
-        </span>
-        <span className="flex items-center gap-2 px-5 py-2.5 bg-white rounded-full text-slate-500 text-sm font-medium border border-slate-200/60 shadow-sm hover:bg-slate-50 transition-colors cursor-default">
-          <CheckCircle className="w-4 h-4 text-emerald-500" /> Quiz đánh giá
-        </span>
       </div>
-
     </div>
   );
 }
