@@ -10,7 +10,7 @@ const grammarData = [
     meaning: "Quyết định (thói quen cá nhân)",
     explanation: "Diễn tả thói quen hoặc quy tắc mà bản thân tự đề ra và thực hiện.",
     examples: [
-      { jp: "健康のために、毎日野菜を食べることにしている。", vn: "Để tốt cho sức khỏe, tôi quyết định (duy trì thói quen) ăn rau mỗi ngày." },
+      { jp: "健康のために、毎日野菜 te 食べることにしている。", vn: "Để tốt cho sức khỏe, tôi quyết định (duy trì thói quen) ăn rau mỗi ngày." },
       { jp: "寝る前に、必ず本を10ページ読むことにしている。", vn: "Trước khi ngủ, tôi luôn quyết định đọc 10 trang sách." }
     ],
     quiz: {
@@ -107,7 +107,7 @@ const grammarData = [
     explanation: "Diễn tả dự định của bản thân hoặc niềm tin chủ quan về một trạng thái nào đó.",
     examples: [
       { jp: "来年、日本へ行くつもりです。", vn: "Năm sau tôi dự định sẽ đi Nhật Bản." },
-      { jp: "若いつもりだが、もう50歳だ。", vn: "Cứ ngỡ là mình còn trẻ nhưng đã 50 tuổi rồi." }
+      { jp: "若いつもりだが、mō 50-sai da.", vn: "Cứ ngỡ là mình còn trẻ nhưng đã 50 tuổi rồi." }
     ],
     quiz: {
       sentence: "大学を卒業したら、日本で働く________です。",
@@ -123,7 +123,7 @@ const grammarData = [
     explanation: "Diễn tả hành động đang bắt đầu, một sự thay đổi đang diễn ra hoặc hướng về phía người nói.",
     examples: [
       { jp: "最近、少しずつ寒くなってきた。", vn: "Gần đây trời đã bắt đầu lạnh dần lên." },
-      { jp: "雨が降ってきた。", vn: "Trời đã đổ mưa rồi (bắt đầu)." }
+      { jp: "雨가 降ってきた。", vn: "Trời đã đổ mưa rồi (bắt đầu)." }
     ],
     quiz: {
       sentence: "だんだん日本語が上手になって________。",
@@ -132,8 +132,6 @@ const grammarData = [
       translation: "Tiếng Nhật của tôi đang dần dần trở nên giỏi lên."
     }
   },
-
-  // --- UNIT 2 ---
   {
     id: 9, unit: 2,
     pattern: "てほしい / もらいたい",
@@ -208,7 +206,7 @@ const grammarData = [
       { jp: "このスープは野菜の甘みがある。", vn: "Món súp này có vị ngọt của rau củ." }
     ],
     quiz: {
-      sentence: "星空の美し________に感動した。",
+      sentence: "星空の美し________ ni 感動した。",
       answer: "み",
       hint: "Hậu tố biến tính từ đuôi 'i' thành danh từ",
       translation: "Tôi đã xúc động trước vẻ đẹp của bầu trời sao."
@@ -217,139 +215,55 @@ const grammarData = [
   {
     id: 14, unit: 2,
     pattern: "んじゃない？ / のではないだろうか",
-    meaning: "Chẳng phải là... hay sao?",
-    explanation: "Cách nói vòng vo, rụt rè để đưa ra ý kiến, phỏng đoán của bản thân.",
+    meaning: "Chẳng phải lĂ ... hay sao?",
+    explanation: "CĂĄch nĂłi vĂｲng vo, r盻･t rﾃｨ ﾄ黛ｻ・ﾄ柁ｰa ra Ăｽ ki蘯ｿn, ph盻熟g ﾄ双ﾃ｡n c盻ｧa b蘯｣n thﾃ｢n.",
     examples: [
-      { jp: "このやり方のほうがいいのではないだろうか。", vn: "Tôi nghĩ cách làm này tốt hơn đó chứ?" },
-      { jp: "彼, 今日休むんじゃない？", vn: "Chẳng phải hôm nay anh ấy nghỉ sao?" }
+      { jp: "このやり方のほうがいいのではないだろうか。", vn: "Tﾃｴi nghﾄｩ cﾃ｡ch lﾃm nﾃy t盻奏 hﾆ｡n ﾄ妥ｳ ch盻ｩ?" },
+      { jp: "彼, 今日休むんじゃない？", vn: "Ch蘯ｳng ph蘯｣i hﾃｴm nay anh 蘯･y ngh盻・sao?" }
     ],
     quiz: {
       sentence: "これ, ちょっと高すぎる________？",
       answer: "んじゃない",
-      hint: "Cách nói thân mật của 'のではないか'",
-      translation: "Cái này, chẳng phải là hơi đắt quá sao?"
+      hint: "CĂĄch nĂłi thﾃ｢n m蘯ｭt c盻ｧa 'のではないか'",
+      translation: "CĂ｡i nĂy, ch蘯ｳng ph蘯｣i lĂ hﾆ｡i ﾄ黛ｺｯt quﾃ｡ sao?"
     }
   },
   {
     id: 15, unit: 2,
     pattern: "縮約形 (てる/とく/なきゃ)",
-    meaning: "Dạng rút gọn (văn nói)",
-    explanation: "Các dạng nói tắt thường dùng trong văn nói hàng ngày (ている→てる, ておく→とく, なければ→なきゃ).",
+    meaning: "D盻｡ng rﾃｺt g盻肱 (vﾄハ nﾃｳi)",
+    explanation: "Cﾃ｡c d蘯｡ng nﾃｳi t蘯ｯt thﾆｰ盻拵g dﾃｹng trong vﾄハ nﾃｳi hﾃng ngﾃy (ている竊偵※繧・ 縺ｦ縺翫￥竊偵→縺・ 縺ｪ縺代ｌ縺ｰ竊偵↑縺阪ｃ).",
     examples: [
-      { jp: "今、何してるの？ (しているの)", vn: "Bây giờ đang làm gì thế?" },
-      { jp: "明日までにこの本、読んどくよ. (読んでおくよ)", vn: "Tôi sẽ đọc xong cuốn sách này trước ngày mai." }
+      { jp: "今、何してるの？ (しているの)", vn: "Bﾃ｢y gi盻・ﾄ疎ng lﾃm gﾃｬ th蘯ｿ?" },
+      { jp: "明日までにこの本、読んどくよ. (読んでおくよ)", vn: "Tﾃｴi s蘯ｽ ﾄ黛ｻ皇 xong cu盻創 sﾃ｡ch nﾃy trﾆｰ盻嫩 ngﾃy mai." }
     ],
     quiz: {
       sentence: "急が________、電車に遅れるよ！",
       answer: "なきゃ",
-      hint: "Dạng rút gọn của 'なければ'",
-      translation: "Nếu không nhanh lên, sẽ trễ tàu đấy!"
+      hint: "D盻｡ng rﾃｺt g盻肱 c盻ｧa 'なければ'",
+      translation: "N蘯ｿu khﾃｴng nhanh lﾃｪn, s蘯ｽ tr盻・tﾃu ﾄ黛ｺ･y!"
     }
   },
-
-  // --- UNIT 3 ---
-  {
-    id: 16, unit: 3,
-    pattern: "から〜にかけて",
-    meaning: "Từ... đến...",
-    explanation: "Chỉ phạm vi đại khái từ điểm bắt đầu đến điểm kết thúc của thời gian hoặc không gian.",
-    examples: [
-      { jp: "明日は関東から東北地方にかけて, 雨が降るでしょう。", vn: "Ngày mai có lẽ sẽ mưa từ vùng Kanto đến vùng Tohoku." },
-      { jp: "昨夜から今朝にかけて, 大雨が降った。", vn: "Đã có mưa lớn từ đêm qua đến sáng nay." }
-    ],
-    quiz: {
-      sentence: "明日は関東から東北地方に________, 雨が降るでしょう。",
-      answer: "かけて",
-      hint: "Đi kèm với から để chỉ phạm vi",
-      translation: "Ngày mai có lẽ sẽ mưa trải dài từ vùng Kanto đến vùng Tohoku."
-    }
-  },
-  {
-    id: 17, unit: 3,
-    pattern: "だらけ",
-    meaning: "Đầy / Toàn là...",
-    explanation: "Chỉ trạng thái có đầy thứ gì đó, thường mang nghĩa tiêu cực (như rác, bùn, lỗi sai).",
-    examples: [
-      { jp: "彼の部屋はゴミだらけだ。", vn: "Phòng của anh ta toàn là rác." },
-      { jp: "雨の中を歩いたので, 靴が泥だらけになった。", vn: "Vì đi bộ trong mưa nên giày dính đầy bùn." }
-    ],
-    quiz: {
-      sentence: "このテスト, 間違い________じゃないか！",
-      answer: "だらけ",
-      hint: "Toàn là (nghĩa tiêu cực)",
-      translation: "Bài kiểm tra này chẳng phải toàn là lỗi sai sao!"
-    }
-  },
-  {
-    id: 18, unit: 3,
-    pattern: "おかげ",
-    meaning: "Nhờ có... / Nhờ vào...",
-    explanation: "Chỉ nguyên nhân dẫn đến kết quả tốt, mang hàm ý biết ơn.",
-    examples: [
-      { jp: "先生のおかげで, N3に合格できました。", vn: "Nhờ có thầy giáo mà em đã thi đỗ N3." },
-      { jp: "薬を飲んだおかげで, 熱が下がった。", vn: "Nhờ uống thuốc mà tôi đã hạ sốt." }
-    ],
-    quiz: {
-      sentence: "友達が手伝ってくれた________で, 早く終わった。",
-      answer: "おかげ",
-      hint: "Nhờ có (kết quả tốt)",
-      translation: "Nhờ bạn bè giúp đỡ mà tôi đã làm xong sớm."
-    }
-  },
-  {
-    id: 19, unit: 3,
-    pattern: "せい / せいか",
-    meaning: "Tại vì... / Có lẽ tại...",
-    explanation: "Chỉ nguyên nhân dẫn đến kết quả xấu, mang hàm ý đổ lỗi.",
-    examples: [
-      { jp: "バスが遅れたせいで, 授業に遅刻してしまった。", vn: "Tại xe buýt đến muộn mà tôi bị trễ học." },
-      { jp: "疲れているせいか, 頭が痛い。", vn: "Có lẽ tại mệt mỏi nên tôi bị đau đầu." }
-    ],
-    quiz: {
-      sentence: "あの人の________で, みんなが迷惑している。",
-      answer: "せい",
-      hint: "Tại vì (kết quả xấu, đổ lỗi)",
-      translation: "Tại người đó mà mọi người đang gặp phiền phức."
-    }
-  },
-  {
-    id: 20, unit: 3,
-    pattern: "とおり(in) / どおり(in)",
-    meaning: "Đúng như / Theo như...",
-    explanation: "Làm một việc gì đó đúng theo như một khuôn mẫu, tiêu chuẩn hoặc dự đoán.",
-    examples: [
-      { jp: "私の説明したとおりに, 機械を組み立ててください。", vn: "Hãy lắp ráp máy móc đúng theo như tôi đã giải thích." },
-      { jp: "天気予報どおり, 雨が降ってきた。", vn: "Trời đã mưa đúng như dự báo thời tiết." }
-    ],
-    quiz: {
-      sentence: "先生が言った________, 試験は難しかった。",
-      answer: "とおり",
-      hint: "Đúng như / Theo như",
-      translation: "Đúng như lời thẩ giáo nói, bài thi rất khó."
-    }
-  },
-  // ... adding all 110 points ...
+  // ... rest of data ...
 ];
 
 export default function Grammar() {
   const navigate = useNavigate();
-  const [activeMode, setActiveMode] = useState('menu'); // 'menu', 'flashcard', 'quiz'
-  const [selectedUnit, setSelectedUnit] = useState('all'); // 1, 2, 'all'
+  const [activeMode, setActiveMode] = useState('menu');
+  const [selectedUnit, setSelectedUnit] = useState('all');
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
   const [userInput, setUserInput] = useState('');
-  const [feedback, setFeedback] = useState(null); // 'correct', 'incorrect'
+  const [feedback, setFeedback] = useState(null);
   const [score, setScore] = useState(0);
   const [showHint, setShowHint] = useState(false);
   const inputRef = useRef(null);
 
-  // Filter data based on selected unit
   const activeData = useMemo(() => {
     if (selectedUnit === 'all') return grammarData;
     return grammarData.filter(item => item.unit === selectedUnit);
   }, [selectedUnit]);
 
-  // Reset states
   useEffect(() => {
     setCurrentIndex(0);
     setIsFlipped(false);
@@ -393,14 +307,10 @@ export default function Grammar() {
   const checkAnswer = () => {
     const cleanInput = userInput.trim().replace(/\s/g, '').toLowerCase();
     const correctAns = activeData[currentIndex].quiz.answer.replace(/\s/g, '').toLowerCase();
-    
     const validAnswers = [correctAns];
     if (activeData[currentIndex].quiz.accepts) {
-      activeData[currentIndex].quiz.accepts.forEach(acc => {
-         validAnswers.push(acc.replace(/\s/g, '').toLowerCase());
-      });
+      activeData[currentIndex].quiz.accepts.forEach(acc => validAnswers.push(acc.replace(/\s/g, '').toLowerCase()));
     }
-
     if (validAnswers.includes(cleanInput)) {
       setFeedback('correct');
       setScore(score + 1);
@@ -410,26 +320,23 @@ export default function Grammar() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50/30 font-sans text-slate-800 p-4 md:p-8 lg:p-12 flex flex-col items-center selection:bg-indigo-100 selection:text-indigo-900">
-      {/* Background Ornaments */}
-      <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
-        <div className="absolute top-[-10%] right-[-10%] w-[400px] h-[400px] bg-indigo-100/30 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-[-10%] left-[-10%] w-[300px] h-[300px] bg-violet-100/30 rounded-full blur-3xl"></div>
-      </div>
-
+    <div className="min-h-screen bg-[#F8FAFC] font-sans text-slate-900 p-4 md:p-8 flex flex-col items-center">
       {/* Header Area */}
-      <div className="w-full max-w-5xl mb-8 md:mb-12 flex flex-col md:flex-row items-center justify-between gap-6">
+      <div className="w-full max-w-4xl mb-12 flex flex-col md:flex-row items-center justify-between gap-6 px-4">
         <div className="text-center md:text-left">
-          <h1 className="text-3xl md:text-4xl font-extrabold bg-gradient-to-r from-indigo-700 to-violet-600 bg-clip-text text-transparent flex items-center justify-center md:justify-start gap-3">
-             <BookOpen className="w-8 h-8 text-indigo-600" /> Ngữ Pháp N3
+          <h1 className="text-3xl font-extrabold text-slate-900 flex items-center justify-center md:justify-start gap-4">
+             <div className="w-12 h-12 bg-indigo-100 text-indigo-600 rounded-2xl flex items-center justify-center shadow-sm">
+              <BookOpen className="w-7 h-7" /> 
+             </div>
+             Ngữ Pháp N3
           </h1>
-          <p className="text-slate-500 font-medium mt-1">
-             {selectedUnit === 'all' ? 'Tổng hợp 110 mẫu N3' : `Unit ${selectedUnit}`}
+          <p className="text-slate-500 font-medium mt-2 ml-1">
+             {selectedUnit === 'all' ? 'Tổng hợp 110 mẫu N3' : `Học theo Unit ${selectedUnit}`}
           </p>
         </div>
         <button 
           onClick={() => activeMode === 'menu' ? navigate('/') : setActiveMode('menu')}
-          className="group px-6 py-2.5 bg-white border border-slate-200 rounded-full shadow-sm hover:shadow-md hover:border-indigo-200 transition-all flex items-center gap-2 text-indigo-600 font-bold"
+          className="group px-6 py-2.5 bg-white border border-slate-200 rounded-full shadow-sm hover:border-slate-400 transition-all flex items-center gap-2 text-slate-600 font-bold"
         >
           <RotateCcw className="w-4 h-4 group-hover:rotate-180 transition-transform duration-500" /> 
           {activeMode === 'menu' ? 'Trang chủ' : 'Quay lại'}
@@ -437,65 +344,71 @@ export default function Grammar() {
       </div>
 
       {/* Main Container */}
-      <div className="w-full max-w-5xl bg-white/80 backdrop-blur-xl rounded-[2.5rem] shadow-[0_25px_60px_-15px_rgba(0,0,0,0.1)] overflow-hidden border border-white/50 min-h-[600px] flex flex-col">
+      <div className="w-full max-w-4xl bg-white rounded-[2rem] border border-slate-200/60 shadow-sm min-h-[600px] flex flex-col overflow-hidden">
         
         {activeMode === 'menu' && (
-          <div className="p-6 md:p-12 flex flex-col items-center justify-center flex-grow gap-12">
-            <div className="w-full bg-slate-100/50 p-2 rounded-[2rem] flex flex-wrap items-center justify-center gap-2 border border-slate-200/50 shadow-inner">
+          <div className="p-8 md:p-14 flex flex-col items-center justify-center flex-grow gap-14">
+            <div className="w-full flex flex-wrap items-center justify-center gap-2">
               {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => (
                 <button 
                   key={num}
                   onClick={() => setSelectedUnit(num)}
-                  className={`py-2 px-6 rounded-2xl text-sm font-bold transition-all duration-300 ${selectedUnit === num ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-200' : 'text-slate-500 hover:bg-white hover:text-indigo-600'}`}
+                  className={`py-2 px-5 rounded-xl text-sm font-bold transition-all ${selectedUnit === num ? 'bg-slate-900 text-white shadow-md' : 'bg-white text-slate-500 border border-slate-200 hover:border-slate-400 hover:text-slate-900'}`}
                 >
                   Unit {num < 10 ? `0${num}` : num}
                 </button>
               ))}
-              <div className="w-px h-8 bg-slate-300 mx-2 hidden sm:block"></div>
+              <div className="w-px h-6 bg-slate-200 mx-2 hidden sm:block"></div>
               <button 
                 onClick={() => setSelectedUnit('all')}
-                className={`py-2 px-6 rounded-2xl text-sm font-bold transition-all duration-300 ${selectedUnit === 'all' ? 'bg-violet-600 text-white shadow-lg' : 'text-slate-500 hover:bg-white hover:text-violet-600'}`}
+                className={`py-2 px-5 rounded-xl text-sm font-bold transition-all ${selectedUnit === 'all' ? 'bg-slate-900 text-white shadow-md' : 'bg-white text-slate-500 border border-slate-200 hover:border-slate-400 hover:text-slate-900'}`}
               >
                 Tất cả
               </button>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-4xl">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-2xl">
               <button 
                 onClick={() => switchMode('flashcard')}
-                className="group p-8 bg-indigo-50/30 border border-indigo-100/50 rounded-[2rem] hover:bg-indigo-600 transition-all duration-500 flex flex-col items-center text-center gap-4 hover:-translate-y-2 hover:shadow-2xl"
+                className="group p-10 bg-white border border-slate-200 rounded-3xl hover:border-indigo-500 hover:bg-slate-50 transition-all flex flex-col items-center text-center gap-5"
               >
-                <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center text-indigo-600 group-hover:scale-110 transition-all">
-                  <Brain className="w-8 h-8" />
+                <div className="w-16 h-16 bg-indigo-50 rounded-2xl flex items-center justify-center text-indigo-600 group-hover:bg-indigo-600 group-hover:text-white transition-all shadow-sm">
+                  <Brain className="w-8 h-8" strokeWidth={2.5} />
                 </div>
-                <h3 className="font-extrabold text-2xl group-hover:text-white">Flashcards</h3>
+                <div>
+                  <h3 className="font-extrabold text-xl mb-1 text-slate-900">Flashcards</h3>
+                  <p className="text-sm text-slate-500">Cấu trúc & ví dụ mẫu</p>
+                </div>
               </button>
               
               <button 
                 onClick={() => switchMode('quiz')}
-                className="group p-8 bg-emerald-50/30 border border-emerald-100/50 rounded-[2rem] hover:bg-emerald-600 transition-all duration-500 flex flex-col items-center text-center gap-4 hover:-translate-y-2 hover:shadow-2xl"
+                className="group p-10 bg-white border border-slate-200 rounded-3xl hover:border-emerald-500 hover:bg-slate-50 transition-all flex flex-col items-center text-center gap-5"
               >
-                <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center text-emerald-600 group-hover:scale-110 transition-all">
-                  <CheckCircle className="w-8 h-8" />
+                <div className="w-16 h-16 bg-emerald-50 rounded-2xl flex items-center justify-center text-emerald-600 group-hover:bg-emerald-600 group-hover:text-white transition-all shadow-sm">
+                  <CheckCircle className="w-8 h-8" strokeWidth={2.5} />
                 </div>
-                <h3 className="font-extrabold text-2xl group-hover:text-white">Luyện tập (Quiz)</h3>
+                <div>
+                  <h3 className="font-extrabold text-xl mb-1 text-slate-900">Luyện tập (Quiz)</h3>
+                  <p className="text-sm text-slate-500">Thử thách điền từ</p>
+                </div>
               </button>
             </div>
           </div>
         )}
 
-        {/* Similar logic for flashcard and quiz modes as before */}
+        {/* Learning Content */}
         {activeMode === 'flashcard' && (
-          <div className="p-6 md:p-12 flex flex-col items-center justify-center flex-grow gap-8">
-            <div className="flex justify-between items-center w-full max-w-lg mb-4">
-              <span className="px-5 py-2 bg-indigo-50 text-indigo-600 rounded-full font-bold text-sm">
-                Câu {currentIndex + 1} / {activeData.length}
+          <div className="p-6 md:p-12 flex flex-col items-center justify-center flex-grow gap-8 bg-white">
+            <div className="flex justify-between items-center w-full max-w-lg">
+              <span className="px-5 py-2 bg-slate-100 text-slate-600 rounded-full font-bold text-sm">
+                {currentIndex + 1} / {activeData.length} mẫu
               </span>
-              <div className="flex gap-2">
-                <button onClick={handlePrev} disabled={currentIndex === 0} className="p-3 rounded-full hover:bg-slate-100 disabled:opacity-30 transition-all">
+              <div className="flex gap-1">
+                <button onClick={handlePrev} disabled={currentIndex === 0} className="p-3 rounded-full hover:bg-slate-100 disabled:opacity-20 transition-all text-slate-400 hover:text-slate-900">
                   <ChevronLeft className="w-6 h-6" />
                 </button>
-                <button onClick={handleNext} className="p-3 rounded-full hover:bg-slate-100 transition-all">
+                <button onClick={handleNext} className="p-3 rounded-full hover:bg-slate-100 transition-all text-slate-400 hover:text-slate-900">
                   <ChevronRight className="w-6 h-6" />
                 </button>
               </div>
@@ -505,19 +418,20 @@ export default function Grammar() {
               className={`relative w-full h-[450px] cursor-pointer perspective-2000 transition-all duration-700 transform-style-3d ${isFlipped ? 'rotate-y-180' : ''}`}
               onClick={() => setIsFlipped(!isFlipped)}
             >
-              <div className={`absolute inset-0 bg-gradient-to-br from-indigo-600 via-indigo-600 to-violet-700 text-white rounded-[2rem] shadow-2xl flex flex-col items-center justify-center backface-hidden ${isFlipped ? 'invisible' : ''} p-8 text-center`}>
-                <h2 className="text-4xl md:text-6xl font-bold mb-4">～{activeData[currentIndex].pattern}</h2>
-                <p className="text-indigo-100 text-base animate-pulse">Nhấn để xem giải nghĩa</p>
+              <div className={`absolute inset-0 bg-slate-900 text-white rounded-3xl shadow-lg flex flex-col items-center justify-center backface-hidden ${isFlipped ? 'invisible' : ''} p-8 text-center`}>
+                <h2 className="text-4xl md:text-5xl font-black mb-6 tracking-tight">～{activeData[currentIndex].pattern}</h2>
+                <div className="px-6 py-2 bg-white/10 rounded-full text-sm font-bold border border-white/20">Nhấn xem giải nghĩa</div>
               </div>
 
-              <div className={`absolute inset-0 bg-white border border-slate-100 rounded-[2rem] shadow-2xl p-8 md:p-12 flex flex-col items-center justify-start overflow-auto backface-hidden transform rotate-y-180 ${!isFlipped ? 'invisible' : ''}`}>
-                <h3 className="text-2xl md:text-3xl font-bold text-indigo-700 mb-4">{activeData[currentIndex].meaning}</h3>
-                <p className="text-slate-600 text-center mb-8 text-base md:text-lg">{activeData[currentIndex].explanation}</p>
-                <div className="w-full space-y-4 mt-auto">
+              <div className={`absolute inset-0 bg-white border border-slate-200 rounded-3xl shadow-lg p-8 md:p-12 flex flex-col items-center overflow-auto backface-hidden transform rotate-y-180 ${!isFlipped ? 'invisible' : ''}`}>
+                <h3 className="text-2xl md:text-3xl font-black text-slate-900 mb-6">{activeData[currentIndex].meaning}</h3>
+                <div className="w-full h-px bg-slate-100 mb-8 max-w-xs"></div>
+                <p className="text-slate-600 text-center mb-10 text-lg leading-relaxed max-w-2xl font-medium">{activeData[currentIndex].explanation}</p>
+                <div className="w-full space-y-4 mt-auto max-w-2xl mx-auto">
                   {activeData[currentIndex].examples.map((ex, i) => (
-                    <div key={i} className="bg-indigo-50/50 p-5 rounded-2xl border-l-4 border-indigo-500">
-                      <p className="font-semibold text-slate-800">{ex.jp}</p>
-                      <p className="text-slate-600 mt-2 italic text-sm">{ex.vn}</p>
+                    <div key={i} className="bg-slate-50 p-6 rounded-2xl border border-slate-200/60 hover:border-indigo-200 transition-colors">
+                      <p className="text-lg font-bold text-slate-900 leading-relaxed mb-2">{ex.jp}</p>
+                      <p className="text-slate-500 italic text-sm">{ex.vn}</p>
                     </div>
                   ))}
                 </div>
@@ -527,23 +441,22 @@ export default function Grammar() {
         )}
 
         {activeMode === 'quiz' && (
-          <div className="p-6 md:p-12 flex flex-col items-center justify-center flex-grow gap-8">
-            <div className="flex justify-between items-center w-full max-w-lg mb-4">
-              <span className="px-5 py-2 bg-emerald-50 text-emerald-600 rounded-full font-bold text-sm">
-                Điểm: {score} / {activeData.length}
+          <div className="p-8 md:p-16 flex flex-col items-center justify-center flex-grow gap-10 bg-white">
+            <div className="flex justify-between items-center w-full max-w-2xl">
+              <span className="px-5 py-2 bg-emerald-50 text-emerald-600 rounded-full font-bold text-sm border border-emerald-100">
+                Đúng: {score} / {activeData.length}
               </span>
-              <span className="text-slate-400 font-bold">Câu {currentIndex + 1}</span>
+              <span className="text-slate-400 font-bold text-sm tracking-widest uppercase">Câu {currentIndex + 1}</span>
             </div>
 
-            <div className="w-full bg-slate-50/80 p-8 md:p-12 rounded-[2rem] border border-slate-100 flex flex-col items-center gap-10">
-              <div className="text-center space-y-6">
-                <HelpCircle className="w-12 h-12 text-emerald-500 mx-auto opacity-50" />
-                <h3 className="text-2xl md:text-4xl font-bold text-slate-800 leading-relaxed px-4">
+            <div className="w-full max-w-2xl flex flex-col items-center gap-12">
+              <div className="text-center space-y-8">
+                <h3 className="text-2xl md:text-4xl font-bold text-slate-900 leading-relaxed tracking-tight">
                   {activeData[currentIndex].quiz.sentence.split('________').map((part, i) => (
                     <React.Fragment key={i}>
                       {part}
                       {i === 0 && (
-                        <span className="mx-2 px-6 py-1 border-b-4 border-emerald-400 text-emerald-600 min-w-[120px] inline-block">
+                        <span className="mx-2 px-6 py-1 border-b-[3px] border-indigo-500 text-indigo-600 min-w-[140px] inline-block font-black">
                           {feedback ? activeData[currentIndex].quiz.answer : '...'}
                         </span>
                       )}
@@ -552,7 +465,7 @@ export default function Grammar() {
                 </h3>
               </div>
 
-              <div className="w-full max-w-2xl space-y-6">
+              <div className="w-full space-y-8">
                 {feedback === null ? (
                   <>
                     <input 
@@ -560,23 +473,25 @@ export default function Grammar() {
                       value={userInput}
                       onChange={(e) => setUserInput(e.target.value)}
                       onKeyDown={(e) => e.key === 'Enter' && checkAnswer()}
-                      placeholder="Nhập đáp án..."
-                      className="w-full p-6 bg-white border-2 border-slate-200 rounded-2xl text-xl text-center focus:border-indigo-500 outline-none transition-all shadow-sm"
+                      placeholder="Nhập đáp án vào đây..."
+                      className="w-full py-6 bg-slate-50 border border-slate-200 rounded-2xl text-2xl text-center focus:bg-white focus:border-indigo-500 outline-none transition-all font-bold placeholder:text-slate-300"
                     />
-                    <div className="flex gap-3">
-                      <button onClick={() => setShowHint(!showHint)} className="p-4 bg-slate-100 text-slate-600 rounded-xl hover:bg-slate-200"><HelpCircle /></button>
-                      <button onClick={checkAnswer} className="flex-grow py-4 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700 shadow-lg shadow-indigo-200">
+                    <div className="flex gap-4">
+                      <button onClick={() => setShowHint(!showHint)} className="p-5 bg-white border border-slate-200 text-slate-400 rounded-2xl hover:bg-slate-50 hover:text-slate-600 transition-colors" title="Gợi ý"><HelpCircle className="w-6 h-6" /></button>
+                      <button onClick={checkAnswer} className="flex-grow py-5 bg-slate-900 text-white rounded-2xl font-bold hover:bg-black shadow-md transition-all">
                          {userInput ? 'Kiểm tra' : 'Xem đáp án'}
                       </button>
                     </div>
-                    {showHint && <div className="p-4 bg-amber-50 text-amber-700 rounded-xl">Gợi ý: {activeData[currentIndex].quiz.hint}</div>}
+                    {showHint && <div className="p-5 bg-amber-50 border border-amber-100 text-amber-800 rounded-2xl text-sm italic font-medium">Gợi ý: {activeData[currentIndex].quiz.hint}</div>}
                   </>
                 ) : (
-                  <div className={`p-8 rounded-[2rem] text-center w-full ${feedback === 'correct' ? 'bg-emerald-50 border border-emerald-100' : 'bg-rose-50 border border-rose-100'}`}>
-                    <p className="text-2xl font-black mb-4">{feedback === 'correct' ? 'CHÍNH XÁC!' : 'SAI RỒI!'}</p>
-                    <p className="text-4xl font-black mb-6">{activeData[currentIndex].quiz.answer}</p>
-                    <p className="text-slate-600 italic mb-10">{activeData[currentIndex].quiz.translation}</p>
-                    <button onClick={handleNext} className="px-12 py-4 rounded-2xl font-black text-white bg-slate-800 hover:bg-slate-900 transition-all">TIẾP THEO</button>
+                  <div className={`p-10 rounded-3xl text-center w-full animate-in zoom-in duration-300 ${feedback === 'correct' ? 'bg-emerald-50/50 border border-emerald-100' : 'bg-rose-50/50 border border-rose-100'}`}>
+                    <p className={`text-sm font-black mb-3 tracking-[0.2em] uppercase ${feedback === 'correct' ? 'text-emerald-500' : 'text-rose-400'}`}>
+                      {feedback === 'correct' ? 'Chính xác' : 'Chưa chính xác'}
+                    </p>
+                    <p className="text-4xl font-black mb-6 text-slate-900">{activeData[currentIndex].quiz.answer}</p>
+                    <p className="text-slate-600 italic mb-10 text-lg">{activeData[currentIndex].quiz.translation}</p>
+                    <button onClick={handleNext} className="w-full py-5 rounded-2xl font-black text-white bg-slate-900 hover:bg-black transition-all shadow-lg active:scale-95 uppercase tracking-widest text-sm">Tiếp theo</button>
                   </div>
                 )}
               </div>
