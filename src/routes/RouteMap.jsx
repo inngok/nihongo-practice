@@ -11,6 +11,7 @@ const Mimikara = lazy(() => import("../pages/grammar/Mimikara"));
 const Vocabulary = lazy(() => import("../pages/vocabulary/Vocabulary"));
 const Kanji = lazy(() => import("../pages/kanji/Kanji"));
 const KanjiSet4 = lazy(() => import("../pages/kanji/KanjiSet4/KanjiSet4"));
+const Soumatome = lazy(() => import("../pages/vocabulary/Soumatome/Soumatome"));
 
 const PageLoader = () => (
   <div className="min-h-[calc(100vh-80px)] mt-20 flex items-center justify-center bg-white">
@@ -59,6 +60,7 @@ export default function RouteMap() {
         <Route path="grammar" element={<Grammar />} />
         <Route path="grammar/mimikara" element={<Mimikara />} />
         <Route path="/vocabulary" element={<Vocabulary />} />
+        <Route path="/vocabulary/soumatome" element={<Soumatome />} />
         <Route path="/kanji" element={<Kanji />} />
         <Route path="/kanji/set-4" element={<KanjiSet4 />} />
         <Route path="*" element={<Fallback />} />
