@@ -648,7 +648,7 @@ export default function Mimikara() {
 
   // --- RENDERING STUDY VIEW (MIMIKARA) ---
   return (
-    <div className="min-h-screen w-full bg-white font-sans text-black flex flex-col items-center pt-24 md:pt-32 px-4 md:px-12 selection:bg-black selection:text-white">
+    <div className="min-h-screen w-full bg-white font-sans text-black flex flex-col items-center pt-44 md:pt-48 px-4 md:px-12 selection:bg-black selection:text-white">
 
       <div className="w-full max-w-6xl mb-12 flex items-center justify-between">
         <div>

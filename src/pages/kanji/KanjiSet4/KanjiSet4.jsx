@@ -263,10 +263,10 @@ export default function KanjiSet4() {
                 <div className={`relative w-full h-full duration-500 preserve-3d shadow-[0_40px_100px_-20px_rgba(0,0,0,0.08)] rounded-[3rem] ${isFlipped ? 'rotate-y-180' : ''}`}>
                   
                   {/* Front Side */}
-                  <div className="absolute inset-0 backface-hidden bg-white border border-slate-100 rounded-[3rem] flex flex-col items-center justify-center p-12">
-                     <div className="absolute top-10 text-[10px] font-bold text-slate-200 uppercase tracking-[0.3em]">Hán tự</div>
-                     <div className="text-[10rem] md:text-[14rem] font-black text-slate-900 select-none leading-none">{currentData[flashcardIndex].kanji}</div>
-                     <div className="absolute bottom-10 flex items-center gap-2 text-[10px] font-bold text-slate-300 uppercase tracking-widest underline underline-offset-4 decoration-slate-100">
+                  <div className="absolute inset-0 backface-hidden bg-white border border-slate-100 rounded-[3rem] flex flex-col items-center justify-center p-8">
+                     <div className="absolute top-8 text-[10px] font-bold text-slate-300 uppercase tracking-[0.3em]">Hán tự</div>
+                     <div className="text-[7rem] md:text-[12rem] font-black text-slate-900 select-none leading-none">{currentData[flashcardIndex].kanji}</div>
+                     <div className="absolute bottom-8 flex items-center justify-center w-full px-4 text-[10px] font-bold text-slate-300 uppercase tracking-widest decoration-slate-100 italic">
                        NHẤN ĐỂ LẬT
                      </div>
                   </div>
