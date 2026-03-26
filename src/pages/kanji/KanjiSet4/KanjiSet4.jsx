@@ -1,19 +1,33 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, BookOpen, Brain, CheckCircle, ChevronLeft, ChevronRight, RotateCcw } from 'lucide-react';
+import { ArrowLeft, BookOpen, Brain, CheckCircle, ChevronLeft, ChevronRight, RotateCcw, HelpCircle, Trophy } from 'lucide-react';
 
 // Import data from the central data folder
 import { kanjiData } from './data';
 
 export default function KanjiSet4() {
   const navigate = useNavigate();
-  const [activePage, setActivePage] = useState(12);
-  const [viewMode, setViewMode] = useState('list'); // 'list' or 'flashcard'
+  const [activePage, setActivePage] = useState('all');
+  const [viewMode, setViewMode] = useState('list'); // 'list', 'flashcard', 'quiz'
   const [flashcardIndex, setFlashcardIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
 
+  // Quiz State
+  const [quizData, setQuizData] = useState([]);
+  const [quizIndex, setQuizIndex] = useState(0);
+  const [userInput, setUserInput] = useState('');
+  const [feedback, setFeedback] = useState(null); // 'correct', 'incorrect'
+  const [score, setScore] = useState(0);
+  const [showHint, setShowHint] = useState(false);
+  const inputRef = useRef(null);
+
   // Filter and memoize current page data
-  const currentData = useMemo(() => kanjiData[activePage] || [], [activePage]);
+  const currentData = useMemo(() => {
+    if (activePage === 'all') {
+      return Object.values(kanjiData).flat();
+    }
+    return kanjiData[activePage] || [];
+  }, [activePage]);
 
   // Page selection logic (automatically sorted numerically)
   const availablePages = useMemo(() => 
@@ -21,20 +35,45 @@ export default function KanjiSet4() {
     []
   );
 
-  // Keyboard navigation for Flashcard Mode
-  React.useEffect(() => {
+  // Initialize Quiz
+  const startQuiz = useCallback(() => {
+    const shuffled = [...currentData].sort(() => Math.random() - 0.5);
+    setQuizData(shuffled);
+    setQuizIndex(0);
+    setScore(0);
+    setUserInput('');
+    setFeedback(null);
+    setShowHint(false);
+    setViewMode('quiz');
+  }, [currentData]);
+
+  // Keyboard navigation for Flashcard & Quiz
+  useEffect(() => {
     const handleKey = (e) => {
-      if (viewMode !== 'flashcard') return;
-      if (e.code === 'ArrowRight') handleNext();
-      if (e.code === 'ArrowLeft') handlePrev();
-      if (e.code === 'Space') {
-        e.preventDefault();
-        setIsFlipped(prev => !prev);
+      if (viewMode === 'flashcard') {
+        if (e.code === 'ArrowRight') handleNext();
+        if (e.code === 'ArrowLeft') handlePrev();
+        if (e.code === 'Space') {
+          e.preventDefault();
+          setIsFlipped(prev => !prev);
+        }
+      } else if (viewMode === 'quiz') {
+        if (e.key === 'Enter') {
+          if (!feedback) checkAnswer();
+          else nextQuiz();
+        }
       }
     };
     window.addEventListener('keydown', handleKey);
     return () => window.removeEventListener('keydown', handleKey);
-  }, [viewMode, flashcardIndex, isFlipped, currentData.length]);
+  }, [viewMode, flashcardIndex, isFlipped, feedback, userInput]);
+
+  // Focus input on quiz
+  useEffect(() => {
+    if (viewMode === 'quiz' && !feedback) {
+      inputRef.current?.focus();
+    }
+  }, [viewMode, quizIndex, feedback]);
 
   const handleNext = React.useCallback(() => {
     if (flashcardIndex < currentData.length - 1) {
@@ -59,10 +98,38 @@ export default function KanjiSet4() {
     setActivePage(pageNum);
     setFlashcardIndex(0);
     setIsFlipped(false);
+    if (viewMode === 'quiz') setViewMode('list'); 
+  };
+
+  // Quiz Logic
+  const checkAnswer = () => {
+    const currentItem = quizData[quizIndex];
+    const answer = currentItem.hano.toLowerCase().trim();
+    const input = userInput.toLowerCase().trim();
+    
+    if (input === answer) {
+      setFeedback('correct');
+      setScore(s => s + 1);
+    } else {
+      setFeedback('incorrect');
+    }
+  };
+
+  const nextQuiz = () => {
+    if (quizIndex < quizData.length - 1) {
+      setQuizIndex(i => i + 1);
+      setUserInput('');
+      setFeedback(null);
+      setShowHint(false);
+    } else {
+      // Quiz finished
+      alert(`Hoàn thành! Bạn đúng ${score + (feedback === 'correct' ? 1 : 0)}/${quizData.length} câu.`);
+      setViewMode('list');
+    }
   };
 
   return (
-    <div className="min-h-screen bg-white flex flex-col items-center pt-24 md:pt-32 pb-20 px-4 md:px-6 font-sans relative overflow-hidden">
+    <div className="min-h-screen bg-white flex flex-col items-center pt-24 md:pt-32 pb-20 px-4 md:px-6 font-sans relative overflow-hidden text-slate-900">
       
       {/* Background Watermark */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[35vw] font-black text-slate-100 opacity-[0.03] pointer-events-none select-none leading-none z-0 whitespace-nowrap">
@@ -76,15 +143,20 @@ export default function KanjiSet4() {
           <div className="space-y-6">
             <button 
               onClick={() => navigate('/kanji')}
-              className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.4em] text-slate-400 hover:text-black transition-colors"
+              className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.4em] text-slate-400 hover:text-black transition-colors underline-offset-8"
             >
-              <ArrowLeft className="w-3 h-3" />
               Danh sách hán tự
             </button>
             <div className="space-y-4">
               <div className="flex items-center gap-4 flex-wrap">
                 <span className="text-slate-300 font-bold text-sm tracking-widest uppercase">Set 04</span>
-                <div className="flex gap-2 flex-wrap">
+                <div className="flex gap-2 flex-wrap items-center">
+                   <button
+                     onClick={() => switchPage('all')}
+                     className={`px-3 py-1 text-[10px] font-black tracking-widest uppercase rounded-full transition-all ${activePage === 'all' ? 'bg-white text-black border border-black shadow-sm' : 'bg-slate-50 text-slate-400 hover:bg-slate-100'}`}
+                   >
+                     Tất cả
+                   </button>
                    {availablePages.map(page => (
                      <button
                        key={page}
@@ -96,27 +168,34 @@ export default function KanjiSet4() {
                    ))}
                 </div>
               </div>
-              <h1 className="text-4xl md:text-7xl font-black text-slate-900 tracking-tighter leading-none">
+              <h1 className="text-4xl md:text-7xl font-black text-slate-900 tracking-tighter leading-none flex items-baseline gap-4">
                 Hán tự 4
+                <span className="text-sm md:text-2xl font-bold text-slate-300 tracking-tight">
+                  ({activePage === 'all' ? Object.values(kanjiData).flat().length : (kanjiData[activePage]?.length || 0)} chữ)
+                </span>
               </h1>
             </div>
           </div>
           
           {/* View Mode Switcher */}
-          <div className="flex bg-slate-50 p-1.5 rounded-2xl border border-slate-100 shadow-sm self-start md:self-end">
+          <div className="flex bg-slate-50 p-1 rounded-2xl border border-slate-100 shadow-sm self-start md:self-end overflow-hidden whitespace-nowrap max-w-full">
             <button 
               onClick={() => setViewMode('list')}
-              className={`flex items-center gap-2 px-6 py-2.5 rounded-xl text-xs font-bold transition-all duration-300 ${viewMode === 'list' ? 'bg-black text-white shadow-md' : 'text-slate-400 hover:text-slate-600'}`}
+              className={`px-4 md:px-8 py-2.5 rounded-xl text-[10px] md:text-xs font-bold transition-all duration-300 ${viewMode === 'list' ? 'bg-black text-white shadow-md' : 'text-slate-400 hover:text-slate-600'}`}
             >
-              <BookOpen className="w-4 h-4" />
               Danh sách
             </button>
             <button 
               onClick={() => setViewMode('flashcard')}
-              className={`flex items-center gap-2 px-6 py-2.5 rounded-xl text-xs font-bold transition-all duration-300 ${viewMode === 'flashcard' ? 'bg-black text-white shadow-md' : 'text-slate-400 hover:text-slate-600'}`}
+              className={`px-4 md:px-8 py-2.5 rounded-xl text-[10px] md:text-xs font-bold transition-all duration-300 ${viewMode === 'flashcard' ? 'bg-black text-white shadow-md' : 'text-slate-400 hover:text-slate-600'}`}
             >
-              <Brain className="w-4 h-4" />
               Flashcard
+            </button>
+            <button 
+              onClick={startQuiz}
+              className={`px-4 md:px-8 py-2.5 rounded-xl text-[10px] md:text-xs font-bold transition-all duration-300 ${viewMode === 'quiz' ? 'bg-black text-white shadow-md' : 'text-slate-400 hover:text-slate-600'}`}
+            >
+              Luyện tập
             </button>
           </div>
         </div>
@@ -187,8 +266,8 @@ export default function KanjiSet4() {
                   <div className="absolute inset-0 backface-hidden bg-white border border-slate-100 rounded-[3rem] flex flex-col items-center justify-center p-12">
                      <div className="absolute top-10 text-[10px] font-bold text-slate-200 uppercase tracking-[0.3em]">Hán tự</div>
                      <div className="text-[10rem] md:text-[14rem] font-black text-slate-900 select-none leading-none">{currentData[flashcardIndex].kanji}</div>
-                     <div className="absolute bottom-10 flex items-center gap-2 text-[10px] font-bold text-slate-300 uppercase tracking-widest">
-                       <RotateCcw className="w-3 h-3" /> Click để lật
+                     <div className="absolute bottom-10 flex items-center gap-2 text-[10px] font-bold text-slate-300 uppercase tracking-widest underline underline-offset-4 decoration-slate-100">
+                       NHẤN ĐỂ LẬT
                      </div>
                   </div>
 
@@ -211,7 +290,7 @@ export default function KanjiSet4() {
                      </div>
 
                      <div className="absolute bottom-10 flex items-center gap-2 text-[10px] font-bold text-slate-300 uppercase tracking-widest">
-                       <CheckCircle className="w-3.5 h-3.5" /> Đã nhớ
+                       ĐÃ NHỚ
                      </div>
                   </div>
                 </div>
@@ -222,9 +301,9 @@ export default function KanjiSet4() {
                 <button 
                   onClick={(e) => { e.stopPropagation(); handlePrev(); }}
                   disabled={flashcardIndex === 0}
-                  className="w-14 h-14 rounded-2xl border border-slate-100 flex items-center justify-center text-slate-900 hover:bg-slate-50 transition-all disabled:opacity-20 disabled:cursor-not-allowed"
+                  className="w-14 h-14 rounded-2xl border border-slate-100 flex items-center justify-center text-[10px] font-black text-slate-900 hover:bg-slate-50 transition-all disabled:opacity-20 disabled:cursor-not-allowed"
                 >
-                  <ChevronLeft className="w-6 h-6" />
+                  TRƯỚC
                 </button>
 
                 <button 
@@ -237,15 +316,15 @@ export default function KanjiSet4() {
                 <button 
                   onClick={(e) => { e.stopPropagation(); handleNext(); }}
                   disabled={flashcardIndex === currentData.length - 1}
-                  className="w-14 h-14 rounded-2xl bg-slate-950 flex items-center justify-center text-white shadow-xl shadow-slate-200 hover:scale-110 active:scale-95 transition-all disabled:opacity-20 disabled:cursor-not-allowed"
+                  className="w-14 h-14 rounded-2xl bg-slate-950 flex items-center justify-center text-[10px] font-black text-white shadow-xl shadow-slate-200 hover:scale-110 active:scale-95 transition-all disabled:opacity-20 disabled:cursor-not-allowed"
                 >
-                  <ChevronRight className="w-6 h-6" />
+                  SAU
                 </button>
               </div>
 
               {/* Shortcuts Info */}
               <p className="mt-12 text-[9px] font-bold text-slate-300 uppercase tracking-widest">
-                Sử dụng phím mũi tên để di chuyển • Space để lật thẻ
+                Phím mũi tên để di chuyển • Space để lật thẻ
               </p>
             </div>
           ) : (
@@ -253,6 +332,87 @@ export default function KanjiSet4() {
               Chưa có dữ liệu flashcard cho trang này.
             </div>
           )
+        )}
+
+        {/* Quiz View */}
+        {viewMode === 'quiz' && quizData.length > 0 && (
+          <div className="max-w-2xl mx-auto flex flex-col items-center animate-in fade-in slide-in-from-bottom-8 duration-700">
+             <div className="w-full flex justify-between items-center mb-12">
+                <div className="flex flex-col">
+                  <span className="text-[10px] font-black text-slate-300 uppercase tracking-widest">Câu hỏi</span>
+                  <span className="text-sm font-black text-slate-900">{quizIndex + 1} / {quizData.length}</span>
+                </div>
+                <div className="flex flex-col items-end">
+                  <span className="text-[10px] font-black text-slate-300 uppercase tracking-widest">Điểm số</span>
+                  <span className="text-sm font-black text-emerald-600">{score}</span>
+                </div>
+             </div>
+
+             <div className="text-center space-y-12 w-full">
+                <div className="space-y-4">
+                  <div className="text-[12rem] font-black text-slate-900 leading-none select-none drop-shadow-sm">
+                    {quizData[quizIndex].kanji}
+                  </div>
+                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.4em]">Nhập âm Hán Việt</p>
+                </div>
+
+                <div className="space-y-6 w-full max-w-md mx-auto">
+                   <input
+                     ref={inputRef}
+                     type="text"
+                     value={userInput}
+                     onChange={(e) => setUserInput(e.target.value)}
+                     disabled={!!feedback}
+                     placeholder="Ví dụ: Nhất"
+                     className={`w-full text-center py-6 text-3xl font-black border-b-4 outline-none transition-all uppercase ${
+                       feedback === 'correct' ? 'border-emerald-500 text-emerald-600 bg-emerald-50/30' : 
+                       feedback === 'incorrect' ? 'border-red-500 text-red-600 bg-red-50/30' : 
+                       'border-slate-900 focus:border-slate-400'
+                     }`}
+                   />
+
+                   <div className="flex flex-col gap-4">
+                      {!feedback ? (
+                        <div className="grid grid-cols-2 gap-4">
+                          <button 
+                            onClick={checkAnswer}
+                            className="py-4 bg-black text-white text-[10px] font-bold uppercase tracking-widest rounded-2xl hover:scale-[1.02] active:scale-95 transition-all"
+                          >
+                            Kiểm tra
+                          </button>
+                          <button 
+                            onClick={() => setShowHint(!showHint)}
+                            className="py-4 border border-slate-200 text-slate-400 text-[10px] font-bold uppercase tracking-widest rounded-2xl hover:border-black hover:text-black transition-colors"
+                          >
+                            {showHint ? 'Ẩn nghĩa' : 'Xem nghĩa'}
+                          </button>
+                        </div>
+                      ) : (
+                        <button 
+                          onClick={nextQuiz}
+                          className={`py-4 ${feedback === 'correct' ? 'bg-emerald-600' : 'bg-slate-900'} text-white text-[10px] font-bold uppercase tracking-widest rounded-2xl animate-in zoom-in-95 duration-300`}
+                        >
+                          {quizIndex === quizData.length - 1 ? 'Xem kết quả' : 'Câu tiếp theo'}
+                        </button>
+                      )}
+                      
+                      {showHint && !feedback && (
+                        <div className="bg-slate-50 p-4 rounded-xl border border-slate-100 animate-in fade-in duration-300">
+                           <p className="text-[10px] font-black text-slate-300 uppercase tracking-widest mb-1">Nghĩa tiếng Việt</p>
+                           <p className="font-bold text-slate-600 italic">"{quizData[quizIndex].meaning}"</p>
+                        </div>
+                      )}
+
+                      {feedback === 'incorrect' && (
+                        <div className="bg-emerald-50 p-6 rounded-2xl border border-emerald-100 animate-in slide-in-from-top-4 duration-500">
+                           <p className="text-[10px] font-black text-emerald-600 uppercase tracking-widest mb-1">Đáp án đúng</p>
+                           <p className="text-3xl font-black text-emerald-700 uppercase">{quizData[quizIndex].hano}</p>
+                        </div>
+                      )}
+                   </div>
+                </div>
+             </div>
+          </div>
         )}
 
       </div>
