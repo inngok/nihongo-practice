@@ -2,18 +2,8 @@ import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, BookOpen, Brain, CheckCircle, ChevronLeft, ChevronRight, RotateCcw } from 'lucide-react';
 
-// Import data from page files
-import { page2Data } from './Page2';
-import { page12Data } from './Page12';
-import { page20Data } from './Page20';
-import { page21Data } from './Page21';
-
-const kanjiData = {
-  2: page2Data,
-  12: page12Data,
-  20: page20Data,
-  21: page21Data,
-};
+// Import data from the central data folder
+import { kanjiData } from './data';
 
 export default function KanjiSet4() {
   const navigate = useNavigate();
@@ -22,11 +12,16 @@ export default function KanjiSet4() {
   const [flashcardIndex, setFlashcardIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
 
+  // Filter and memoize current page data
   const currentData = useMemo(() => kanjiData[activePage] || [], [activePage]);
 
-  // Page selection logic
-  const availablePages = Object.keys(kanjiData).map(Number).sort((a, b) => a - b);
+  // Page selection logic (automatically sorted numerically)
+  const availablePages = useMemo(() => 
+    Object.keys(kanjiData).map(Number).sort((a, b) => a - b),
+    []
+  );
 
+  // Keyboard navigation for Flashcard Mode
   React.useEffect(() => {
     const handleKey = (e) => {
       if (viewMode !== 'flashcard') return;
@@ -126,6 +121,8 @@ export default function KanjiSet4() {
           </div>
         </div>
 
+        {/* --- DYNAMIC VIEWS --- */}
+        
         {/* List View */}
         {viewMode === 'list' && (
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -181,7 +178,7 @@ export default function KanjiSet4() {
 
               {/* The Card */}
               <div 
-                className="group perspective w-full aspect-[16/10] md:max-h-[500px] cursor-pointer"
+                className="group perspective w-full aspect-[16/10] md:max-h-[450px] cursor-pointer"
                 onClick={() => setIsFlipped(!isFlipped)}
               >
                 <div className={`relative w-full h-full duration-500 preserve-3d shadow-[0_40px_100px_-20px_rgba(0,0,0,0.08)] rounded-[3rem] ${isFlipped ? 'rotate-y-180' : ''}`}>
@@ -189,7 +186,7 @@ export default function KanjiSet4() {
                   {/* Front Side */}
                   <div className="absolute inset-0 backface-hidden bg-white border border-slate-100 rounded-[3rem] flex flex-col items-center justify-center p-12">
                      <div className="absolute top-10 text-[10px] font-bold text-slate-200 uppercase tracking-[0.3em]">Hán tự</div>
-                     <div className="text-[10rem] md:text-[14rem] font-black text-slate-900 select-none">{currentData[flashcardIndex].kanji}</div>
+                     <div className="text-[10rem] md:text-[14rem] font-black text-slate-900 select-none leading-none">{currentData[flashcardIndex].kanji}</div>
                      <div className="absolute bottom-10 flex items-center gap-2 text-[10px] font-bold text-slate-300 uppercase tracking-widest">
                        <RotateCcw className="w-3 h-3" /> Click để lật
                      </div>
@@ -197,19 +194,19 @@ export default function KanjiSet4() {
 
                   {/* Back Side */}
                   <div className="absolute inset-0 backface-hidden bg-slate-900 text-white rounded-[3rem] rotate-y-180 flex flex-col items-center justify-center p-12 overflow-hidden">
-                     <div className="absolute -top-10 -right-10 text-[20vw] font-black text-white/[0.03] rotate-12 select-none pointer-events-none">
+                     <div className="absolute -top-10 -right-10 text-[20vw] font-black text-white/[0.03] rotate-12 select-none pointer-events-none leading-none">
                        {currentData[flashcardIndex].kanji}
                      </div>
                      
                      <div className="space-y-8 text-center relative z-10">
                        <div className="space-y-2">
                          <p className="text-[10px] font-bold text-white/40 uppercase tracking-[0.4em]">Âm Hán Việt</p>
-                         <h3 className="text-5xl md:text-7xl font-black text-white italic">{currentData[flashcardIndex].hano}</h3>
+                         <h3 className="text-5xl md:text-7xl font-black text-white italic leading-tight">{currentData[flashcardIndex].hano}</h3>
                        </div>
                        <div className="w-12 h-px bg-white/20 mx-auto" />
                        <div className="space-y-2">
                          <p className="text-[10px] font-bold text-white/40 uppercase tracking-[0.4em]">Nghĩa Tiếng Việt</p>
-                         <p className="text-2xl md:text-3xl font-medium text-white/90">{currentData[flashcardIndex].meaning}</p>
+                         <p className="text-2xl md:text-3xl font-medium text-white/90 leading-snug">{currentData[flashcardIndex].meaning}</p>
                        </div>
                      </div>
 
