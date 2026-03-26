@@ -5,10 +5,12 @@ import { ArrowLeft, BookOpen, Brain, CheckCircle, ChevronLeft, ChevronRight, Rot
 // Import data from page files
 import { page2Data } from './Page2';
 import { page12Data } from './Page12';
+import { page21Data } from './Page21';
 
 const kanjiData = {
   2: page2Data,
   12: page12Data,
+  21: page21Data,
 };
 
 export default function KanjiSet4() {
