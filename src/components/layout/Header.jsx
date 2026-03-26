@@ -1,47 +1,45 @@
 import React from 'react';
-import { User } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 
 export default function Header() {
   const { pathname } = useLocation();
 
   return (
-    <header className="fixed top-0 z-50 w-full bg-white px-12 py-6 flex items-center justify-between pointer-events-auto">
-      <Link to="/" className="font-bold text-xl tracking-tight text-black">
-        NIHONGO
-      </Link>
+    <header className="fixed top-0 z-[100] w-full bg-white/95 backdrop-blur-sm border-b border-slate-50 px-4 md:px-12 py-4 flex flex-col md:flex-row items-center justify-between gap-4">
+      <div className="flex w-full md:w-auto items-center justify-between">
+        <Link to="/" className="font-black text-xl tracking-tighter text-black uppercase">
+          Nihongo
+        </Link>
+        <div className="md:hidden flex items-center">
+           {/* Mobile menu button could go here, but keeping it text-only for now */}
+        </div>
+      </div>
       
-      <nav className="absolute left-1/2 -translate-x-1/2 flex items-center gap-8 text-sm font-medium text-slate-400">
-        <Link 
-          to="/" 
-          className={`hover:text-black transition-colors ${pathname === '/' ? 'text-black' : ''}`}
-        >
-          Trang chủ
-        </Link>
-        <Link 
-          to="/grammar" 
-          className={`hover:text-black transition-colors ${pathname.startsWith('/grammar') ? 'text-black' : ''}`}
-        >
-          Ngữ pháp
-        </Link>
-        <Link 
-          to="/vocabulary" 
-          className={`hover:text-black transition-colors ${pathname === '/vocabulary' ? 'text-black' : ''}`}
-        >
-          Từ vựng
-        </Link>
-        <Link 
-          to="/kanji" 
-          className={`hover:text-black transition-colors ${pathname === '/kanji' ? 'text-black' : ''}`}
-        >
-          Hán tự
-        </Link>
+      <nav className="flex items-center gap-4 md:gap-8 text-[10px] md:text-xs font-black uppercase tracking-widest text-slate-400 overflow-x-auto no-scrollbar w-full md:w-auto justify-center md:justify-start">
+        {[
+          { path: '/', label: 'Trang chủ' },
+          { path: '/grammar', label: 'Ngữ pháp' },
+          { path: '/vocabulary', label: 'Từ vựng' },
+          { path: '/kanji', label: 'Hán tự' }
+        ].map(nav => (
+          <Link 
+            key={nav.path}
+            to={nav.path} 
+            className={`transition-all whitespace-nowrap py-1 border-b-2 ${
+              (nav.path === '/' && pathname === '/') || (nav.path !== '/' && pathname.startsWith(nav.path))
+                ? 'text-black border-black' 
+                : 'border-transparent hover:text-black hover:border-slate-200'
+            }`}
+          >
+            {nav.label}
+          </Link>
+        ))}
       </nav>
 
-      <div className="flex items-center">
-        <div className="w-6 h-6 rounded-full border border-black flex items-center justify-center text-black cursor-pointer">
-          <User className="w-3.5 h-3.5" />
-        </div>
+      <div className="hidden md:flex items-center">
+        <Link to="/" className="w-8 h-8 rounded-full border border-black flex items-center justify-center text-[10px] font-black text-black hover:bg-black hover:text-white transition-all">
+          USER
+        </Link>
       </div>
     </header>
   );
