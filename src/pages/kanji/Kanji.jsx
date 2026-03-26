@@ -18,7 +18,7 @@ export default function Kanji() {
   ];
 
   return (
-    <div className="min-h-screen bg-white flex flex-col items-center pt-24 pb-20 px-6 font-sans relative overflow-hidden">
+    <div className="min-h-screen bg-white flex flex-col items-center pt-24 md:pt-32 pb-20 px-4 md:px-6 font-sans relative overflow-hidden">
 
       {/* Background Watermark */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[35vw] font-black text-slate-100 opacity-[0.03] pointer-events-none select-none leading-none z-0 whitespace-nowrap">
@@ -38,10 +38,10 @@ export default function Kanji() {
 
         {/* Title Section */}
         <div className="mb-20">
-          <h1 className="text-6xl md:text-7xl font-black text-slate-900 tracking-tighter mb-4 leading-none">
+          <h1 className="text-4xl md:text-7xl font-black text-slate-900 tracking-tighter mb-4 leading-none">
             Hán tự
           </h1>
-          <p className="text-lg text-slate-500 max-w-2xl leading-relaxed font-medium">
+          <p className="text-sm md:text-lg text-slate-500 max-w-2xl leading-relaxed font-medium">
             Rèn luyện kỹ năng đọc và viết Hán tự theo lộ trình từ cơ bản đến nâng cao cho trình độ N3.
           </p>
         </div>
@@ -52,7 +52,7 @@ export default function Kanji() {
             <div
               key={set.id}
               onClick={() => set.path !== '#' && navigate(set.path)}
-              className={`group relative aspect-square bg-white border border-slate-100 rounded-[2.5rem] p-10 flex flex-col justify-between transition-all duration-500
+              className={`group relative aspect-square bg-white border border-slate-100 rounded-[2.5rem] p-6 md:p-10 flex flex-col justify-between transition-all duration-500
                           ${set.path !== '#' ? 'hover:border-slate-200 hover:shadow-[0_30px_70px_-20px_rgba(0,0,0,0.08)] cursor-pointer' : 'opacity-40 cursor-not-allowed'}`}
             >
               {/* Top Row */}

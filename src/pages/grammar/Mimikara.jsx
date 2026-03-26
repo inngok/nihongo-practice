@@ -648,14 +648,14 @@ export default function Mimikara() {
 
   // --- RENDERING STUDY VIEW (MIMIKARA) ---
   return (
-    <div className="min-h-screen w-full bg-white font-sans text-black flex flex-col items-center pt-32 px-12 selection:bg-black selection:text-white">
+    <div className="min-h-screen w-full bg-white font-sans text-black flex flex-col items-center pt-24 md:pt-32 px-4 md:px-12 selection:bg-black selection:text-white">
 
       <div className="w-full max-w-6xl mb-12 flex items-center justify-between">
         <div>
           <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400 mb-2">
             MIMIKARA OBOERU • {selectedUnit === 'all' ? 'TẤT CẢ' : `UNIT ${selectedUnit}`}
           </p>
-          <h1 className="text-5xl font-bold tracking-tighter italic">Mimikara</h1>
+          <h1 className="text-3xl md:text-5xl font-bold tracking-tighter italic">Mimikara</h1>
         </div>
         <button
           onClick={() => activeMode === 'menu' ? navigate('/grammar') : switchMode('menu')}
@@ -718,21 +718,21 @@ export default function Mimikara() {
                 className="flex-grow flex flex-col items-center justify-center py-12"
                 onClick={() => setIsFlipped(!isFlipped)}
               >
-                <div className={`w-full max-w-3xl aspect-[16/9] border border-black flex flex-col items-center justify-center p-12 text-center cursor-pointer transition-all ${isFlipped ? 'bg-white' : 'bg-black text-white'}`}>
+                <div className={`w-full max-w-3xl aspect-[16/10] md:aspect-[16/9] border border-black flex flex-col items-center justify-center p-6 md:p-12 text-center cursor-pointer transition-all ${isFlipped ? 'bg-white' : 'bg-black text-white'}`}>
                   {!isFlipped ? (
                     <>
-                      <h2 className="text-5xl font-bold mb-4 italic">{activeData[currentIndex].pattern}</h2>
-                      <p className="text-[10px] font-bold tracking-[0.2em] opacity-50">CLICK TO FLIP</p>
+                      <h2 className="text-3xl md:text-5xl font-bold mb-4 italic">{activeData[currentIndex].pattern}</h2>
+                      <p className="text-[10px] font-bold tracking-[0.2em] opacity-50 uppercase">Nhấn để xem nghĩa</p>
                     </>
                   ) : (
-                    <div className="animate-in fade-in duration-300">
-                      <h3 className="text-3xl font-bold mb-4 italic">{activeData[currentIndex].meaning}</h3>
-                      <p className="text-slate-500 text-sm max-w-md mx-auto mb-8 font-medium">{activeData[currentIndex].explanation}</p>
-                      <div className="text-left space-y-4">
+                    <div className="animate-in fade-in duration-300 w-full">
+                      <h3 className="text-xl md:text-3xl font-bold mb-4 italic">{activeData[currentIndex].meaning}</h3>
+                      <p className="text-slate-500 text-xs md:text-sm max-w-md mx-auto mb-6 md:mb-8 font-medium">{activeData[currentIndex].explanation}</p>
+                      <div className="text-left space-y-4 max-w-lg mx-auto">
                         {activeData[currentIndex].examples.slice(0, 1).map((ex, i) => (
                           <div key={i} className="border-l-2 border-black pl-4">
-                            <p className="text-lg font-bold italic">{ex.jp}</p>
-                            <p className="text-xs text-slate-400 mt-1">{ex.vn}</p>
+                            <p className="text-base md:text-lg font-bold italic leading-tight">{ex.jp}</p>
+                            <p className="text-[10px] md:text-xs text-slate-400 mt-1">{ex.vn}</p>
                           </div>
                         ))}
                       </div>
@@ -743,8 +743,8 @@ export default function Mimikara() {
             ) : (
               <div className="flex-grow flex flex-col items-center justify-center py-12 text-center">
                 <p className="text-slate-400 italic mb-8">"{activeData[currentIndex].quiz.translation}"</p>
-                <div className="mb-12">
-                  <h3 className="text-3xl font-bold tracking-tight italic flex flex-wrap justify-center items-center">
+                <div className="mb-8 md:mb-12 px-2">
+                  <h3 className="text-xl md:text-3xl font-bold tracking-tight italic flex flex-wrap justify-center items-center gap-y-2">
                     {activeData[currentIndex].quiz.sentence.split('________').map((part, i, arr) => (
                       <React.Fragment key={i}>
                         <span>{part}</span>
@@ -777,7 +777,15 @@ export default function Mimikara() {
                   />
                   <div className="flex flex-col gap-2">
                     {!feedback ? (
-                      <button onClick={checkAnswer} className="w-full py-4 bg-black text-white text-xs font-bold uppercase tracking-widest">Kiểm Tra</button>
+                      <div className="flex flex-col gap-3">
+                        <button onClick={checkAnswer} className="w-full py-4 bg-black text-white text-xs font-bold uppercase tracking-widest">Kiểm Tra</button>
+                        <button 
+                          onClick={() => setShowHint(!showHint)} 
+                          className="w-full py-3 border border-slate-200 text-slate-400 text-[10px] font-bold uppercase tracking-widest hover:border-black hover:text-black transition-colors"
+                        >
+                          {showHint ? 'Ẩn gợi ý' : 'Xem gợi ý'}
+                        </button>
+                      </div>
                     ) : (
                       <div className="space-y-4">
                         {feedback === 'incorrect' && (
