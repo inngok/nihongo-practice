@@ -89,7 +89,7 @@ export default function KanjiSet4() {
                      <button
                        key={page}
                        onClick={() => switchPage(page)}
-                       className={`px-3 py-1 text-[10px] font-black tracking-widest uppercase rounded-full transition-all ${activePage === page ? 'bg-slate-900 text-white' : 'bg-slate-50 text-slate-400 hover:bg-slate-200'}`}
+                       className={`px-3 py-1 text-[10px] font-black tracking-widest uppercase rounded-full transition-all ${activePage === page ? 'bg-white text-black border border-black shadow-sm' : 'bg-slate-50 text-slate-400 hover:bg-slate-100'}`}
                      >
                        Trang {page}
                      </button>
@@ -106,14 +106,14 @@ export default function KanjiSet4() {
           <div className="flex bg-slate-50 p-1.5 rounded-2xl border border-slate-100 shadow-sm self-start md:self-end">
             <button 
               onClick={() => setViewMode('list')}
-              className={`flex items-center gap-2 px-6 py-2.5 rounded-xl text-xs font-bold transition-all duration-300 ${viewMode === 'list' ? 'bg-white text-slate-900 shadow-md' : 'text-slate-400 hover:text-slate-600'}`}
+              className={`flex items-center gap-2 px-6 py-2.5 rounded-xl text-xs font-bold transition-all duration-300 ${viewMode === 'list' ? 'bg-black text-white shadow-md' : 'text-slate-400 hover:text-slate-600'}`}
             >
               <BookOpen className="w-4 h-4" />
               Danh sách
             </button>
             <button 
               onClick={() => setViewMode('flashcard')}
-              className={`flex items-center gap-2 px-6 py-2.5 rounded-xl text-xs font-bold transition-all duration-300 ${viewMode === 'flashcard' ? 'bg-white text-slate-900 shadow-md' : 'text-slate-400 hover:text-slate-600'}`}
+              className={`flex items-center gap-2 px-6 py-2.5 rounded-xl text-xs font-bold transition-all duration-300 ${viewMode === 'flashcard' ? 'bg-black text-white shadow-md' : 'text-slate-400 hover:text-slate-600'}`}
             >
               <Brain className="w-4 h-4" />
               Flashcard
@@ -193,24 +193,24 @@ export default function KanjiSet4() {
                   </div>
 
                   {/* Back Side */}
-                  <div className="absolute inset-0 backface-hidden bg-slate-900 text-white rounded-[3rem] rotate-y-180 flex flex-col items-center justify-center p-12 overflow-hidden">
-                     <div className="absolute -top-10 -right-10 text-[20vw] font-black text-white/[0.03] rotate-12 select-none pointer-events-none leading-none">
+                  <div className="absolute inset-0 backface-hidden bg-white border-2 border-slate-900 text-slate-950 rounded-[3rem] rotate-y-180 flex flex-col items-center justify-center p-12 overflow-hidden">
+                     <div className="absolute -top-10 -right-10 text-[20vw] font-black text-slate-100 rotate-12 select-none pointer-events-none leading-none">
                        {currentData[flashcardIndex].kanji}
                      </div>
                      
                      <div className="space-y-8 text-center relative z-10">
                        <div className="space-y-2">
-                         <p className="text-[10px] font-bold text-white/40 uppercase tracking-[0.4em]">Âm Hán Việt</p>
-                         <h3 className="text-5xl md:text-7xl font-black text-white italic leading-tight">{currentData[flashcardIndex].hano}</h3>
+                         <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.4em]">Âm Hán Việt</p>
+                         <h3 className="text-5xl md:text-7xl font-black text-slate-900 italic leading-tight">{currentData[flashcardIndex].hano}</h3>
                        </div>
-                       <div className="w-12 h-px bg-white/20 mx-auto" />
+                       <div className="w-12 h-px bg-slate-200 mx-auto" />
                        <div className="space-y-2">
-                         <p className="text-[10px] font-bold text-white/40 uppercase tracking-[0.4em]">Nghĩa Tiếng Việt</p>
-                         <p className="text-2xl md:text-3xl font-medium text-white/90 leading-snug">{currentData[flashcardIndex].meaning}</p>
+                         <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.4em]">Nghĩa Tiếng Việt</p>
+                         <p className="text-2xl md:text-3xl font-bold text-slate-600 leading-snug">{currentData[flashcardIndex].meaning}</p>
                        </div>
                      </div>
 
-                     <div className="absolute bottom-10 flex items-center gap-2 text-[10px] font-bold text-white/30 uppercase tracking-widest">
+                     <div className="absolute bottom-10 flex items-center gap-2 text-[10px] font-bold text-slate-300 uppercase tracking-widest">
                        <CheckCircle className="w-3.5 h-3.5" /> Đã nhớ
                      </div>
                   </div>

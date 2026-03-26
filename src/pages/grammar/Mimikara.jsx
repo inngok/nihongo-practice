@@ -718,20 +718,20 @@ export default function Mimikara() {
                 className="flex-grow flex flex-col items-center justify-center py-12"
                 onClick={() => setIsFlipped(!isFlipped)}
               >
-                <div className={`w-full max-w-3xl aspect-[16/10] md:aspect-[16/9] border border-black flex flex-col items-center justify-center p-6 md:p-12 text-center cursor-pointer transition-all ${isFlipped ? 'bg-white' : 'bg-black text-white'}`}>
+                <div className={`w-full max-w-3xl aspect-[16/10] md:aspect-[16/9] border-2 border-slate-200 flex flex-col items-center justify-center p-6 md:p-12 text-center cursor-pointer transition-all shadow-sm hover:shadow-md ${isFlipped ? 'bg-white border-black' : 'bg-white'}`}>
                   {!isFlipped ? (
                     <>
-                      <h2 className="text-3xl md:text-5xl font-bold mb-4 italic">{activeData[currentIndex].pattern}</h2>
-                      <p className="text-[10px] font-bold tracking-[0.2em] opacity-50 uppercase">Nhấn để xem nghĩa</p>
+                      <h2 className="text-3xl md:text-5xl font-bold mb-4 italic text-black">{activeData[currentIndex].pattern}</h2>
+                      <p className="text-[10px] font-bold tracking-[0.2em] text-slate-400 uppercase">Nhấn để xem nghĩa</p>
                     </>
                   ) : (
                     <div className="animate-in fade-in duration-300 w-full">
-                      <h3 className="text-xl md:text-3xl font-bold mb-4 italic">{activeData[currentIndex].meaning}</h3>
+                      <h3 className="text-xl md:text-3xl font-bold mb-4 italic text-black">{activeData[currentIndex].meaning}</h3>
                       <p className="text-slate-500 text-xs md:text-sm max-w-md mx-auto mb-6 md:mb-8 font-medium">{activeData[currentIndex].explanation}</p>
                       <div className="text-left space-y-4 max-w-lg mx-auto">
                         {activeData[currentIndex].examples.slice(0, 1).map((ex, i) => (
                           <div key={i} className="border-l-2 border-black pl-4">
-                            <p className="text-base md:text-lg font-bold italic leading-tight">{ex.jp}</p>
+                            <p className="text-base md:text-lg font-bold italic leading-tight text-black">{ex.jp}</p>
                             <p className="text-[10px] md:text-xs text-slate-400 mt-1">{ex.vn}</p>
                           </div>
                         ))}
