@@ -1,21 +1,26 @@
-**1) Quy trình cập nhật**
- 1) Chạy local (tuỳ chọn)
-npm install
-npm run dev
+# 🇯🇵 Nihongo Study Hub (N3)
 
- 2) Commit & push
-git add -A
-git commit -m "feat: <mô tả thay đổi>"
-git push
+Ứng dụng học Tiếng Nhật N3 (Ngữ pháp, Hán tự, Từ vựng) với trải nghiệm Flashcard 3D và bài tập tương tác.
 
-→ GitHub Actions tự build & deploy. Vài phút sau kiểm tra Prod.
+## ✨ Tính năng
+*   **Ngữ pháp**: Flashcard & Quiz cho trọn bộ Mimikara Oboeru N3.
+*   **Hán tự**: Học theo trang giáo trình (Page 2, 12,...) + Flashcard lật 3D.
+*   **Phím tắt**: `Left/Right Arrow` để đổi thẻ, `Space` để lật (Flashcard Mode).
+*   **Giao diện**: Tối giản, responsive, hiệu ứng mượt mà.
 
-Chỉ muốn redeploy lại (không đổi code)
-git commit --allow-empty -m "trigger deploy"
-git push
+## 🚀 Phát triển & Deploy
+1. **Cài đặt & Chạy**:
+   ```bash
+   npm install
+   npm run dev
+   ```
+2. **Commit & Deploy tự động**:
+   ```bash
+   git add -A
+   git commit -m "feat: <thay đổi>"
+   git push
+   ```
+   *Deploy tự động qua GitHub Actions sau vài phút.*
 
-**2) Thêm trang/route mới**
-
-Bọc trang trong Layout (Header/Footer) qua RouteMap.jsx.
-Với HashRouter, dùng đường dẫn bình thường (/, /about, …).
-
+---
+*Chúc bạn học tốt! 頑張ってください！*
