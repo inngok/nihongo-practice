@@ -17,7 +17,7 @@ export default function Home() {
           Trình độ N3
         </span>
         <h1 className="text-6xl md:text-7xl font-black text-slate-900 tracking-tighter">
-          N3 Study Hub
+          Luyện tiếng Nhật Online
         </h1>
         <p className="text-lg text-slate-500 max-w-lg mx-auto leading-relaxed mt-2 font-medium">
           Môi trường học tập chuyên sâu cho hành trình chinh phục tiếng Nhật. Tập trung vào những điều quan trọng nhất.
