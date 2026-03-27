@@ -594,15 +594,33 @@ export default function Mimikara() {
     [selectedUnit]);
 
   // Filter for search
+  const removeAccents = (str) => {
+    return str.normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/đ/g, "d")
+      .replace(/Đ/g, "D")
+      .toLowerCase();
+  };
+
   const filteredGrammar = useMemo(() => {
-    if (!searchTerm.trim()) return grammarData;
-    const term = searchTerm.toLowerCase();
-    return grammarData.filter(item => 
-      item.pattern.toLowerCase().includes(term) || 
-      item.meaning.toLowerCase().includes(term) ||
-      item.explanation.toLowerCase().includes(term)
+    const dataSource = activeData;
+    if (!searchTerm.trim()) return dataSource;
+    const term = removeAccents(searchTerm.trim());
+    return dataSource.filter(item => 
+      removeAccents(item.pattern).includes(term) || 
+      removeAccents(item.meaning).includes(term) ||
+      removeAccents(item.explanation).includes(term)
     );
-  }, [searchTerm]);
+  }, [searchTerm, activeData]);
+
+  // Grouped by unit for display
+  const groupedGrammar = useMemo(() => {
+    return filteredGrammar.reduce((acc, item) => {
+      if (!acc[item.unit]) acc[item.unit] = [];
+      acc[item.unit].push(item);
+      return acc;
+    }, {});
+  }, [filteredGrammar]);
 
   // Reset state when switching modes
   const switchMode = useCallback((mode) => {
@@ -748,33 +766,46 @@ export default function Mimikara() {
               />
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-20">
-              {filteredGrammar.length > 0 ? (
-                filteredGrammar.map((item) => (
-                  <div 
-                    key={item.id}
-                    onClick={() => selectGrammarFromList(item)}
-                    className="p-8 border border-slate-100 rounded-[2rem] hover:border-black transition-all group flex flex-col justify-between aspect-[16/10] md:aspect-video cursor-pointer"
-                  >
-                    <div>
-                      <div className="flex justify-between items-start mb-6">
-                        <span className="text-[10px] font-bold text-slate-300 tracking-widest uppercase">U{item.unit < 10 ? `0${item.unit}` : item.unit} • #{item.id}</span>
-                        <div className="w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                          <ChevronRight className="w-4 h-4 text-black" />
-                        </div>
+            <div className="flex flex-col gap-20 mb-20">
+              {Object.keys(groupedGrammar).length > 0 ? (
+                Object.keys(groupedGrammar).sort((a, b) => Number(a) - Number(b)).map(unit => (
+                  <div key={unit} className="animate-in">
+                    {selectedUnit === 'all' && (
+                      <div className="flex items-center gap-6 mb-8 group">
+                        <div className="h-px bg-slate-100 flex-grow group-hover:bg-black transition-colors" />
+                        <h2 className="text-3xl md:text-5xl font-black italic tracking-tighter whitespace-nowrap">Unit {unit}</h2>
+                        <div className="h-px bg-slate-100 flex-grow group-hover:bg-black transition-colors" />
                       </div>
-                      <h3 className="text-2xl md:text-3xl font-black text-slate-900 mb-3 tracking-tighter italic">{item.pattern}</h3>
-                      <p className="text-slate-500 font-bold text-sm mb-4 leading-tight">{item.meaning}</p>
-                    </div>
-                    <div className="pt-6 border-t border-slate-50">
-                      <p className="text-[11px] text-slate-400 leading-relaxed font-medium line-clamp-2 italic">
-                        {item.explanation}
-                      </p>
+                    )}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      {groupedGrammar[unit].map((item) => (
+                        <div 
+                          key={item.id}
+                          onClick={() => selectGrammarFromList(item)}
+                          className="p-8 border border-slate-100 rounded-[2rem] hover:border-black transition-all group flex flex-col justify-between aspect-[16/10] md:aspect-video cursor-pointer"
+                        >
+                          <div>
+                            <div className="flex justify-between items-start mb-6">
+                              <span className="text-[10px] font-bold text-slate-300 tracking-widest uppercase">U{item.unit < 10 ? `0${item.unit}` : item.unit} • #{item.id}</span>
+                              <div className="w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                <ChevronRight className="w-4 h-4 text-black" />
+                              </div>
+                            </div>
+                            <h3 className="text-2xl md:text-3xl font-black text-slate-900 mb-3 tracking-tighter italic">{item.pattern}</h3>
+                            <p className="text-slate-500 font-bold text-sm mb-4 leading-tight">{item.meaning}</p>
+                          </div>
+                          <div className="pt-6 border-t border-slate-50">
+                            <p className="text-[11px] text-slate-400 leading-relaxed font-medium line-clamp-2 italic">
+                              {item.explanation}
+                            </p>
+                          </div>
+                        </div>
+                      ))}
                     </div>
                   </div>
                 ))
               ) : (
-                <div className="col-span-full py-40 text-center">
+                <div className="py-20 text-center">
                   <p className="text-slate-300 text-xl italic font-medium">Không tìm thấy kết quả nào cho "{searchTerm}"</p>
                 </div>
               )}
