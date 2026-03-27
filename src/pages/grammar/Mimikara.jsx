@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { BookOpen, Brain, CheckCircle, ChevronLeft, ChevronRight, RotateCcw, HelpCircle, Layers, ArrowLeft, User } from 'lucide-react';
+import { BookOpen, Brain, CheckCircle, ChevronLeft, ChevronRight, RotateCcw, HelpCircle, Layers, ArrowLeft, User, Search, List } from 'lucide-react';
 
 const grammarData = [
   // --- UNIT 1 ---
@@ -580,6 +580,7 @@ export default function Mimikara() {
   const [feedback, setFeedback] = useState(null); // 'correct', 'incorrect'
   const [score, setScore] = useState(0);
   const [showHint, setShowHint] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
   const inputRef = useRef(null);
 
   // Tự động focus vào ô nhập liệu
@@ -592,6 +593,17 @@ export default function Mimikara() {
     selectedUnit === 'all' ? grammarData : grammarData.filter(item => item.unit === selectedUnit),
     [selectedUnit]);
 
+  // Filter for search
+  const filteredGrammar = useMemo(() => {
+    if (!searchTerm.trim()) return grammarData;
+    const term = searchTerm.toLowerCase();
+    return grammarData.filter(item => 
+      item.pattern.toLowerCase().includes(term) || 
+      item.meaning.toLowerCase().includes(term) ||
+      item.explanation.toLowerCase().includes(term)
+    );
+  }, [searchTerm]);
+
   // Reset state when switching modes
   const switchMode = useCallback((mode) => {
     setActiveMode(mode);
@@ -601,6 +613,16 @@ export default function Mimikara() {
     setFeedback(null);
     setScore(0);
     setShowHint(false);
+    setSearchTerm('');
+  }, []);
+
+  const selectGrammarFromList = useCallback((item) => {
+    setSelectedUnit('all');
+    const index = grammarData.findIndex(g => g.id === item.id);
+    setCurrentIndex(index);
+    setActiveMode('flashcard');
+    setIsFlipped(false);
+    setSearchTerm('');
   }, []);
 
   const handleNext = useCallback(() => {
@@ -694,17 +716,74 @@ export default function Mimikara() {
                 <button
                   key={mode.id}
                   onClick={() => switchMode(mode.id)}
-                  className="px-12 py-5 border border-black text-sm font-bold uppercase tracking-widest hover:bg-black hover:text-white transition-all"
+                  className="px-12 py-5 border border-black text-sm font-bold uppercase tracking-widest hover:bg-black hover:text-white transition-all flex flex-col items-center gap-1"
                 >
+                  {mode.id === 'flashcard' && <Brain className="w-4 h-4 mb-1 mx-auto" />}
+                  {mode.id === 'quiz' && <CheckCircle className="w-4 h-4 mb-1 mx-auto" />}
                   {mode.label}
                 </button>
               ))}
+              <button
+                onClick={() => switchMode('list')}
+                className="px-12 py-5 border border-black text-sm font-bold uppercase tracking-widest hover:bg-black hover:text-white transition-all flex flex-col items-center gap-1"
+              >
+                <List className="w-4 h-4 mb-1" />
+                Danh sách
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* LIST VIEW */}
+        {activeMode === 'list' && (
+          <div className="flex flex-col flex-grow animate-in">
+            <div className="relative mb-12">
+              <Search className="absolute left-0 top-1/2 -translate-y-1/2 text-slate-300 w-5 h-5" />
+              <input
+                type="text"
+                placeholder="Tìm mẫu ngữ pháp hoặc ý nghĩa..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full pl-10 pr-4 py-4 border-b-2 border-slate-100 focus:border-black outline-none transition-all text-xl font-medium placeholder:text-slate-200"
+              />
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-20">
+              {filteredGrammar.length > 0 ? (
+                filteredGrammar.map((item) => (
+                  <div 
+                    key={item.id}
+                    onClick={() => selectGrammarFromList(item)}
+                    className="p-8 border border-slate-100 rounded-[2rem] hover:border-black transition-all group flex flex-col justify-between aspect-[16/10] md:aspect-video cursor-pointer"
+                  >
+                    <div>
+                      <div className="flex justify-between items-start mb-6">
+                        <span className="text-[10px] font-bold text-slate-300 tracking-widest uppercase">U{item.unit < 10 ? `0${item.unit}` : item.unit} • #{item.id}</span>
+                        <div className="w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                          <ChevronRight className="w-4 h-4 text-black" />
+                        </div>
+                      </div>
+                      <h3 className="text-2xl md:text-3xl font-black text-slate-900 mb-3 tracking-tighter italic">{item.pattern}</h3>
+                      <p className="text-slate-500 font-bold text-sm mb-4 leading-tight">{item.meaning}</p>
+                    </div>
+                    <div className="pt-6 border-t border-slate-50">
+                      <p className="text-[11px] text-slate-400 leading-relaxed font-medium line-clamp-2 italic">
+                        {item.explanation}
+                      </p>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="col-span-full py-40 text-center">
+                  <p className="text-slate-300 text-xl italic font-medium">Không tìm thấy kết quả nào cho "{searchTerm}"</p>
+                </div>
+              )}
             </div>
           </div>
         )}
 
         {/* STUDY VIEWS */}
-        {activeMode !== 'menu' && (
+        {(activeMode === 'flashcard' || activeMode === 'quiz') && (
           <div className="flex flex-col flex-grow animate-in fade-in duration-500">
             <div className="flex justify-between items-center mb-8 pb-4 border-b border-slate-100">
               <span className="text-[10px] font-bold uppercase tracking-widest">
@@ -819,6 +898,17 @@ export default function Mimikara() {
               </button>
             </div>
           </div>
+        )}
+
+        {activeMode === 'list' && (
+           <div className="fixed bottom-12 right-12 z-50">
+             <button 
+               onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+               className="w-14 h-14 bg-black text-white rounded-full flex items-center justify-center shadow-2xl hover:scale-110 transition-all active:scale-95"
+             >
+               <ChevronRight className="w-6 h-6 -rotate-90" />
+             </button>
+           </div>
         )}
       </div>
 
