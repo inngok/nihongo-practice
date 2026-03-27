@@ -85,6 +85,22 @@ export default function Home() {
         </Link>
 
       </div>
+
+      {/* Specialty Bottom Section */}
+      <div className="mt-20 md:mt-24 relative z-10 flex flex-col items-center gap-6">
+        <Link
+          to="/exam-pc7"
+          className="group flex items-center gap-4 px-8 py-3 bg-slate-50 border border-slate-100 rounded-full hover:bg-white hover:border-slate-200 hover:shadow-xl hover:shadow-slate-100 transition-all duration-500"
+        >
+          <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center border border-slate-100 group-hover:bg-slate-900 group-hover:text-white transition-all">
+            <Languages className="w-4 h-4" />
+          </div>
+          <span className="text-[10px] md:text-[11px] font-black tracking-[0.3em] uppercase text-slate-400 group-hover:text-slate-900 transition-colors">
+            Ôn thi PC7
+          </span>
+          <ArrowRight className="w-3.5 h-3.5 text-slate-300 group-hover:text-slate-900 group-hover:translate-x-1 transition-all" />
+        </Link>
+      </div>
     </div>
   );
 }

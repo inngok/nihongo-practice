@@ -12,6 +12,9 @@ const Vocabulary = lazy(() => import("../pages/vocabulary/Vocabulary"));
 const Kanji = lazy(() => import("../pages/kanji/Kanji"));
 const KanjiSet4 = lazy(() => import("../pages/kanji/KanjiSet4/KanjiSet4"));
 const Soumatome = lazy(() => import("../pages/vocabulary/Soumatome/Soumatome"));
+const ExamPC7 = lazy(() => import("../pages/exam/ExamPC7"));
+const ExamVocab = lazy(() => import("../pages/exam/ExamVocab"));
+const TryN3 = lazy(() => import("../pages/vocabulary/TryN3/TryN3"));
 
 const PageLoader = () => (
   <div className="min-h-[calc(100vh-80px)] mt-20 flex items-center justify-center bg-white">
@@ -23,7 +26,7 @@ const Layout = () => (
   <div className="flex flex-col min-h-screen bg-white relative">
     <ScrollToTop />
     <Header />
-    
+
     {/* Slogan - Top Right Corner Badge */}
     <div className="fixed right-6 top-6 z-[100] hidden lg:block pointer-events-none select-none">
       <div className="bg-white/80 backdrop-blur-md border border-slate-100 px-4 py-2 rounded-xl shadow-sm flex items-center gap-3">
@@ -45,7 +48,6 @@ const Layout = () => (
 const Fallback = () => (
   <div className="min-h-[calc(100vh-80px)] mt-20 flex-grow flex items-center justify-center bg-white text-slate-500 font-bold text-lg">
     <div className="text-center space-y-4">
-      <div className="text-4xl">🥲</div>
       <div>Trang không tồn tại</div>
     </div>
   </div>
@@ -60,8 +62,11 @@ export default function RouteMap() {
         <Route path="grammar/mimikara" element={<Mimikara />} />
         <Route path="/vocabulary" element={<Vocabulary />} />
         <Route path="/vocabulary/soumatome" element={<Soumatome />} />
+        <Route path="/vocabulary/try-n3" element={<TryN3 />} />
         <Route path="/kanji" element={<Kanji />} />
         <Route path="/kanji/set-4" element={<KanjiSet4 />} />
+        <Route path="/exam-pc7" element={<ExamPC7 />} />
+        <Route path="/exam-pc7/vocab-comprehensive" element={<ExamVocab type="comprehensive" />} />
         <Route path="*" element={<Fallback />} />
       </Route>
     </Routes>
