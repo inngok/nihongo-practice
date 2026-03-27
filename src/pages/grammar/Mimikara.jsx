@@ -835,16 +835,23 @@ export default function Mimikara() {
                       <p className="text-[10px] font-bold tracking-[0.2em] text-slate-400 uppercase">Nhấn để xem nghĩa</p>
                     </>
                   ) : (
-                    <div className="animate-in fade-in duration-300 w-full">
-                      <h3 className="text-xl md:text-3xl font-bold mb-4 italic text-black">{activeData[currentIndex].meaning}</h3>
-                      <p className="text-slate-500 text-xs md:text-sm max-w-md mx-auto mb-6 md:mb-8 font-medium">{activeData[currentIndex].explanation}</p>
-                      <div className="text-left space-y-4 max-w-lg mx-auto">
-                        {activeData[currentIndex].examples.slice(0, 1).map((ex, i) => (
-                          <div key={i} className="border-l-2 border-black pl-4">
-                            <p className="text-base md:text-lg font-bold italic leading-tight text-black">{ex.jp}</p>
-                            <p className="text-[10px] md:text-xs text-slate-400 mt-1">{ex.vn}</p>
-                          </div>
-                        ))}
+                    <div className="animate-in fade-in duration-300 w-full px-4">
+                      <div className="mb-10">
+                        <h3 className="text-2xl md:text-4xl font-black mb-3 italic text-black tracking-tighter">{activeData[currentIndex].meaning}</h3>
+                        <p className="text-slate-500 text-xs md:text-sm max-w-md mx-auto font-medium leading-relaxed">{activeData[currentIndex].explanation}</p>
+                      </div>
+
+                      <div className="bg-slate-50 p-8 md:p-10 rounded-[2.5rem] border border-slate-100 max-w-xl mx-auto text-left relative overflow-hidden group hover:border-black transition-all">
+                        <div className="absolute top-0 right-0 p-6 opacity-[0.05] group-hover:opacity-10 transition-opacity">
+                          <BookOpen className="w-12 h-12 text-black" />
+                        </div>
+                        <p className="text-[10px] font-black text-slate-300 uppercase tracking-[0.3em] mb-6">Ví dụ minh họa</p>
+                        <p className="text-xl md:text-2xl font-bold italic leading-tight text-black mb-3 tracking-tight">
+                          {activeData[currentIndex].examples[0].jp}
+                        </p>
+                        <p className="text-xs md:text-sm text-slate-400 font-medium italic">
+                          {activeData[currentIndex].examples[0].vn}
+                        </p>
                       </div>
                     </div>
                   )}
