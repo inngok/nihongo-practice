@@ -695,11 +695,11 @@ export default function Mimikara() {
     <div className="min-h-screen w-full bg-white font-sans text-black flex flex-col items-center pt-44 md:pt-48 px-4 md:px-12 selection:bg-black selection:text-white">
 
       <div className="w-full max-w-6xl mb-12 flex items-center justify-between">
-        <div>
-          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400 mb-2">
+        <div className="flex-1 pr-4">
+          <p className="text-[9px] md:text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400 mb-2">
             MIMIKARA OBOERU • {selectedUnit === 'all' ? 'TẤT CẢ' : `UNIT ${selectedUnit}`}
           </p>
-          <h1 className="text-3xl md:text-5xl font-bold tracking-tighter italic">Mimikara</h1>
+          <h1 className="text-2xl md:text-5xl font-bold tracking-tighter italic leading-none">Mimikara</h1>
         </div>
         <button
           onClick={() => {
@@ -739,7 +739,7 @@ export default function Mimikara() {
               </button>
             </div>
 
-            <div className="flex gap-4">
+            <div className="flex flex-wrap gap-3 md:gap-4">
               {[
                 { id: 'flashcard', label: 'Ghi nhớ' },
                 { id: 'quiz', label: 'Luyện tập' }
@@ -747,7 +747,7 @@ export default function Mimikara() {
                 <button
                   key={mode.id}
                   onClick={() => switchMode(mode.id)}
-                  className="px-12 py-5 border border-black text-sm font-bold uppercase tracking-widest hover:bg-black hover:text-white transition-all flex flex-col items-center gap-1"
+                  className="flex-1 min-w-[100px] px-4 md:px-12 py-4 md:py-5 border border-black text-xs font-bold uppercase tracking-widest hover:bg-black hover:text-white transition-all flex flex-col items-center gap-1"
                 >
                   {mode.id === 'flashcard' && <Brain className="w-4 h-4 mb-1 mx-auto" />}
                   {mode.id === 'quiz' && <CheckCircle className="w-4 h-4 mb-1 mx-auto" />}
@@ -756,7 +756,7 @@ export default function Mimikara() {
               ))}
               <button
                 onClick={() => switchMode('list')}
-                className="px-12 py-5 border border-black text-sm font-bold uppercase tracking-widest hover:bg-black hover:text-white transition-all flex flex-col items-center gap-1"
+                className="flex-1 min-w-[100px] px-4 md:px-12 py-4 md:py-5 border border-black text-xs font-bold uppercase tracking-widest hover:bg-black hover:text-white transition-all flex flex-col items-center gap-1"
               >
                 <List className="w-4 h-4 mb-1" />
                 Danh sách
@@ -768,14 +768,14 @@ export default function Mimikara() {
         {/* LIST VIEW */}
         {activeMode === 'list' && (
           <div className="flex flex-col flex-grow animate-in">
-            <div className="relative mb-12">
-              <Search className="absolute left-0 top-1/2 -translate-y-1/2 text-slate-300 w-5 h-5" />
+            <div className="relative mb-8 md:mb-12">
+              <Search className="absolute left-0 top-1/2 -translate-y-1/2 text-slate-300 w-4 h-4 md:w-5 md:h-5" />
               <input
                 type="text"
                 placeholder="Tìm mẫu ngữ pháp hoặc ý nghĩa..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-4 border-b-2 border-slate-100 focus:border-black outline-none transition-all text-xl font-medium placeholder:text-slate-200"
+                className="w-full pl-8 md:pl-10 pr-4 py-3 md:py-4 border-b-2 border-slate-100 focus:border-black outline-none transition-all text-lg md:text-xl font-medium placeholder:text-slate-200"
               />
             </div>
 
@@ -795,7 +795,7 @@ export default function Mimikara() {
                         <div 
                           key={item.id}
                           onClick={() => selectGrammarFromList(item)}
-                          className="p-8 border border-slate-100 rounded-[2rem] hover:border-black transition-all group flex flex-col justify-between aspect-[16/10] md:aspect-video cursor-pointer"
+                          className="p-6 md:p-8 border border-slate-100 rounded-[1.5rem] md:rounded-[2rem] hover:border-black transition-all group flex flex-col justify-between aspect-[16/10] md:aspect-video cursor-pointer"
                         >
                           <div>
                             <div className="flex justify-between items-start mb-6">
