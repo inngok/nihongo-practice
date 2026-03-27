@@ -15,6 +15,7 @@ const Soumatome = lazy(() => import("../pages/vocabulary/Soumatome/Soumatome"));
 const ExamPC7 = lazy(() => import("../pages/exam/ExamPC7"));
 const ExamVocab = lazy(() => import("../pages/exam/ExamVocab"));
 const TryN3 = lazy(() => import("../pages/vocabulary/TryN3/TryN3"));
+const MimikaraVocab = lazy(() => import("../pages/vocabulary/MimikaraVocab/MimikaraVocab"));
 
 const PageLoader = () => (
   <div className="min-h-[calc(100vh-80px)] mt-20 flex items-center justify-center bg-white">
@@ -63,6 +64,7 @@ export default function RouteMap() {
         <Route path="/vocabulary" element={<Vocabulary />} />
         <Route path="/vocabulary/soumatome" element={<Soumatome />} />
         <Route path="/vocabulary/try-n3" element={<TryN3 />} />
+        <Route path="/vocabulary/mimikara" element={<MimikaraVocab />} />
         <Route path="/kanji" element={<Kanji />} />
         <Route path="/kanji/set-4" element={<KanjiSet4 />} />
         <Route path="/exam-pc7" element={<ExamPC7 />} />
