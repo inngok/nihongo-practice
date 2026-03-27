@@ -583,6 +583,8 @@ export default function Mimikara() {
   const [searchTerm, setSearchTerm] = useState('');
   const [originMode, setOriginMode] = useState('menu');
   const inputRef = useRef(null);
+  const touchStart = useRef(null);
+  const minSwipeDistance = 50;
 
   // Tự động focus vào ô nhập liệu
   useEffect(() => {
@@ -593,6 +595,35 @@ export default function Mimikara() {
   const activeData = useMemo(() =>
     selectedUnit === 'all' ? grammarData : grammarData.filter(item => item.unit === selectedUnit),
     [selectedUnit]);
+
+  // Gesture Handlers
+  const onTouchStart = (e) => {
+    touchStart.current = {
+      x: e.touches[0].clientX,
+      y: e.touches[0].clientY
+    };
+  };
+
+  const onTouchEnd = (e) => {
+    if (!touchStart.current) return;
+    const deltaX = touchStart.current.x - e.changedTouches[0].clientX;
+    const deltaY = touchStart.current.y - e.changedTouches[0].clientY;
+
+    // Mostly horizontal and exceeds threshold
+    if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > minSwipeDistance) {
+      if (deltaX > 0) {
+        // SWIPE LEFT -> GO BACK (As requested)
+        if (activeMode === 'menu') {
+          navigate('/grammar');
+        } else {
+          setActiveMode(originMode);
+          setCurrentIndex(0);
+          setIsFlipped(false);
+        }
+      }
+    }
+    touchStart.current = null;
+  };
 
   // Filter for search
   const removeAccents = (str) => {
@@ -692,7 +723,11 @@ export default function Mimikara() {
 
   // --- RENDERING STUDY VIEW (MIMIKARA) ---
   return (
-    <div className="min-h-screen w-full bg-white font-sans text-black flex flex-col items-center pt-44 md:pt-48 px-4 md:px-12 selection:bg-black selection:text-white">
+    <div 
+      className="min-h-screen w-full bg-white font-sans text-black flex flex-col items-center pt-44 md:pt-48 px-4 md:px-12 selection:bg-black selection:text-white"
+      onTouchStart={onTouchStart}
+      onTouchEnd={onTouchEnd}
+    >
 
       <div className="w-full max-w-6xl mb-12 flex items-center justify-between">
         <div className="flex-1 pr-4">
