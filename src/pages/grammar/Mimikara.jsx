@@ -581,6 +581,7 @@ export default function Mimikara() {
   const [score, setScore] = useState(0);
   const [showHint, setShowHint] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
+  const [originMode, setOriginMode] = useState('menu');
   const inputRef = useRef(null);
 
   // Tự động focus vào ô nhập liệu
@@ -625,13 +626,16 @@ export default function Mimikara() {
   // Reset state when switching modes
   const switchMode = useCallback((mode) => {
     setActiveMode(mode);
+    if (mode === 'menu' || mode === 'list') {
+      setOriginMode(mode);
+    }
     setCurrentIndex(0);
     setIsFlipped(false);
     setUserInput('');
     setFeedback(null);
     setScore(0);
     setShowHint(false);
-    setSearchTerm('');
+    // Don't clear searchTerm here to allow "search tiếp"
   }, []);
 
   const selectGrammarFromList = useCallback((item) => {
@@ -639,8 +643,8 @@ export default function Mimikara() {
     const index = grammarData.findIndex(g => g.id === item.id);
     setCurrentIndex(index);
     setActiveMode('flashcard');
+    setOriginMode('list');
     setIsFlipped(false);
-    setSearchTerm('');
   }, []);
 
   const handleNext = useCallback(() => {
@@ -698,10 +702,19 @@ export default function Mimikara() {
           <h1 className="text-3xl md:text-5xl font-bold tracking-tighter italic">Mimikara</h1>
         </div>
         <button
-          onClick={() => activeMode === 'menu' ? navigate('/grammar') : switchMode('menu')}
+          onClick={() => {
+            if (activeMode === 'menu') {
+              navigate('/grammar');
+            } else {
+              // Return to selection source (menu or list)
+              setActiveMode(originMode);
+              setCurrentIndex(0);
+              setIsFlipped(false);
+            }
+          }}
           className="px-6 py-2 border border-black text-xs font-bold uppercase tracking-widest hover:bg-black hover:text-white transition-all"
         >
-          {activeMode === 'menu' ? 'Quay lại' : 'Menu'}
+          {activeMode === 'menu' ? 'Thoát' : 'Quay lại'}
         </button>
       </div>
 
@@ -938,16 +951,6 @@ export default function Mimikara() {
           </div>
         )}
 
-        {activeMode === 'list' && (
-           <div className="fixed bottom-12 right-12 z-50">
-             <button 
-               onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-               className="w-14 h-14 bg-black text-white rounded-full flex items-center justify-center shadow-2xl hover:scale-110 transition-all active:scale-95"
-             >
-               <ChevronRight className="w-6 h-6 -rotate-90" />
-             </button>
-           </div>
-        )}
       </div>
 
       <style dangerouslySetInnerHTML={{

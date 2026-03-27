@@ -27,7 +27,6 @@ const Layout = () => (
     {/* Slogan - Top Right Corner Badge */}
     <div className="fixed right-6 top-6 z-[100] hidden lg:block pointer-events-none select-none">
       <div className="bg-white/80 backdrop-blur-md border border-slate-100 px-4 py-2 rounded-xl shadow-sm flex items-center gap-3">
-        <div className="w-1 h-1 rounded-full bg-black/20" />
         <p className="text-[9px] font-bold uppercase tracking-[0.1em] text-slate-400 italic whitespace-nowrap">
           "If you can dream it, you can do it"
         </p>

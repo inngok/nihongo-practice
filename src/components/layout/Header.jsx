@@ -37,9 +37,7 @@ export default function Header() {
       </nav>
 
       <div className="hidden md:flex items-center">
-        <Link to="/" className="w-8 h-8 rounded-full border border-black flex items-center justify-center text-[10px] font-black text-black hover:bg-black hover:text-white transition-all">
-          USER
-        </Link>
+        {/* Removed USER button */}
       </div>
     </header>
   );
