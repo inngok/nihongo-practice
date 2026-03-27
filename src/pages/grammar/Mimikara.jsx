@@ -405,7 +405,11 @@ const grammarData = [
   },
   {
     id: 78, unit: 8, pattern: "ように", meaning: "Để / Mong sao...", explanation: "Chỉ mục đích hoặc dùng khi cầu nguyện, mong mỏi một điều gì đó.",
-    examples: [{ jp: "忘れないように、メモをしておく。", vn: "Ghi chú lại để không bị quên." }],
+    examples: [
+      { jp: "忘れないように、メモをしておく。", vn: "Ghi chú lại để không bị quên." },
+      { jp: "合格できますように。", vn: "Cầu mong cho mình sẽ thi đỗ." },
+      { jp: "前に言ったように、ここは静かにしてください。", vn: "Như tôi đã nói trước đó, hãy giữ im lặng ở đây." }
+    ],
     quiz: { sentence: "風邪を引かない________、コートを着る。", answer: "ように", accepts: [], hint: "Để (mục đích)", translation: "Tôi mặc áo khoác để không bị cảm." }
   },
   {
@@ -506,12 +510,15 @@ const grammarData = [
   {
     id: 98, unit: 9, pattern: "てならない", meaning: "Rất... (Tự nhiên cảm thấy)", explanation: "Cảm xúc tự nhiên dâng trào (thường tiêu cực, văn trang trọng).",
     examples: [{ jp: "国の家族のことが心配でならない。", vn: "Tôi vô cùng lo lắng cho gia đình ở quê." }],
-    quiz: { sentence: "面接の結果가 기쁘다면.", answer: "てならない", accepts: [], hint: "Vô cùng...", translation: "Tôi vô cùng bận tâm về kết quả của buổi phỏng vấn." }
+    quiz: { sentence: "面接の結果が気になっ________。", answer: "てならない", accepts: [], hint: "Vô cùng (văn nói trang trọng)", translation: "Tôi vô cùng bận tâm về kết quả của buổi phỏng vấn." }
   },
   {
-    id: 99, unit: 10, pattern: "とか", meaning: "Ví dụ như là / Hay là", explanation: "Liệt kê ví dụ, gợi ý hoặc không muốn khẳng định chắc chắn.",
-    examples: [{ jp: "休日は映画を見るとか、買い物に行くとかして過ごします。", vn: "Ngày nghỉ tôi thường xem phim hoặc đi mua sắm." }],
-    quiz: { sentence: "休みの日は、本を読む________、音楽を聞く________しています。", answer: "とか", accepts: [], hint: "Liệt kê ví dụ", translation: "Vào ngày nghỉ tôi thường đọc sách hay là nghe nhạc." }
+    id: 99, unit: 10, pattern: "とか", meaning: "Ví dụ như là / Nghe nói là... nên", explanation: "Dùng để liệt kê ví dụ hoặc diễn tả một lý do nghe loáng thoáng, không chắc chắn (thường đi với とかで).",
+    examples: [
+      { jp: "休日は映画を見るとか、買い物に行くとかして過ごします。", vn: "Ngày nghỉ tôi thường xem phim hoặc đi mua sắm." },
+      { jp: "息子さんは塾だとかで、今日は不参加です。", vn: "Vì nghe nói con trai bận đi học thêm hay sao đó nên hôm nay không tham gia." }
+    ],
+    quiz: { sentence: "彼は風邪を引いた________で、今日は欠席です。", answer: "とか", accepts: [], hint: "Cụm 'とかで' (Nghe nói là... nên)", translation: "Vì nghe nói là anh ấy bị cảm nên hôm nay vắng mặt." }
   },
   {
     id: 100, unit: 10, pattern: "だけ", meaning: "Chỉ / Mức tối đa có thể", explanation: "Biểu thị sự giới hạn hoặc làm đến mức cao nhất (好きなだけ).",
@@ -595,6 +602,7 @@ export default function Mimikara() {
   const activeData = useMemo(() =>
     selectedUnit === 'all' ? grammarData : grammarData.filter(item => item.unit === selectedUnit),
     [selectedUnit]);
+
 
   // Gesture Handlers
   const onTouchStart = (e) => {
@@ -720,6 +728,27 @@ export default function Mimikara() {
       if (!feedback) setShowHint(prev => !prev);
     }
   }, [feedback, checkAnswer, handleNext]);
+
+  // Global Keyboard Navigation
+  useEffect(() => {
+    const handleGlobalKey = (e) => {
+      // Flashcard Mode
+      if (activeMode === 'flashcard') {
+        if (e.key === 'ArrowRight') handleNext();
+        if (e.key === 'ArrowLeft') currentIndex > 0 && (setCurrentIndex(currentIndex - 1), setIsFlipped(false));
+        if (e.key === ' ' || e.code === 'Space' || e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+          e.preventDefault();
+          setIsFlipped(f => !f);
+        }
+      } 
+      // Quiz Mode (Navigation only when feedback exists)
+      else if (activeMode === 'quiz' && feedback) {
+        if (e.key === 'Enter') handleNext();
+      }
+    };
+    window.addEventListener('keydown', handleGlobalKey);
+    return () => window.removeEventListener('keydown', handleGlobalKey);
+  }, [activeMode, currentIndex, feedback, handleNext]);
 
   // --- RENDERING STUDY VIEW (MIMIKARA) ---
   return (
@@ -873,36 +902,62 @@ export default function Mimikara() {
 
             {activeMode === 'flashcard' ? (
               <div
-                className="flex-grow flex flex-col items-center justify-center py-12"
-                onClick={() => setIsFlipped(!isFlipped)}
+                className="flex-grow flex flex-col items-center justify-center py-6 md:py-12 w-full"
               >
-                <div className={`w-full max-w-3xl aspect-[16/10] md:aspect-[16/9] border-2 border-slate-200 flex flex-col items-center justify-center p-6 md:p-12 text-center cursor-pointer transition-all shadow-sm hover:shadow-md ${isFlipped ? 'bg-white border-black' : 'bg-white'}`}>
-                  {!isFlipped ? (
-                    <>
-                      <h2 className="text-3xl md:text-5xl font-bold mb-4 italic text-black">{activeData[currentIndex].pattern}</h2>
-                      <p className="text-[10px] font-bold tracking-[0.2em] text-slate-400 uppercase">Nhấn để xem nghĩa</p>
-                    </>
-                  ) : (
-                    <div className="animate-in fade-in duration-300 w-full px-4">
-                      <div className="mb-10">
-                        <h3 className="text-2xl md:text-4xl font-black mb-3 italic text-black tracking-tighter">{activeData[currentIndex].meaning}</h3>
-                        <p className="text-slate-500 text-xs md:text-sm max-w-md mx-auto font-medium leading-relaxed">{activeData[currentIndex].explanation}</p>
-                      </div>
-
-                      <div className="bg-slate-50 p-8 md:p-10 rounded-[2.5rem] border border-slate-100 max-w-xl mx-auto text-left relative overflow-hidden group hover:border-black transition-all">
-                        <div className="absolute top-0 right-0 p-6 opacity-[0.05] group-hover:opacity-10 transition-opacity">
-                          <BookOpen className="w-12 h-12 text-black" />
+                <div 
+                  className="group perspective w-full max-w-3xl aspect-[16/10] md:aspect-[16/9] min-h-[400px] md:min-h-[500px] cursor-pointer"
+                  onClick={() => setIsFlipped(!isFlipped)}
+                >
+                  <div className={`relative w-full h-full duration-700 preserve-3d shadow-[0_30px_60px_-15px_rgba(0,0,0,0.05)] rounded-[3rem] ${isFlipped ? 'rotate-y-180' : ''}`}>
+                    
+                    {/* FRONT SIDE */}
+                    <div className="absolute inset-0 backface-hidden bg-white border-2 border-slate-100 rounded-[3rem] flex flex-col items-center justify-center p-8 md:p-12 text-center">
+                      <div className="space-y-4 md:space-y-8">
+                        <p className="text-[9px] md:text-[10px] font-black tracking-[0.4em] text-slate-300 uppercase">Cấu trúc ngữ pháp</p>
+                        <h2 className="text-4xl md:text-7xl font-black italic text-slate-950 tracking-tighter leading-tight break-words px-2">
+                          {activeData[currentIndex].pattern}
+                        </h2>
+                        <div className="pt-6 md:pt-10">
+                          <span className="px-5 py-2 rounded-full border border-slate-100 text-[9px] md:text-[10px] font-black tracking-widest text-slate-400 group-hover:border-slate-900 group-hover:text-slate-900 transition-all uppercase">
+                            Nhấn để xem nghĩa
+                          </span>
                         </div>
-                        <p className="text-[10px] font-black text-slate-300 uppercase tracking-[0.3em] mb-6">Ví dụ minh họa</p>
-                        <p className="text-xl md:text-2xl font-bold italic leading-tight text-black mb-3 tracking-tight">
-                          {activeData[currentIndex].examples[0].jp}
-                        </p>
-                        <p className="text-xs md:text-sm text-slate-400 font-medium italic">
-                          {activeData[currentIndex].examples[0].vn}
-                        </p>
                       </div>
                     </div>
-                  )}
+
+                    {/* BACK SIDE */}
+                    <div className="absolute inset-0 backface-hidden bg-white border-2 border-slate-900 rounded-[3rem] rotate-y-180 flex flex-col items-center p-6 md:p-10 text-center overflow-y-auto overflow-x-hidden pt-12 md:pt-20">
+                      <div className="w-full">
+                        <div className="mb-6 md:mb-10">
+                          <h3 className="text-xl md:text-4xl font-black mb-2 md:mb-4 italic text-slate-900 tracking-tighter leading-tight">
+                            {activeData[currentIndex].meaning}
+                          </h3>
+                          <div className="w-12 md:w-16 h-1 bg-slate-950 mx-auto mb-4 rounded-full" />
+                          <p className="text-slate-500 text-xs md:text-base max-w-lg mx-auto font-medium leading-[1.6] italic px-4">
+                            {activeData[currentIndex].explanation}
+                          </p>
+                        </div>
+
+                        <div className="space-y-3 w-full max-w-xl mx-auto text-left mb-8">
+                          {activeData[currentIndex].examples.map((ex, idx) => (
+                            <div key={idx} className="bg-slate-50 p-5 md:p-7 rounded-[1.5rem] md:rounded-[2rem] border border-slate-100 transition-all duration-500">
+                              <div className="flex flex-col gap-2 md:gap-3">
+                                <p className="text-base md:text-lg font-bold text-slate-900 leading-snug tracking-tight">
+                                  {ex.jp}
+                                </p>
+                                <div className="w-6 h-px bg-slate-200" />
+                                <p className="text-[11px] md:text-sm text-slate-400 font-bold italic leading-relaxed">
+                                  {ex.vn}
+                                </p>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                        
+                        <p className="text-[9px] font-black text-slate-200 uppercase tracking-widest text-center italic mb-4">NHẤN ĐỂ QUAY LẠI</p>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             ) : (
@@ -968,19 +1023,21 @@ export default function Mimikara() {
               </div>
             )}
 
-            <div className="mt-auto flex justify-between gap-4 py-8">
+            <div className="mt-auto flex justify-between items-center gap-4 md:gap-8 py-10 w-full max-w-3xl mx-auto px-2">
               <button
                 onClick={() => { currentIndex > 0 && (setCurrentIndex(currentIndex - 1), setIsFlipped(false)); }}
                 disabled={currentIndex === 0}
-                className="flex-1 py-4 border border-black text-xs font-bold uppercase tracking-widest disabled:opacity-20 hover:bg-black hover:text-white transition-all"
+                className="flex-1 py-4 md:py-6 border border-slate-200 rounded-2xl text-[10px] md:text-xs font-black uppercase tracking-[0.2em] md:tracking-[0.4em] text-slate-400 disabled:opacity-30 hover:border-slate-900 hover:text-slate-900 transition-all active:scale-95 flex items-center justify-center gap-2"
               >
+                <ChevronLeft className="w-4 h-4" />
                 Trước
               </button>
               <button
                 onClick={handleNext}
-                className="flex-1 py-4 bg-black text-white text-xs font-bold uppercase tracking-widest hover:bg-slate-800 transition-all"
+                className="flex-1 py-4 md:py-6 bg-slate-950 text-white rounded-2xl text-[10px] md:text-xs font-black uppercase tracking-[0.2em] md:tracking-[0.4em] hover:bg-black hover:shadow-2xl hover:shadow-slate-200 active:scale-95 transition-all flex items-center justify-center gap-2"
               >
-                {currentIndex === activeData.length - 1 ? 'Xong' : 'Sau'}
+                {currentIndex === activeData.length - 1 ? 'Hoàn thành' : 'Tiếp theo'}
+                <ChevronRight className="w-4 h-4" />
               </button>
             </div>
           </div>
@@ -990,8 +1047,8 @@ export default function Mimikara() {
 
       <style dangerouslySetInnerHTML={{
         __html: `
-        .perspective-2000 { perspective: 2000px; }
-        .transform-style-3d { transform-style: preserve-3d; }
+        .perspective { perspective: 2000px; }
+        .preserve-3d { transform-style: preserve-3d; }
         .backface-hidden { backface-visibility: hidden; }
         .rotate-y-180 { transform: rotateY(180deg); }
         @keyframes bounce-subtle { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }

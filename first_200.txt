@@ -1,0 +1,200 @@
+﻿import React, { useState, useMemo, useEffect, useCallback, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
+
+// Import data
+const soumatomeData = {
+  1: { // Tuần 1
+    1: { // Ngày 1
+      title: "Nhà bếp – phòng khách",
+      japanese: "キッチンで / リ        { kanji: "台所", kana: "だいどころ", meaning: "nhà bếp" },
+        { kanji: "電子レンジ", kana: "でんしレンジ", meaning: "lò vi sóng" },
+        { kanji: "お茶わん", kana: "おちゃわん", meaning: "chén" },
+        { kanji: "ワイングラス", kana: "ワイングラス", meaning: "ly uống rượu" },
+        { kanji: "コーヒーカップ", kana: "コーヒーカップ", meaning: "tách cà phê" },
+        { kanji: "茶わん", kana: "ちゃわん", meaning: "ly, cốc uống trà" },
+        { kanji: "湯飲み", kana: "ゆのみ", meaning: "tách trà" },
+        { kanji: "ガスレンジ", kana: "ガスレンジ", meaning: "bếp ga" },
+        { kanji: "ガスコンロ", kana: "ガスコンロ", meaning: "bếp ga di động, bếp gas" },
+        { kanji: "ガラスのコップ", kana: "ガラスのコップ", meaning: "ly thủy tinh" },
+        { kanji: "レバー", kana: "レバー", meaning: "cần gạt số, cần điều khiển" },
+        { kanji: "流し", kana: "ながし", meaning: "bồn, chậu rửa" },
+        { kanji: "居間", kana: "いま", meaning: "phòng khách" },
+        { kanji: "リビング", kana: "リビング", meaning: "phòng khách" },
+        { kanji: "窓ガラス", kana: "まどガラス", meaning: "cửa kính; kính cửa sổ" },
+        { kanji: "雨戸", kana: "あまど", meaning: "cửa sập, cửa che mưa, cửa chớp" },
+        { kanji: "網戸", kana: "あみど", meaning: "cửa lưới" },
+        { kanji: "天井", kana: "てんじょう", meaning: "trần nhà" },
+        { kanji: "床", kana: "ゆか", meaning: "sàn nhà" },
+        { kanji: "コンセント", kana: "コンセント", meaning: "ổ cắm điện" },
+        { kanji: "コード", kana: "コード", meaning: "dây dẫn" },
+        { kanji: "エアコン", kana: "エアコン", meaning: "máy điều hòa" },
+        { kanji: "ヒーター", kana: "ヒーター", meaning: "máy sưởi, lò sưởi" },
+        { kanji: "カーペット", kana: "カーペット", meaning: "tấm thảm" },
+        { kanji: "蛇口", kana: "じゃぐち", meaning: "vòi nước" },
+        { kanji: "水道の蛇口をひねる", kana: "すいどうのじゃぐちをひねる", meaning: "mở vòi nước" },
+        { kanji: "水が凍る", kana: "みずがこおる", meaning: "nước đông lạnh" },
+        { kanji: "氷になる", kana: "こおりになる", meaning: "nước đá, thành nước đá" },
+        { kanji: "冷凍して保存する", kana: "れいとうしてほぞんする", meaning: "làm lạnh, làm đông sau đó đem bảo quản" },
+        { kanji: "残り物を温める", kana: "のこりものをあたためる", meaning: "làm nóng đồ ăn thừa" },
+        { kanji: "ビールを冷やす", kana: "ビールをひやす", meaning: "làm lạnh bia" },
+        { kanji: "ビールが冷えている", kana: "ビールがひえている", meaning: "bia được làm lạnh" },
+        { kanji: "エアコンのリモコン", kana: "エアコンのリモコン", meaning: "điều khiển điều hòa" },
+        { kanji: "スイッチ", kana: "スイッチ", meaning: "công tắc" },
+        { kanji: "電源を入れる", kana: "でんげんをいれる", meaning: "mở điện, bật nguồn điện" },
+        { kanji: "電源を切る", kana: "でんげんをきる", meaning: "tắt điện, cắt nguồn điện" },
+        { kanji: "じゅうたんを敷く", kana: "じゅうたんをしく", meaning: "trải thảm" },
+        { kanji: "暖房をつける", kana: "だんぼうをつける", meaning: "bật lò sưởi" },
+        { kanji: "冷房が効いている", kana: "れいぼうがきいている", meaning: "máy lạnh đang hoạt động" },
+        { kanji: "日当たりがいい", kana: "ひあたりがいい", meaning: "có ánh nắng chiều vào" },
+        { kanji: "日当たりが悪い", kana: "ひあたりがわるい", meaning: "không có ánh nắng chiều vào" },�n điện" },
+        { kanji: "電源を切る", kana: "den gen o ki ru", meaning: "tắt điện, cắt nguồn điện" },
+        { kanji: "じゅうたんを敷く", kana: "juu tan o shi ku", meaning: "trải thảm" },
+        { kanji: "暖房をつける", kana: "dan boo o tsu ke ru", meaning: "bật lò sưởi" },
+        { kanji: "冷房が効いている", kana: "rei boo ga kii te i ru", meaning: "máy lạnh đang hoạt động" },
+        { kanji: "日当たりがいい", kana: "hi a ta ri ga ii", meaning: "có ánh nắng chiều vào" },
+        { kanji: "日当たりが悪い", kana: "hi a ta ri ga wa rui", meaning: "không có ánh nắng chiều vào" },
+      ]
+    }
+  }
+};
+
+export default function Soumatome() {
+  const navigate = useNavigate();
+  const [activeWeek, setActiveWeek] = useState(1);
+  const [activeDay, setActiveDay] = useState(1);
+  const [viewMode, setViewMode] = useState('list'); // 'list', 'flashcard', 'quiz'
+
+  // Flashcard State
+  const [cardIndex, setCardIndex] = useState(0);
+  const [isFlipped, setIsFlipped] = useState(false);
+
+  // Quiz State
+  const [quizData, setQuizData] = useState([]);
+  const [quizIndex, setQuizIndex] = useState(0);
+  const [userInput, setUserInput] = useState('');
+  const [feedback, setFeedback] = useState(null);
+  const [score, setScore] = useState(0);
+  const [showHint, setShowHint] = useState(false);
+  const inputRef = useRef(null);
+
+  const currentData = useMemo(() => {
+    return soumatomeData[activeWeek]?.[activeDay] || { title: '', words: [] };
+  }, [activeWeek, activeDay]);
+
+  // Actions
+  const startQuiz = useCallback(() => {
+    const shuffled = [...currentData.words].sort(() => Math.random() - 0.5);
+    setQuizData(shuffled);
+    setQuizIndex(0);
+    setScore(0);
+    setUserInput('');
+    setFeedback(null);
+    setShowHint(false);
+    setViewMode('quiz');
+  }, [currentData]);
+
+  // Keyboard navigation
+  useEffect(() => {
+    const handleKey = (e) => {
+      if (viewMode === 'flashcard') {
+        if (e.code === 'ArrowRight') nextCard();
+        if (e.code === 'ArrowLeft') prevCard();
+        if (e.code === 'Space') { e.preventDefault(); setIsFlipped(f => !f); }
+      } else if (viewMode === 'quiz' && !feedback) {
+        if (e.key === 'Enter') checkAnswer();
+      } else if (viewMode === 'quiz' && feedback) {
+        if (e.key === 'Enter') nextQuiz();
+      }
+    };
+    window.addEventListener('keydown', handleKey);
+    return () => window.removeEventListener('keydown', handleKey);
+  }, [viewMode, cardIndex, feedback, userInput]);
+
+  // Flashcard logic
+  const nextCard = () => { if (cardIndex < currentData.words.length - 1) { setCardIndex(i => i + 1); setIsFlipped(false); } };
+  const prevCard = () => { if (cardIndex > 0) { setCardIndex(i => i - 1); setIsFlipped(false); } };
+
+  // Quiz logic
+  const checkAnswer = () => {
+    const answer = quizData[quizIndex].meaning.toLowerCase().trim();
+    if (userInput.toLowerCase().trim() === answer) {
+      setFeedback('correct');
+      setScore(s => s + 1);
+    } else {
+      setFeedback('incorrect');
+    }
+  };
+  const nextQuiz = () => {
+    if (quizIndex < quizData.length - 1) {
+      setQuizIndex(i => i + 1);
+      setUserInput('');
+      setFeedback(null);
+      setShowHint(false);
+    } else {
+      alert(`Xong! Bạn đúng ${score + (feedback === 'correct' ? 1 : 0)}/${quizData.length}`);
+      setViewMode('list');
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-white flex flex-col items-center pt-44 md:pt-32 pb-20 px-4 md:px-6 font-sans relative overflow-hidden text-slate-900">
+      
+      {/* Background Watermark */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[25vw] font-black text-slate-100 opacity-[0.03] pointer-events-none select-none leading-none z-0 whitespace-nowrap">
+        SOUMATOME
+      </div>
+
+      <div className="w-full max-w-5xl relative z-10">
+        
+        {/* Navigation & Header */}
+        <div className="mb-12">
+          <button 
+            onClick={() => navigate('/vocabulary')}
+            className="text-[10px] font-bold uppercase tracking-[0.4em] text-slate-400 hover:text-black transition-colors mb-8 decoration-slate-100"
+          >
+            Danh sách từ vựng
+          </button>
+          
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-12">
+            <div className="space-y-6 flex-grow">
+              <div className="flex flex-col gap-4">
+                <span className="text-slate-300 font-bold text-[10px] tracking-[0.3em] uppercase">Chọn tuần học</span>
+                <div className="flex gap-2 flex-wrap text-nowrap">
+                   {[1, 2, 3, 4, 5, 6].map(week => (
+                     <button
+                       key={week}
+                       onClick={() => { setActiveWeek(week); setViewMode('list'); }}
+                       className={`px-4 py-2 border ${activeWeek === week ? 'bg-black text-white border-black shadow-lg text-nowrap' : 'border-slate-100 text-slate-400 hover:border-black hover:text-black'} text-xs font-bold transition-all duration-300`}
+                     >
+                       TUẦN {week}
+                     </button>
+                   ))}
+                </div>
+              </div>
+
+              <div className="flex flex-col gap-2">
+                <span className="text-slate-300 font-bold text-[10px] tracking-[0.3em] uppercase">Chọn ngày</span>
+                <div className="flex gap-2 flex-wrap">
+                   {[1, 2, 3, 4, 5, 6, 7].map(day => (
+                     <button
+                       key={day}
+                       onClick={() => { setActiveDay(day); setViewMode('list'); }}
+                       className={`px-3 py-1 text-[10px] font-black tracking-widest uppercase rounded-full transition-all ${activeDay === day ? 'bg-white text-black border border-black shadow-sm' : 'bg-slate-50 text-slate-400 hover:bg-slate-100'}`}
+                     >
+                       Ngày {day}
+                     </button>
+                   ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Mode Switcher */}
+            <div className="flex bg-slate-50 p-1.5 rounded-2xl border border-slate-100 shadow-sm self-start md:self-end whitespace-nowrap">
+              <button onClick={() => setViewMode('list')} className={`px-6 py-2.5 rounded-xl text-[10px] font-bold transition-all ${viewMode === 'list' ? 'bg-black text-white shadow-md' : 'text-slate-400 hover:text-slate-600'}`}>Danh sách</button>
+              <button onClick={() => { setViewMode('flashcard'); setCardIndex(0); setIsFlipped(false); }} className={`px-6 py-2.5 rounded-xl text-[10px] font-bold transition-all ${viewMode === 'flashcard' ? 'bg-black text-white shadow-md' : 'text-slate-400 hover:text-slate-600'}`}>Flashcard</button>
+              <button onClick={startQuiz} className={`px-6 py-2.5 rounded-xl text-[10px] font-bold transition-all ${viewMode === 'quiz' ? 'bg-black text-white shadow-md' : 'text-slate-400 hover:text-slate-600'}`}>Luyện tập</button>
+            </div>
+          </div>
+        </div>
+
+        {/* STUDY VIEWS */}

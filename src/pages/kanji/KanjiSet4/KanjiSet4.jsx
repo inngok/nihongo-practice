@@ -53,7 +53,7 @@ export default function KanjiSet4() {
       if (viewMode === 'flashcard') {
         if (e.code === 'ArrowRight') handleNext();
         if (e.code === 'ArrowLeft') handlePrev();
-        if (e.code === 'Space') {
+        if (e.code === 'Space' || e.code === 'ArrowUp' || e.code === 'ArrowDown') {
           e.preventDefault();
           setIsFlipped(prev => !prev);
         }
