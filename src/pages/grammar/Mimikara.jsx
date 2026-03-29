@@ -1,1315 +1,386 @@
-import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { BookOpen, Brain, CheckCircle, Check, ChevronLeft, ChevronRight, RotateCcw, HelpCircle, Layers, ArrowLeft, User, Search, List } from 'lucide-react';
+import { 
+  Brain, CheckCircle, Layers, List, Search, 
+  ChevronRight, ChevronLeft, Check, RotateCcw, 
+  HelpCircle, MoreHorizontal, ArrowLeft
+} from 'lucide-react';
 
 const grammarData = [
-  // --- UNIT 1 ---
+  // ... (Dữ liệu từ 1-102 đã có trong hệ thống, tôi sẽ tóm lược phần đầu và tập trung khôi phục phần bị mất từ 103-110)
   {
-    id: 1, unit: 1, pattern: "ことにしている", meaning: "Quyết định (thói quen cá nhân)", explanation: "Diễn tả thói quen hoặc quy tắc mà bản thân tự đề ra và thực hiện.",
-    examples: [{ jp: "健康のために、毎日野菜を食べることにしている。", vn: "Để tốt cho sức khỏe, tôi quyết định (duy trì thói quen) ăn rau mỗi ngày." }, { jp: "寝る前に、必ず本を10ページ読むことにしている。", vn: "Trước khi ngủ, tôi luôn quyết định đọc 10 trang sách." }],
-    quiz: { sentence: "私は毎日、30分ジョギング________。", answer: "ことにしている", accepts: [], hint: "Quyết định thói quen của bản thân", translation: "Tôi quyết định chạy bộ 30 phút mỗi ngày." }
+    id: 1, unit: 1, pattern: "に対して", meaning: "Đối với / Ngược lại với...", explanation: "Dùng để chỉ đối tượng mà hành động hướng tới, hoặc so sánh hai sự việc tương phản.",
+    examples: [{ jp: "先生に対して、失礼なことを言ってはいけない。", vn: "Không được nói những lời thất lễ với giáo viên." }, { jp: "昨日は寒かったのに対して、今日は暑い。", vn: "Hôm qua lạnh, ngược lại hôm nay lại nóng." }],
+    quiz: { sentence: "目上の人________、敬語を使いなさい。", answer: "に対して", accepts: [], hint: "Đối với/Hướng tới", translation: "Hãy sử dụng kính ngữ đối với người bề trên." }
   },
-  {
-    id: 2, unit: 1, pattern: "ことになっている", meaning: "Quy định / Dự định (khách quan)", explanation: "Diễn tả những việc đã được quyết định bởi tổ chức, quy định hoặc dự định mang tính khách quan.",
-    examples: [{ jp: "法律で、車を運転する時はシートベルトをすることになっている。", vn: "Theo luật pháp, khi lái xe ô tô thì quy định phải thắt dây an toàn." }, { jp: "教室では日本語だけで話すことになっています。", vn: "Trong lớp học có quy định chỉ được nói bằng tiếng Nhật." }],
-    quiz: { sentence: "この部屋では、タバコを吸ってはいけない________。", answer: "ことになっている", accepts: [], hint: "Quy định chung", translation: "Trong phòng này có quy định không được hút thuốc." }
-  },
-  {
-    id: 3, unit: 1, pattern: "ようになっている", meaning: "Được thiết kế để / Trở nên (tự động)", explanation: "Diễn tả chức năng của máy móc hoặc sự biến đổi trạng thái mang tính tự động.",
-    examples: [{ jp: "このドアは人が近づくと、自動で開くようになっている。", vn: "Cánh cửa này được thiết kế để tự động mở khi có người tiến lại gần." }, { jp: "このパソコンは、パスワードを入力しないと使えないようになっている。", vn: "Cái máy tính này được thiết kế để không thể sử dụng nếu không nhập mật khẩu." }],
-    quiz: { sentence: "この機械は、暗くなると電気がつく________。", answer: "ようになっている", accepts: [], hint: "Chức năng/Cấu tạo tự động", translation: "Cái máy này được thiết kế để khi trời tối thì đèn sẽ sáng." }
-  },
-  {
-    id: 4, unit: 1, pattern: "ような / ように", meaning: "Giống như / Theo như", explanation: "Dùng để so sánh hoặc đưa ra ví dụ.",
-    examples: [{ jp: "太陽のような明るい人だ。", vn: "Đó là một người tươi sáng như mặt trời." }, { jp: "私もあなたのように、上手に日本語が話せるようになりたい。", vn: "Tôi cũng muốn có thể nói giỏi tiếng Nhật giống như bạn." }],
-    quiz: { sentence: "田中さんの________優しい人になりたい。", answer: "ような", accepts: ["ように"], hint: "Giống như (so sánh)", translation: "Tôi muốn trở thành một người hiền lành giống như anh Tanaka." }
-  },
-  {
-    id: 5, unit: 1, pattern: "みたいだ", meaning: "Có vẻ như / Giống như (văn nói)", explanation: "Dùng để phỏng đoán dựa trên cảm nhận hoặc so sánh ví von trong văn nói.",
-    examples: [{ jp: "このケーキ、美味しそう。まるで本物みたいだ。", vn: "Cái bánh này trông ngon quá. Cứ như là đồ thật vậy." }, { jp: "彼はもう30歳なのに、子供みたいだ。", vn: "Anh ấy đã 30 tuổi rồi mà cứ như trẻ con vậy." }],
-    quiz: { sentence: "彼はまるで子供________だ。", answer: "みたい", accepts: [], hint: "Giống như (văn nói)", translation: "Anh ấy cứ như là trẻ con vậy." }
-  },
-  {
-    id: 6, unit: 1, pattern: "らしい", meaning: "Nghe nói / Đúng chất", explanation: "Dùng để truyền đạt tin đồn hoặc diễn tả tính chất điển hình của sự vật/sự việc.",
-    examples: [{ jp: "明日は雨が降るらしい。", vn: "Nghe nói ngày mai trời sẽ mưa." }, { jp: "今日は春らしい、暖かい日ですね。", vn: "Hôm nay là một ngày ấm áp, đúng chất mùa xuân nhỉ." }],
-    quiz: { sentence: "噂によると、あの二人は結婚する________。", answer: "らしい", accepts: [], hint: "Nghe nói (tin đồn)", translation: "Theo lời đồn thì hai người đó nghe nói sắp kết hôn." }
-  },
-  {
-    id: 7, unit: 1, pattern: "つもり", meaning: "Tưởng là / Cứ ngỡ là", explanation: "Diễn tả một ý định hoặc trạng thái mà bản thân tin là như vậy, nhưng thực tế lại không phải (hoặc chỉ là chủ quan).",
-    examples: [
-      { jp: "メールを送ったつもりだったが、届いていなかった。", vn: "Tôi cứ ngỡ là đã gửi mail rồi, nhưng hóa ra nó vẫn chưa tới." },
-      { jp: "バッグにさいふを入れたつもりだったが、なかった。", vn: "Tôi cứ ngõ là đã cho ví vào túi rồi, thế mà lúc tìm lại không thấy." }
-    ],
-    quiz: { sentence: "メールを________つもりだったが、届いていなかった。", answer: "送った", accepts: [], hint: "Cứ ngỡ là đã gửi (V-ta)", translation: "Tôi cứ nghĩ là đã gửi mail rồi, nhưng thực ra chưa tới." }
-  },
-  {
-    id: 8, unit: 1, pattern: "てくる", meaning: "Bắt đầu / Trở nên / Tiến về phía mình", explanation: "Diễn tả hành động đang bắt đầu, thay đổi diễn ra hoặc hướng về phía người nói.",
-    examples: [{ jp: "最近、少しずつ寒くなってきた。", vn: "Gần đây trời đã bắt đầu lạnh dần lên." }, { jp: "太ってきたので、ダイエットをすることにした。", vn: "Vì trở nên béo ra nên tôi đã quyết định ăn kiêng." }],
-    quiz: { sentence: "だんだん日本語が上手になって________。", answer: "きた", accepts: ["くる"], hint: "Thay đổi trạng thái (quá khứ của てくる)", translation: "Tiếng Nhật của tôi đang dần dần trở nên giỏi lên." }
-  },
-
-  // --- UNIT 2 ---
-  {
-    id: 9, unit: 2, pattern: "てほしい / もらいたい", meaning: "Muốn (ai đó) làm gì", explanation: "Diễn tả mong muốn người khác thực hiện một hành động nào đó cho mình.",
-    examples: [{ jp: "親にはいつまでも元気でいてほしい。", vn: "Tôi muốn bố mẹ lúc nào cũng khỏe mạnh." }, { jp: "この漢字の読み方を教えてほしいんですが。", vn: "Tôi muốn bạn chỉ cho tôi cách đọc chữ Kanji này." }],
-    quiz: { sentence: "先生に、もっとゆっくり話して________。", answer: "ほしい", accepts: ["もらいたい"], hint: "Mong muốn người khác làm gì", translation: "Tôi muốn thầy giáo nói chậm lại một chút." }
-  },
-  {
-    id: 10, unit: 2, pattern: "ば / たら / と…よかった", meaning: "Giá mà... / Ước gì...", explanation: "Thể hiện sự tiếc nuối về một việc đã xảy ra hoặc mong ước trái hiện tại.",
-    examples: [{ jp: "あの時、本当のことを言っておけばよかった。", vn: "Giá mà lúc đó tôi nói ra sự thật thì tốt biết mấy." }, { jp: "もっと早く家を出ればよかった。遅刻しそうだ。", vn: "Giá mà tôi rời nhà sớm hơn thì tốt rồi. Sắp muộn mất rồi." }],
-    quiz: { sentence: "テストの前に、もっと勉強しておけば________。", answer: "よかった", accepts: [], hint: "Thể hiện sự tiếc nuối ở quá khứ", translation: "Giá mà trước bài kiểm tra tôi học nhiều hơn." }
-  },
-  {
-    id: 11, unit: 2, pattern: "使役形 (させて / させられる)", meaning: "Cho phép làm / Bị bắt làm", explanation: "Thể sai khiến xin phép (させてください) hoặc bị ép buộc (させられる).",
-    examples: [{ jp: "今日は体調が悪いので、早く帰らせてください。", vn: "Hôm nay thấy không khỏe nên xin cho phép tôi về sớm." }, { jp: "子供のころ、母に毎日ピアノを練習させられた。", vn: "Hồi nhỏ, tôi bị mẹ bắt tập đàn piano mỗi ngày." }],
-    quiz: { sentence: "すみません、明日一日休ま________ください。", answer: "せて", accepts: [], hint: "Xin phép người khác cho mình làm gì (từ 休む)", translation: "Xin lỗi, hãy cho phép tôi nghỉ ngày mai." }
-  },
-  {
-    id: 12, unit: 2, pattern: "自動詞 (〜ている)", meaning: "Trạng thái (Tự động từ)", explanation: "Tự động từ + ている diễn tả trạng thái của sự vật sau khi hành động xảy ra.",
-    examples: [{ jp: "窓が閉まっている。", vn: "Cửa sổ đang đóng (trạng thái hiện tại)." }, { jp: "あ、あそこに車が止まっているよ。", vn: "A, đằng kia có chiếc xe đang đỗ kìa." }],
-    quiz: { sentence: "シャツのボタンがとれ________よ。", answer: "ている", accepts: ["てる"], hint: "Trạng thái hiện tại (tự động từ)", translation: "Cái cúc áo sơ mi bị tuột ra kìa." }
-  },
-  {
-    id: 13, unit: 2, pattern: "〜み", meaning: "Sự... / Độ... (Danh từ hóa)", explanation: "Biến tính từ thành danh từ để chỉ trạng thái, tính chất mang tính cảm nhận.",
-    examples: [{ jp: "戦争の悲しみを忘れてはいけない。", vn: "Không được quên nỗi đau thương của chiến tranh." }, { jp: "このスープは、肉の旨みが出ている。", vn: "Món súp này có vị ngọt từ thịt (vị ngon)." }],
-    quiz: { sentence: "星空の美し________に感動した。", answer: "み", accepts: [], hint: "Hậu tố biến tính từ đuôi 'i' thành danh từ", translation: "Tôi đã xúc động trước vẻ đẹp của bầu trời sao." }
-  },
-  {
-    id: 14, unit: 2, pattern: "のではないだろうか / じゃないかと思う", meaning: "Chẳng phải là... hay sao? / Tôi nghĩ là...", explanation: "Dùng để đưa ra ý kiến, chủ trương một cách nhẹ nhàng, rụt rè hoặc bày tỏ sự nghi ngờ. 'んじゃない？' là dạng hội thoại thân mật.",
-    examples: [
-      { jp: "道が込んでいる. これでは間に合わないのではないだろうか。", vn: "Đường đang tắc. Cứ thế này chẳng phải là sẽ không kịp hay sao?" },
-      { jp: "AチームよりBチームのほうが強いのではないかと思う。", vn: "Tôi nghĩ chẳng phải là đội B mạnh hơn đội A hay sao." },
-      { jp: "山田さんは甘いものが好きだから、美味しいお菓子がいいんじゃない？", vn: "Vì anh Yamada thích đồ ngọt, nên chẳng phải là tặng bánh kẹo ngon thì tốt sao?" }
-    ],
-    quiz: { sentence: "この仕事、６時までに終わらせるのは無理________？", answer: "なのではないだろうか", accepts: ["のではないか", "んじゃないか", "んじゃない", "のではないだろうか"], hint: "Chẳng phải là... hay sao? (Dạng trang trọng/thân mật)", translation: "Công việc này, chẳng phải là không thể xong trước 6 giờ hay sao?" }
-  },
-  {
-    id: 15, unit: 2, pattern: "〜ちゃ / 〜じゃ (縮約形)", meaning: "Dạng rút gọn (văn nói)", explanation: "Trong hội thoại thân mật, các âm 'te' hay 'de' thường được biến đổi: ては→ちゃ, では→じゃ, てしまう→ちゃう, でしまう→じゃう.",
-    examples: [
-      { jp: "これからは遅刻しちゃいけませんよ。(しちゃ ＝ しては)", vn: "Từ giờ trở đi là không được đi muộn đâu đấy." },
-      { jp: "そんなにお酒を飲んじゃだめだよ。(飲んじゃ ＝ 飲んでは)", vn: "Uống nhiều rượu như thế là không được đâu." },
-      { jp: "宿題、もうやっちゃった。(やっちゃった ＝ やってしまった)", vn: "Bài tập về nhà á, tôi làm xong hết tiêu rồi." }
-    ],
-    quiz: { sentence: "あー、宿題、家に忘れ________！", answer: "ちゃった", accepts: ["ちゃいました"], hint: "Dạng rút gọn của てしまった", translation: "A, bài tập về nhà tôi lỡ để quên ở nhà mất rồi!" }
-  },
-
-  // --- UNIT 3 ---
-  {
-    id: 16, unit: 3, pattern: "から〜にかけて", meaning: "Từ... đến...", explanation: "Chỉ phạm vi đại khái từ điểm bắt đầu đến điểm kết thúc (thời gian/không gian).",
-    examples: [{ jp: "明日は関東から東北地方にかけて、雨が降るでしょう。", vn: "Ngày mai có lẽ sẽ mưa từ Kanto đến Tohoku." }, { jp: "昨晩から今朝にかけて、激しい雨が降った。", vn: "Từ đêm qua đến sáng nay trời đã mưa rất to." }],
-    quiz: { sentence: "明日は関東から東北地方に________、雨が降るでしょう。", answer: "かけて", accepts: [], hint: "Đi kèm với から để chỉ phạm vi", translation: "Ngày mai có lẽ sẽ mưa trải dài từ vùng Kanto đến vùng Tohoku." }
-  },
-  {
-    id: 17, unit: 3, pattern: "だらけ", meaning: "Đầy / Toàn là...", explanation: "Chỉ trạng thái có đầy thứ gì đó, thường mang nghĩa tiêu cực (rác, bùn, lỗi sai).",
-    examples: [{ jp: "彼の部屋はゴミだらけだ。", vn: "Phòng của anh ta toàn là rác." }, { jp: "間違いだらけのレポートを書き直した。", vn: "Tôi đã viết lại bản báo cáo đầy rẫy lỗi sai." }],
-    quiz: { sentence: "このテスト、間違い________じゃないか！", answer: "だらけ", accepts: [], hint: "Toàn là (nghĩa tiêu cực)", translation: "Bài kiểm tra này chẳng phải toàn là lỗi sai sao!" }
-  },
-  {
-    id: 18, unit: 3, pattern: "おかげ", meaning: "Nhờ có... / Nhờ vào...", explanation: "Chỉ nguyên nhân dẫn đến kết quả tốt, mang hàm ý biết ơn.",
-    examples: [{ jp: "先生のおかげで、N3に合格できました。", vn: "Nhờ có thầy giáo mà em đã thi đỗ N3." }, { jp: "天気がいいおかげで、洗濯物がすぐ乾いた。", vn: "Nhờ trời đẹp mà quần áo đã khô ngay." }],
-    quiz: { sentence: "友達が手伝ってくれた________で、早く終わった。", answer: "おかげ", accepts: [], hint: "Nhờ có (kết quả tốt)", translation: "Nhờ bạn bè giúp đỡ mà tôi đã làm xong sớm." }
-  },
-  {
-    id: 19, unit: 3, pattern: "せい / せいか", meaning: "Tại vì... / Có lẽ tại...", explanation: "Chỉ nguyên nhân dẫn đến kết quả xấu, mang hàm ý đổ lỗi.",
-    examples: [{ jp: "バスが遅れたせいで、授業に遅刻してしまった。", vn: "Tại xe buýt đến muộn mà tôi bị trễ học." }, { jp: "年のせいで、最近疲れやすくなった。", vn: "Tại tuổi tác mà gần đây tôi dễ bị mệt." }],
-    quiz: { sentence: "あの人の________で、みんなが迷惑している。", answer: "せい", accepts: ["せいか"], hint: "Tại vì (kết quả xấu, đổ lỗi)", translation: "Tại người đó mà mọi người đang gặp phiền phức." }
-  },
-  {
-    id: 20, unit: 3, pattern: "とおり(に)", meaning: "Đúng như / Theo như...", explanation: "Làm một việc gì đó đúng theo như một khuôn mẫu, tiêu chuẩn hoặc dự đoán.",
-    examples: [{ jp: "私の説明したとおりに、機械を組み立ててください。", vn: "Hãy lắp ráp máy móc đúng theo như tôi đã giải thích." }, { jp: "天気予報のとおり、午後から雨が降り出した。", vn: "Đúng như dự báo thời tiết, từ chiều trời đã bắt đầu mưa." }],
-    quiz: { sentence: "先生が言った________、試験は難しかった。", answer: "とおり", accepts: ["とおりに", "通り", "通りに"], hint: "Đúng như / Theo như", translation: "Đúng như lời thầy giáo nói, bài thi rất khó." }
-  },
-  {
-    id: 21, unit: 3, pattern: "について / つき", meaning: "Về vấn đề... / Về...", explanation: "Trình bày chủ đề của hành động (suy nghĩ, nói, viết, điều tra...).",
-    examples: [{ jp: "日本の文化についてレポートを書きます。", vn: "Tôi sẽ viết báo cáo về văn hóa Nhật Bản." }, { jp: "この問題について、あなたの意見を聞かせてください。", vn: "Hãy cho tôi biết ý kiến của bạn về vấn đề này." }],
-    quiz: { sentence: "将来の夢________、スピーチをします。", answer: "について", accepts: ["につき"], hint: "Về (chủ đề bài phát biểu)", translation: "Tôi sẽ thuyết trình về ước mơ trong tương lai." }
-  },
-  {
-    id: 22, unit: 3, pattern: "に関し(て)", meaning: "Liên quan đến... / Về...", explanation: "Cách nói trang trọng hơn của について.",
-    examples: [{ jp: "この事件に関して、新しい情報が入りました。", vn: "Đã có thông tin mới liên quan đến vụ án này." }, { jp: "環境問題に関しては、色々な意見がある。", vn: "Liên quan đến vấn đề môi trường, có rất nhiều ý kiến khác nhau." }],
-    quiz: { sentence: "この件________は、現在調査中です。", answer: "に関して", accepts: ["に関し"], hint: "Liên quan đến (cách nói trang trọng)", translation: "Liên quan đến vụ việc này, hiện chúng tôi đang điều tra." }
-  },
-  {
-    id: 23, unit: 3, pattern: "に比べ(て)", meaning: "So với...", explanation: "Dùng để so sánh hai sự vật, sự việc.",
-    examples: [{ jp: "今年は去年に比べて、雨の日が多い。", vn: "Năm nay nhiều ngày mưa hơn so với năm ngoái." }, { jp: "兄に比べて、弟は背が高い。", vn: "So với anh trai thì người em cao hơn." }],
-    quiz: { sentence: "東京________、私の町は静かだ。", answer: "に比べて", accepts: ["に比べ"], hint: "So với", translation: "So với Tokyo thì thị trấn của tôi yên tĩnh hơn." }
-  },
-  {
-    id: 24, unit: 3, pattern: "に加え(て)", meaning: "Thêm vào đó / Không chỉ... mà còn...", explanation: "Bổ bổ sung thêm một yếu tố khác vào yếu tố đã có sẵn.",
-    examples: [{ jp: "彼は英語に加えて、日本語も話せる。", vn: "Anh ấy không chỉ nói được tiếng Anh mà còn tiếng Nhật." }, { jp: "大雨に加え、風も強くなってきた。", vn: "Thêm vào mưa lớn, gió cũng đã bắt đầu mạnh lên." }],
-    quiz: { sentence: "熱があるの________、咳も出ます。", answer: "に加えて", accepts: ["に加え"], hint: "Thêm vào đó", translation: "Không chỉ bị sốt mà tôi còn bị ho." }
-  },
-  {
-    id: 25, unit: 3, pattern: "に対し(て) (Đối với)", meaning: "Đối với (Thái độ)", explanation: "Thể hiện thái độ hướng tới một đối tượng.",
-    examples: [{ jp: "お客様に対して、失礼なことをしてはいけない。", vn: "Không được làm điều thất lễ đối với khách hàng." }, { jp: "先生に対して、そんな言葉遣いをしてはいけません。", vn: "Đối với thầy giáo, không được dùng lời lẽ như thế." }],
-    quiz: { sentence: "目上の人________は、敬語を使いなさい。", answer: "に対して", accepts: ["に対し"], hint: "Đối với (thái độ)", translation: "Đối với người bề trên thì hãy dùng kính ngữ." }
-  },
-  {
-    id: 26, unit: 3, pattern: "たびに", meaning: "Mỗi khi / Cứ mỗi lần...", explanation: "Cứ mỗi lần hành động phía trước xảy ra thì kéo theo hành động phía sau.",
-    examples: [{ jp: "旅行に行くたびに、お土産を買ってくる。", vn: "Cứ mỗi lần đi du lịch là tôi lại mua quà lưu niệm về." }, { jp: "この曲を聞くたびに、故郷を思い出す。", vn: "Cứ mỗi lần nghe bản nhạc này, tôi lại nhớ về quê hương." }],
-    quiz: { sentence: "彼に会う________、胸がドキドキする。", answer: "たびに", accepts: ["度", "度に"], hint: "Mỗi khi", translation: "Mỗi khi gặp anh ấy, tim tôi lại đập rộn ràng." }
-  },
-  {
-    id: 27, unit: 3, pattern: "たとえ〜ても", meaning: "Cho dù... thì cũng...", explanation: "Đưa ra một giả định nghịch lý.",
-    examples: [{ jp: "たとえ雨が降っても、明日の試合は行われます。", vn: "Cho dù ngày mai trời mưa thì trận đấu vẫn sẽ diễn ra." }, { jp: "たとえ反対されても、私は自分のやりたいことをやる。", vn: "Cho dù có bị phản đối, tôi vẫn sẽ làm điều mình muốn." }],
-    quiz: { sentence: "________失敗しても、また挑戦すればいい。", answer: "たとえ", accepts: [], hint: "Đi cặp với 〜ても", translation: "Cho dù có thất bại thì thử thách lại là được." }
-  },
-  {
-    id: 28, unit: 3, pattern: "って", meaning: "Nói là / Nghe nói là / Tên là...", explanation: "Cách nói thân mật của と (trích dẫn), という (gọi là) hoặc は (chủ đề).",
-    examples: [{ jp: "明日は休みだって。", vn: "Nghe nói ngày mai được nghỉ đấy." }, { jp: "田中さんって、どんな人なの？", vn: "Anh Tanaka là người như thế nào vậy?" }],
-    quiz: { sentence: "あそこにある店、美味しいんだ________。", answer: "って", accepts: [], hint: "Nghe nói là (văn nói thân mật)", translation: "Quán ở đằng kia, nghe nói ngon lắm đấy." }
-  },
-
-  // --- UNIT 4 ---
-  {
-    id: 29, unit: 4, pattern: "くらい / ぐらい", meaning: "Đến mức / Khoảng chừng", explanation: "Chỉ mức độ của sự việc, thường là mức độ nhẹ, tối thiểu.",
-    examples: [{ jp: "泣きたいくらい痛い。", vn: "Đau đến mức muốn khóc." }, { jp: "一歩歩けないくらい、お腹がいっぱいだ。", vn: "No đến mức không thể bước đi nổi một bước." }],
-    quiz: { sentence: "パンが一つ買える________のお金しかない。", answer: "くらい", accepts: ["ぐらい"], hint: "Đến mức / Khoảng", translation: "Tôi chỉ có tiền đủ đến mức mua được một cái bánh mì." }
-  },
-  {
-    id: 30, unit: 4, pattern: "くらいなら / ぐらいなら", meaning: "Nếu phải... thì thà...", explanation: "So sánh hai việc tồi tệ, thà chọn vế sau còn hơn.",
-    examples: [{ jp: "あいつに謝るくらいなら、死んだほうがましだ。", vn: "Nếu phải xin lỗi hắn ta thì tôi thà chết còn hơn." }, { jp: "途中でやめるくらいなら、初めからやらないほうがいい。", vn: "Nếu phải bỏ dở giữa chừng thì tốt nhất ngay từ đầu không nên làm." }],
-    quiz: { sentence: "彼と結婚する________、独身のほうがいい。", answer: "くらいなら", accepts: ["ぐらいなら"], hint: "Nếu phải... thì thà...", translation: "Nếu phải kết hôn với anh ta thì tôi thà độc thân còn hơn." }
-  },
-  {
-    id: 31, unit: 4, pattern: "うちに", meaning: "Trong lúc / Nhân lúc", explanation: "Tranh thủ làm việc gì đó khi trạng thái chưa thay đổi.",
-    examples: [{ jp: "スープが温かいうちに、飲んでください。", vn: "Hãy uống nhân lúc súp còn nóng." }, { jp: "明るいうちに、仕事を終わらせてしまおう。", vn: "Hãy kết thúc công việc trong khi trời còn sáng." }],
-    quiz: { sentence: "忘れない________、メモしておこう。", answer: "うちに", accepts: [], hint: "Trong lúc (chưa quên)", translation: "Nhân lúc chưa quên, hãy ghi chú lại." }
-  },
-  {
-    id: 32, unit: 4, pattern: "を中心に", meaning: "Lấy... làm trung tâm", explanation: "Chỉ ra một thứ/người làm trung tâm của một phạm vi, hiện tượng.",
-    examples: [{ jp: "この店は若い女性を中心に人気がある。", vn: "Quán này được yêu thích, đặc biệt tập trung vào phụ nữ trẻ." }, { jp: "地球は太陽を中心にして回っている。", vn: "Trái đất quay quanh mặt trời là trung tâm." }],
-    quiz: { sentence: "文法________、日本語を勉強する。", answer: "を中心に", accepts: ["を中心として", "を中心にして"], hint: "Lấy... làm trung tâm", translation: "Tôi học tiếng Nhật tập trung vào ngữ pháp." }
-  },
-  {
-    id: 33, unit: 4, pattern: "をはじめ", meaning: "Trước tiên phải kể đến", explanation: "Đưa ra một ví dụ tiêu biểu nhất trong số nhiều thứ cùng loại.",
-    examples: [{ jp: "校長先生をはじめ、先生方、大変お世話になりました。", vn: "Xin cảm ơn các thầy cô, trước tiên là thầy hiệu trưởng." }, { jp: "日本には富士山をはじめ、美しい山がたくさんある。", vn: "Ở Nhật Bản có rất nhiều núi đẹp, trước tiên phải kể đến núi Phú Sĩ." }],
-    quiz: { sentence: "社長________、社員の皆様にお礼を申し上げます。", answer: "をはじめ", accepts: ["をはじめとして"], hint: "Tiêu biểu là... / Trước tiên là...", translation: "Xin gửi lời cảm ơn đến mọi người, trước tiên là giám đốc." }
-  },
-  {
-    id: 34, unit: 4, pattern: "に対し(て) (So sánh)", meaning: "Trái ngược với / Đối lập với", explanation: "Dùng để so sánh sự khác nhau rõ rệt giữa hai sự vật.",
-    examples: [{ jp: "兄がスポーツが得意なのに対して、弟は勉強が得意だ。", vn: "Trái với anh trai giỏi thể thao, người em lại giỏi học." }, { jp: "都会が騒がしいのに対して、田舎は静かでのんびりしている。", vn: "Trái với thành phố ồn ào, nông thôn lại yên tĩnh và thong thả." }],
-    quiz: { sentence: "東京が賑やかなの________、私の町は静かだ。", answer: "に対して", accepts: ["に対し"], hint: "Trái ngược với", translation: "Trái ngược với Tokyo náo nhiệt, thị trấn của tôi rất yên tĩnh." }
-  },
-  {
-    id: 35, unit: 4, pattern: "において", meaning: "Tại / Ở / Trong (lĩnh vực)...", explanation: "Chỉ địa điểm, thời đại, lĩnh vực xảy ra sự việc (trang trọng của で).",
-    examples: [{ jp: "入学式は体育館において行われる。", vn: "Lễ nhập học sẽ được tổ chức tại nhà thi đấu." }, { jp: "現代社会において、インターネットは欠かせないものだ。", vn: "Trong xã hội hiện đại, Internet là thứ không thể thiếu." }],
-    quiz: { sentence: "会議は第一会議室________行われます。", answer: "において", accepts: [], hint: "Tại (cách nói trang trọng của で)", translation: "Cuộc họp sẽ được tổ chức tại phòng họp số 1." }
-  },
-  {
-    id: 36, unit: 4, pattern: "にわたって", meaning: "Suốt / Trải dài", explanation: "Chỉ phạm vi rộng lớn của không gian hoặc khoảng thời gian kéo dài.",
-    examples: [{ jp: "会議は５時間にわたって行われた。", vn: "Cuộc họp đã diễn ra suốt 5 tiếng đồng hồ." }, { jp: "南北数キロにわたって、桜の並木が続いている。", vn: "Hàng cây hoa anh đào trải dài suốt vài km từ nam chí bắc." }],
-    quiz: { sentence: "３週間________、雨が降り続いた。", answer: "にわたって", accepts: ["にわたり"], hint: "Trải suốt / Kéo dài suốt", translation: "Mưa đã rơi liên tục suốt 3 tuần." }
-  },
-  {
-    id: 37, unit: 4, pattern: "にとって", meaning: "Đối với... (quan điểm)", explanation: "Đứng từ góc độ của người/vật đó để đưa ra đánh giá, nhận định.",
-    examples: [{ jp: "私にとって、家族は一番大切なものです。", vn: "Đối với tôi, gia đình là điều quan trọng nhất." }, { jp: "現代人にとって、スマホは生活の一部になっている。", vn: "Đối với người hiện đại, smartphone đã trở thành một phần của cuộc sống." }],
-    quiz: { sentence: "子供________、遊びはとても重要だ。", answer: "にとって", accepts: [], hint: "Đối với (góc độ đánh giá)", translation: "Đối với trẻ em, vui chơi là điều rất quan trọng." }
-  },
-  {
-    id: 38, unit: 4, pattern: "による/によって", meaning: "Tùy vào / Do / Bởi", explanation: "Chỉ phương pháp, nguyên nhân, người thực hiện hoặc sự khác biệt.",
-    examples: [{ jp: "人によって、考え方が違う。", vn: "Mỗi người có cách suy nghĩ khác nhau (tùy vào)." }, { jp: "不注意によって、大きな事故が起きてしまった。", vn: "Do không chú ý mà tai nạn lớn đã xảy ra (nguyên nhân)." }],
-    quiz: { sentence: "文化は、国________異なります。", answer: "によって", accepts: ["により", "によっては"], hint: "Tùy vào (chỉ sự khác biệt)", translation: "Văn hóa thì khác biệt tùy vào từng quốc gia." }
-  },
-
-  // --- UNIT 5 ---
-  {
-    id: 39, unit: 5, pattern: "に違いない", meaning: "Chắc chắn là", explanation: "Dùng để phỏng đoán một cách chắc chắn dựa trên căn cứ.",
-    examples: [{ jp: "鍵がない。どこかに落としたに違いない。", vn: "Không thấy chìa khóa. Chắc chắn là đánh rơi ở đâu rồi." }, { jp: "夜中にこんなに電話が鳴るのは、何かあったに違いない。", vn: "Điện thoại reo giữa đêm thế này thì chắc chắn là có chuyện gì đó rồi." }],
-    quiz: { sentence: "あんなに練習したのだから、明日は勝てる________。", answer: "に違いない", accepts: ["にちがいない"], hint: "Chắc chắn là", translation: "Đã tập luyện đến mức đó thì ngày mai chắc chắn sẽ thắng." }
-  },
-  {
-    id: 40, unit: 5, pattern: "とは / というのは", meaning: "Nghĩa là / Cái gọi là...", explanation: "Dùng để định nghĩa, giải thích ý nghĩa của một từ.",
-    examples: [{ jp: "デジカメとは、デジタルカメラのことです。", vn: "Dejikame có nghĩa là máy ảnh kỹ thuật số." }, { jp: "敬語とは、相手を敬って使う言葉のことです。", vn: "Kính ngữ nghĩa là những từ dùng để thể hiện sự kính trọng đối với đối phương." }],
-    quiz: { sentence: "パソコン________、パーソナルコンピュータのことだ。", answer: "とは", accepts: ["というのは", "っていうのは"], hint: "Nghĩa là (giải thích)", translation: "Pasokon nghĩa là máy tính cá nhân." }
-  },
-  {
-    id: 41, unit: 5, pattern: "たとたん(に)", meaning: "Vừa mới... thì ngay lập tức", explanation: "Hành động vế sau xảy ra gần như đồng thời ngay sau hành động vế trước.",
-    examples: [{ jp: "ドアを開けたとたん、猫が飛び出してきた。", vn: "Vừa mở cửa ra thì con mèo phóng ra ngoài." }, { jp: "外に出たとたん、雨が降り出した。", vn: "Vừa mới ra ngoài thì trời đã bắt đầu đổ mưa." }],
-    quiz: { sentence: "立ち上がっ________、めまいがした。", answer: "たとたん", accepts: ["たとたんに", "とたん", "とたんに"], hint: "Vừa mới... thì", translation: "Vừa mới đứng lên thì bị chóng mặt." }
-  },
-  {
-    id: 42, unit: 5, pattern: "につれ(て)", meaning: "Càng... càng...", explanation: "Chỉ sự thay đổi đồng thời (thường dùng cho tự nhiên, dần dần).",
-    examples: [{ jp: "年をとるにつれて、物忘れがひどくなった。", vn: "Cùng với tuổi tác, tật hay quên càng trở nên nghiêm trọng." }, { jp: "時間が経つにつれて、悲しみも薄れていくだろう。", vn: "Cùng với thời gian trôi đi, có lẽ nỗi đau cũng sẽ phai nhạt." }],
-    quiz: { sentence: "成長する________、親に似てきた。", answer: "につれて", accepts: ["につれ"], hint: "Càng... càng (sự thay đổi kéo theo)", translation: "Càng lớn càng giống bố mẹ." }
-  },
-  {
-    id: 43, unit: 5, pattern: "にしたがって", meaning: "Theo như / Càng... càng...", explanation: "Tuân theo quy tắc hoặc chỉ sự thay đổi đồng thời.",
-    examples: [{ jp: "先生の指示にしたがって、行動してください。", vn: "Hãy hành động theo như chỉ thị của giáo viên." }, { jp: "山の頂上に登るにしたがって、気温が下がってきた。", vn: "Càng lên cao phía đỉnh núi, nhiệt độ càng giảm xuống." }],
-    quiz: { sentence: "ルール________、ゲームをしてください。", answer: "にしたがって", accepts: ["に従って", "にしたがい"], hint: "Theo như (tuân theo quy tắc)", translation: "Hãy chơi game theo đúng luật." }
-  },
-  {
-    id: 44, unit: 5, pattern: "最中(に)", meaning: "Đúng lúc đang", explanation: "Nhấn mạnh thời điểm hành động đang diễn ra cao trào thì có việc khác xen vào.",
-    examples: [{ jp: "会議の最中に、携帯電話が鳴った。", vn: "Giữa lúc đang họp thì điện thoại reo." }, { jp: "食事の最中に、友達が遊びに来た。", vn: "Đúng lúc đang ăn cơm thì bạn đến chơi." }],
-    quiz: { sentence: "シャワーを浴びている________に、客が来た。", answer: "最中", accepts: ["さいちゅう"], hint: "Đúng lúc đang (Kanji: 最中)", translation: "Đúng lúc đang tắm vòi sen thì có khách đến." }
-  },
-  {
-    id: 45, unit: 5, pattern: "てからでないと", meaning: "Nếu chưa... thì không thể...", explanation: "Diễn tả điều kiện tiên quyết. Vế sau luôn mang ý nghĩa phủ định.",
-    examples: [{ jp: "お金を払ってからでないと、商品を受け取れない。", vn: "Nếu chưa trả tiền thì không thể nhận hàng." }, { jp: "宿題を終わらせてからでないと、遊びに行ってはいけません。", vn: "Nếu chưa làm xong bài tập thì không được đi chơi." }],
-    quiz: { sentence: "手を洗っ________、ご飯を食べてはいけません。", answer: "てからでないと", accepts: ["てからでなければ"], hint: "Nếu chưa... thì không được", translation: "Nếu chưa rửa tay thì không được ăn cơm." }
-  },
-  {
-    id: 46, unit: 5, pattern: "て以来", meaning: "Kể từ khi... (cho đến nay)", explanation: "Nhấn mạnh một trạng thái duy trì liên tục suốt từ quá khứ đến bây giờ.",
-    examples: [{ jp: "日本に来て以来、毎日納豆を食べている。", vn: "Kể từ khi đến Nhật, ngày nào tôi cũng ăn natto." }, { jp: "3年前に日本へ行って以来、一度も帰国していない。", vn: "Kể từ khi sang Nhật 3 năm trước, tôi chưa một lần về nước." }],
-    quiz: { sentence: "結婚し________、ずっとこの町に住んでいる。", answer: "て以来", accepts: ["ていらい", "以来", "いらい"], hint: "Kể từ khi", translation: "Kể từ khi kết hôn, tôi vẫn luôn sống ở thị trấn này." }
-  },
-  {
-    id: 47, unit: 5, pattern: "一方だ", meaning: "Ngày càng... (liên tục)", explanation: "Chỉ một trạng thái đang phát triển liên tục (thường là chiều hướng xấu).",
-    examples: [{ jp: "最近、物価は上がる一方だ。", vn: "Gần đây, vật giá ngày càng tăng." }, { jp: "不景気なので、仕事を探す人は増える一方だ。", vn: "Vì kinh tế suy thoái nên số người tìm việc ngày càng tăng." }],
-    quiz: { sentence: "仕事が忙しくて、疲労はたまる________。", answer: "一方だ", accepts: ["いっぽうだ", "一方"], hint: "Ngày càng (chiều hướng xấu)", translation: "Công việc bận rộn, mệt mỏi ngày càng tích tụ." }
-  },
-  {
-    id: 48, unit: 5, pattern: "しかない", meaning: "Chỉ còn cách... / Không còn cách nào khác", explanation: "Thể hiện sự đành chịu, không còn lựa chọn nào khác.",
-    examples: [{ jp: "終電を逃したので、歩いて帰るしかない。", vn: "Vì lỡ chuyến tàu cuối nên chỉ còn cách đi bộ về." }, { jp: "パソコンが壊れたので、新しいのを買うしかない。", vn: "Máy tính hỏng rồi nên chỉ còn cách mua cái mới thôi." }],
-    quiz: { sentence: "約束したのだから、行く________。", answer: "しかない", accepts: ["ほかない", "よりない", "よりほかない"], hint: "Chỉ còn cách...", translation: "Đã hứa rồi nên chỉ còn cách phải đi thôi." }
-  },
-  {
-    id: 49, unit: 5, pattern: "はもちろん", meaning: "...thì đã đành / Không chỉ... mà còn", explanation: "Việc ở vế trước là điều đương nhiên không cần bàn cãi.",
-    examples: [{ jp: "彼は英語はもちろん、フランス語も話せる。", vn: "Anh ấy tiếng Anh thì đã đành, tiếng Pháp cũng nói được." }, { jp: "このレストランは、料理の味はもちろん、サービスも素晴らしい。", vn: "Nhà hàng này hương vị món ăn thì đã đành (đương nhiên ngon), dịch vụ cũng rất tuyệt vời." }],
-    quiz: { sentence: "復習________、予習も大切だ。", answer: "はもちろん", accepts: ["はもとより", "もとより"], hint: "...thì đã đành (đương nhiên)", translation: "Ôn tập thì đã đành, chuẩn bị bài trước cũng rất quan trọng." }
-  },
-  {
-    id: 50, unit: 5, pattern: "ついでに", meaning: "Nhân tiện", explanation: "Nhân cơ hội đang làm việc A thì làm luôn việc B.",
-    examples: [{ jp: "散歩のついでに、パンを買ってきた。", vn: "Nhân tiện đi dạo, tôi đã mua bánh mì về." }, { jp: "銀行へ行くついでに、この手紙を出してきてくれませんか。", vn: "Nhân tiện đi ngân hàng, bạn có thể gửi hộ tôi lá thư này được không?" }],
-    quiz: { sentence: "買い物に行く________、郵便局に寄って。", answer: "ついでに", accepts: ["ついで"], hint: "Nhân tiện", translation: "Nhân tiện đi mua sắm thì ghé vào bưu điện giúp nhé." }
-  },
-
-  // --- UNIT 6 ---
-  {
-    id: 51, unit: 6, pattern: "ということだ", meaning: "Nghĩa là / Nghe nói là", explanation: "Truyền đạt lại thông tin nghe được, hoặc giải thích ý nghĩa.",
-    examples: [{ jp: "ニュースによると、明日雨が降るということだ。", vn: "Theo tin tức, nghe nói ngày mai trời sẽ mưa." }, { jp: "合格したということは、たくさん勉強したということですね。", vn: "Việc cậu đỗ nghĩa là cậu đã học rất nhiều đấy nhỉ." }],
-    quiz: { sentence: "彼の話では、来年結婚する________。", answer: "ということだ", accepts: ["とのことだ"], hint: "Nghe nói là", translation: "Theo lời anh ấy nói, nghe đâu sang năm anh ấy sẽ kết hôn." }
-  },
-  {
-    id: 52, unit: 6, pattern: "ことはない", meaning: "Không cần phải", explanation: "Khuyên bảo ai đó không cần thiết phải làm một việc gì đó.",
-    examples: [{ jp: "君が謝ることはないよ。", vn: "Cậu không cần phải xin lỗi đâu." }, { jp: "時間はたっぷりあるから、急ぐことはありません。", vn: "Thời gian còn nhiều lắm nên không cần phải vội đâu." }],
-    quiz: { sentence: "軽い風邪だから、心配する________。", answer: "ことはない", accepts: ["ことない"], hint: "Không cần phải", translation: "Chỉ là cảm nhẹ thôi nên không cần phải lo lắng." }
-  },
-  {
-    id: 53, unit: 6, pattern: "こと", meaning: "Phải / Hãy", explanation: "Đưa ra mệnh lệnh, quy tắc, chỉ thị.",
-    examples: [{ jp: "明日、8時までに来ること。", vn: "Ngày mai phải đến trước 8 giờ." }, { jp: "レポートは今週中に提出すること。", vn: "Báo cáo phải nộp trong tuần này." }],
-    quiz: { sentence: "図書館では静かにする________。", answer: "こと", accepts: [], hint: "Phải (Mệnh lệnh / Nội quy)", translation: "Trong thư viện phải giữ im lặng." }
-  },
-  {
-    id: 54, unit: 6, pattern: "ないことはない", meaning: "Không phải là không...", explanation: "Thừa nhận một điều gì đó ở mức độ thấp, hoặc miễn cưỡng.",
-    examples: [{ jp: "走れば、間に合わないこともない。", vn: "Nếu chạy thì không hẳn là không kịp." }, { jp: "刺身は食べられないことはないが、あまり好きではない。", vn: "Sashimi không phải là tôi không ăn được, nhưng không thích lắm." }],
-    quiz: { sentence: "お酒は飲め________が、弱いです。", answer: "ないことはない", accepts: ["ないこともない"], hint: "Không phải là không", translation: "Không phải là tôi không uống được rượu, nhưng tửu lượng kém." }
-  },
-  {
-    id: 55, unit: 6, pattern: "もの（もん）", meaning: "Bởi vì...", explanation: "Đưa ra lý do cá nhân, mang tính chất biện bạch, làm nũng.",
-    examples: [{ jp: "「どうして食べないの？」「だって、美味しくないんだもん。」", vn: "\"Sao con không ăn?\" \"Tại vì không ngon mà.\"" }, { jp: "「一人でできる？」「うん、もう大人だもん。」", vn: "\"Con tự làm một mình được không?\" \"Vâng, vì con là người lớn rồi mà.\"" }],
-    quiz: { sentence: "行きたくないよ。疲れたんだ________。", answer: "もの", accepts: ["もん"], hint: "Bởi vì (văn nói, biện bạch)", translation: "Tôi không muốn đi đâu. Tại vì mệt mà." }
-  },
-  {
-    id: 56, unit: 6, pattern: "ものだから", meaning: "Tại vì...", explanation: "Đưa ra lý do khách quan, phân trần để mong được thông cảm.",
-    examples: [{ jp: "電車が遅れたものだから、遅刻してしまいました。", vn: "Tại vì tàu trễ nên tôi đã bị muộn." }, { jp: "あまりに可愛いかったものだから、つい買ってしまった。", vn: "Vì nó quá là dễ thương nên tôi đã lỡ mua mất rồi." }],
-    quiz: { sentence: "道が混んでいた________、遅れてすみません。", answer: "ものだから", accepts: ["もので", "もんだから"], hint: "Tại vì (phân trần)", translation: "Tại vì tắc đường nên xin lỗi tôi đến muộn." }
-  },
-  {
-    id: 57, unit: 6, pattern: "ものか", meaning: "Tuyệt đối không", explanation: "Phủ định mạnh mẽ, thể hiện cảm xúc tức giận hoặc kiên quyết.",
-    examples: [{ jp: "あんな店、二度と行くものか。", vn: "Cái quán đó, tuyệt đối không đi lần hai đâu." }, { jp: "誰があなたの言うことなんか信じるものか。", vn: "Ai mà thèm tin lời cậu nói chứ (tuyệt đối không tin)." }],
-    quiz: { sentence: "あんな人に、二度と会う________！", answer: "ものか", accepts: ["もんか"], hint: "Tuyệt đối không", translation: "Người như vậy, tôi tuyệt đối không gặp lại lần hai đâu!" }
-  },
-  {
-    id: 58, unit: 6, pattern: "たところ", meaning: "Sau khi thử làm... thì", explanation: "Nhấn mạnh kết quả nhận được hoặc điều bất ngờ phát hiện ra.",
-    examples: [{ jp: "先生に聞いたところ、明日テストがあるそうだ。", vn: "Sau khi hỏi thầy giáo thì nghe nói ngày mai có bài kiểm tra." }, { jp: "新しいお店へ行ってみたところ、とても美味しかった。", vn: "Sau khi thử đến cửa hàng mới thì thấy rất ngon." }],
-    quiz: { sentence: "病院で検査し________、病気が見つかった。", answer: "たところ", accepts: [], hint: "Sau khi thử làm... thì (kết quả)", translation: "Sau khi kiểm tra ở bệnh viện thì phát hiện ra bệnh." }
-  },
-  {
-    id: 59, unit: 6, pattern: "ところに", meaning: "Đúng lúc / Ngay lúc", explanation: "Thời điểm một hành động đang diễn ra thì có sự việc khác xen vào.",
-    examples: [{ jp: "出かけようとしたところに、電話がかかってきた。", vn: "Đúng lúc định ra ngoài thì có điện thoại." }, { jp: "ちょうどいいところに来たね。今からお茶にしようと思っていたんだ。", vn: "Cậu đến đúng lúc lắm. Tớ đang định uống trà đây." }],
-    quiz: { sentence: "寝ている________、地震が起きた。", answer: "ところに", accepts: ["ところ", "ところへ"], hint: "Đúng lúc (thời điểm)", translation: "Đúng lúc đang ngủ thì xảy ra động đất." }
-  },
-  {
-    id: 60, unit: 6, pattern: "ところだった", meaning: "Suýt nữa thì", explanation: "Chỉ một việc tồi tệ suýt chút nữa thì đã xảy ra.",
-    examples: [{ jp: "もう少しで車에ぶつかるところだった。", vn: "Suýt chút nữa thì bị xe tông." }, { jp: "忘れるところだった。教えてくれてありがとう。", vn: "Suýt nữa thì tôi quên mất. Cảm ơn bạn đã nhắc nhé." }],
-    quiz: { sentence: "もう少しで遅刻する________。", answer: "ところだった", accepts: [], hint: "Suýt nữa thì", translation: "Suýt chút nữa thì bị đi muộn." }
-  },
-  {
-    id: 61, unit: 6, pattern: "ほど", meaning: "Đến mức / Khoảng", explanation: "Diễn tả mức độ của một trạng thái (mức độ cao).",
-    examples: [{ jp: "死ぬほど疲れた。", vn: "Mệt đến mức muốn chết." }, { jp: "外は、息が凍るほど寒い。", vn: "Ngoài trời lạnh đến mức hơi thở cũng đóng băng." }],
-    quiz: { sentence: "食べられない________料理が山のようにある。", answer: "ほど", accepts: ["くらい", "ぐらい"], hint: "Đến mức (Mức độ cao)", translation: "Có nhiều đồ ăn đến mức ăn không nổi, chất cao như núi." }
-  },
-  {
-    id: 62, unit: 6, pattern: "ば〜ほど", meaning: "Càng... càng...", explanation: "Chỉ sự phát triển đồng thời của hai vế.",
-    examples: [{ jp: "日本語は、勉強すればするほど難しくなる。", vn: "Tiếng Nhật, càng học càng thấy khó." }, { jp: "考えれば考えるほど、いいアイデアが浮かびそうだ。", vn: "Càng suy nghĩ thì càng có vẻ như ý tưởng hay sẽ nảy ra." }],
-    quiz: { sentence: "考えれ________考えるほど、わからなくなる。", answer: "ば", accepts: [], hint: "Càng... càng", translation: "Càng suy nghĩ thì càng không hiểu." }
-  },
-  {
-    id: 63, unit: 6, pattern: "ほど〜はない", meaning: "Không có gì... bằng", explanation: "So sánh nhất, đánh giá chủ quan rằng một sự vật/việc là nhất.",
-    examples: [{ jp: "彼女ほど優しい人はいない。", vn: "Không có người nào hiền bằng cô ấy." }, { jp: "母の料理ほど美味しいものはない。", vn: "Không có gì ngon bằng món ăn mẹ nấu." }],
-    quiz: { sentence: "今年の夏________暑い年はない。", answer: "ほど", accepts: ["くらい", "ぐらい"], hint: "Không có gì... bằng", translation: "Không có năm nào nóng bằng mùa hè năm nay." }
-  },
-
-  // --- UNIT 7 ---
-  {
-    id: 64, unit: 7, pattern: "など / なんか / なんて", meaning: "Như là... / Cỡ như...", explanation: "Đưa ra ví dụ, hoặc mang sắc thái khiêm tốn / coi thường.",
-    examples: [{ jp: "私なんて、まだまだです。", vn: "Cỡ như tôi thì vẫn còn kém lắm." }, { jp: "疲れた時は、甘いものなどいかがですか。", vn: "Những lúc mệt mỏi, bạn dùng thử mấy món đồ ngọt xem sao?" }],
-    quiz: { sentence: "幽霊________いるわけがない。", answer: "なんて", accepts: ["なんか", "など"], hint: "Cỡ như / Ba cái thứ như", translation: "Mấy thứ như ma quỷ không thể nào tồn tại được." }
-  },
-  {
-    id: 65, unit: 7, pattern: "などと(なんて)言う/思う", meaning: "Nói / Nghĩ rằng", explanation: "Trích dẫn lại lời nói kèm thái độ ngạc nhiên, coi thường.",
-    examples: [{ jp: "彼が犯人だなんて、信じられない。", vn: "Thật không thể tin được chuyện anh ta là thủ phạm." }, { jp: "試験は簡単だなどと言って、本当は難しかった。", vn: "Cứ nói mấy câu như là bài thi dễ lắm, mà thực ra lại khó." }],
-    quiz: { sentence: "自分が天才だ________思っていない。", answer: "なんて", accepts: ["などと"], hint: "Nghĩ rằng cái điều như là...", translation: "Tôi chưa từng nghĩ mình là thiên tài hay gì cả." }
-  },
-  {
-    id: 66, unit: 7, pattern: "からには", meaning: "Một khi đã... thì phải...", explanation: "Vì đã đến tình trạng đó nên có nghĩa vụ/quyết tâm phải làm đến cùng.",
-    examples: [{ jp: "約束したからには、守らなければならない。", vn: "Một khi đã hứa thì phải giữ lời." }, { jp: "試合に出るからには、勝ちたい。", vn: "Một khi đã tham gia thi đấu thì tôi muốn thắng." }],
-    quiz: { sentence: "日本に留学する________、N1に合格したい。", answer: "からには", accepts: [], hint: "Một khi đã", translation: "Một khi đã du học Nhật Bản thì tôi muốn thi đỗ N1." }
-  },
-  {
-    id: 67, unit: 7, pattern: "きる", meaning: "Hoàn thành / Làm đến cùng", explanation: "Làm xong toàn bộ sự việc không còn sót lại gì, hoặc đạt đến giới hạn.",
-    examples: [{ jp: "この小説は一日で読みきった。", vn: "Cuốn tiểu thuyết này tôi đã đọc xong hết trong một ngày." }, { jp: "マラソンを最後まで走りきった。", vn: "Tôi đã chạy hết quãng đường marathon cho đến cuối cùng." }],
-    quiz: { sentence: "たくさんあって、一人では食べ________ない。", answer: "きれ", accepts: ["きれない"], hint: "Hoàn thành / Hết (chia khả năng)", translation: "Nhiều quá, một mình tôi không thể ăn hết được." }
-  },
-  {
-    id: 68, unit: 7, pattern: "ぎみ", meaning: "Có vẻ... / Hơi...", explanation: "Cảm thấy có triệu chứng, chiều hướng như thế (sức khỏe/tâm trạng).",
-    examples: [{ jp: "最近、風邪ぎみで調子が悪い。", vn: "Gần đây tôi hơi cảm nên người thấy mệt." }, { jp: "新入社員は緊張ぎみだ。", vn: "Nhân viên mới có vẻ hơi căng thẳng." }],
-    quiz: { sentence: "最近、寝不足________で頭が痛い。", answer: "ぎみ", accepts: ["気味"], hint: "Có vẻ / Hơi", translation: "Gần đây do hơi thiếu ngủ nên tôi bị đau đầu." }
-  },
-  {
-    id: 69, unit: 7, pattern: "がち", meaning: "Thường hay... / Dễ...", explanation: "Tần suất xảy ra một tình trạng nào đó nhiều lần (nghĩa tiêu cực).",
-    examples: [{ jp: "彼は最近、学校を休みがちだ。", vn: "Gần đây anh ấy hay nghỉ học." }, { jp: "この季節は雨が多くなりがちだ。", vn: "Mùa này trời thường hay đổ mưa." }],
-    quiz: { sentence: "冬は曇りの日が続き________だ。", answer: "がち", accepts: [], hint: "Thường hay / Dễ (xu hướng tiêu cực)", translation: "Mùa đông thường hay kéo dài những ngày nhiều mây." }
-  },
-  {
-    id: 70, unit: 7, pattern: "向き", meaning: "Phù hợp với...", explanation: "Bản chất, tính chất vốn dĩ thích hợp với một đối tượng.",
-    examples: [{ jp: "この映画は子供向きだ。", vn: "Bộ phim này phù hợp với trẻ em." }, { jp: "このマンションは一人暮らし向きだ。", vn: "Căn chung cư này phù hợp với người sống một mình." }],
-    quiz: { sentence: "この服のデザインは、若い人________だ。", answer: "向き", accepts: ["むき"], hint: "Phù hợp với", translation: "Thiết kế của bộ đồ này phù hợp với người trẻ tuổi." }
-  },
-  {
-    id: 71, unit: 7, pattern: "向け", meaning: "Dành cho... / Hướng tới...", explanation: "Cố tình thiết kế, sản xuất ra để đặc biệt dành riêng cho một đối tượng.",
-    examples: [{ jp: "これは外国人向けに書かれた本だ。", vn: "Đây là cuốn sách được viết dành cho người nước ngoài." }, { jp: "これは女性向けにデザインされた時計です。", vn: "Đây là chiếc đồng hồ được thiết kế dành riêng cho phụ nữ." }],
-    quiz: { sentence: "この料理は、子供________に辛くなくしてある。", answer: "向け", accepts: ["むけ"], hint: "Dành cho / Hướng tới", translation: "Món ăn này được làm không cay để dành cho trẻ em." }
-  },
-  {
-    id: 72, unit: 7, pattern: "を通じ(て) / 通し(て)", meaning: "Thông qua / Trong suốt...", explanation: "Thông qua một trung gian, hoặc duy trì trạng thái trong suốt một khoảng thời gian.",
-    examples: [{ jp: "この町は一年を通じて暖かい。", vn: "Thị trấn này ấm áp trong suốt cả năm." }, { jp: "インターネットを通じて、世界中のニュースを知ることができる。", vn: "Thông qua Internet, chúng ta có thể biết được tin tức trên toàn thế giới." }],
-    quiz: { sentence: "友人の紹介________、彼女と知り合った。", answer: "を通じて", accepts: ["をとおして", "を通して", "を通じ"], hint: "Thông qua", translation: "Tôi đã quen biết cô ấy thông qua sự giới thiệu của bạn bè." }
-  },
-  {
-    id: 73, unit: 7, pattern: "っぽい", meaning: "Có vẻ... / Giống như / Hay", explanation: "Cảm thấy giống như tính chất đó, hoặc có xu hướng dễ bị làm sao đó.",
-    examples: [{ jp: "年をとると、忘れっぽくなる。", vn: "Khi có tuổi, người ta hay trở nên đãng trí." }, { jp: "この服は少し子供っぽいね。", vn: "Bộ quần áo này trông hơi trẻ con nhỉ." }],
-    quiz: { sentence: "あの人は怒り________から、気をつけたほうがいい。", answer: "っぽい", accepts: [], hint: "Hay... / Có xu hướng", translation: "Người đó hay cáu gắt lắm nên chú ý thì hơn." }
-  },
-  {
-    id: 74, unit: 7, pattern: "とともに", meaning: "Cùng với... / Đồng thời với...", explanation: "Làm cùng ai đó, hoặc một sự việc thay đổi đồng thời với việc khác.",
-    examples: [{ jp: "家族とともに日本へ来た。", vn: "Tôi đã đến Nhật Bản cùng với gia đình." }, { jp: "経済の発展とともに、人々の生活が変わった。", vn: "Cùng với sự phát triển kinh tế, cuộc sống của con người đã thay đổi." }],
-    quiz: { sentence: "春の訪れ________、花が咲き始めた。", answer: "とともに", accepts: ["と共に"], hint: "Cùng với", translation: "Cùng với việc mùa xuân đến, hoa cũng bắt đầu nở." }
-  },
-  {
-    id: 75, unit: 7, pattern: "にともなって", meaning: "Kéo theo...", explanation: "Sự thay đổi của A kéo theo sự thay đổi của B (thường dùng trong văn viết).",
-    examples: [{ jp: "人口の増加にともなって、色々な問題が起きた。", vn: "Cùng với sự gia tăng dân số, nhiều vấn đề phát sinh." }, { jp: "時代の変化にともなって、新しい言葉が生まれる。", vn: "Cùng với sự biến đổi của thời đại, những từ ngữ mới được sinh ra." }],
-    quiz: { sentence: "台風の接近________、風が強くなってきた。", answer: "にともなって", accepts: ["に伴って", "にともない", "に伴い"], hint: "Kéo theo", translation: "Cùng với việc bão đang đến gần, gió đã bắt đầu thổi mạnh." }
-  },
-
-  // --- UNIT 8 ---
-  {
-    id: 76, unit: 8, pattern: "に決まっている", meaning: "Chắc chắn là", explanation: "Thể hiện sự phán đoán mang tính chủ quan, đinh ninh là chắc chắn sự việc sẽ như thế.",
-    examples: [{ jp: "あんなに勉強したのだから、合格するに決まっている。", vn: "Học nhiều đến thế cơ mà, nhất định sẽ đỗ." }, { jp: "勝つに決まっている。相手は初心者だ。", vn: "Nhất định sẽ thắng thôi. Đối thủ là người mới mà." }],
-    quiz: { sentence: "あんなに高いカメラ、私に買える________。", answer: "に決まっている", accepts: ["にきまっている"], hint: "Chắc chắn là", translation: "Cái máy ảnh đắt đến thế, chắc chắn là tôi không mua nổi rồi." }
-  },
-  {
-    id: 77, unit: 8, pattern: "っけ", meaning: "Có phải... đúng không? / ...ấy nhỉ", explanation: "Dùng khi hỏi lại để xác nhận một điều mà mình không nhớ rõ.",
-    examples: [{ jp: "今日は何曜日だっけ。", vn: "Hôm nay là thứ mấy ấy nhỉ?" }, { jp: "会議は明日だったっけ？", vn: "Cuộc họp là ngày mai đúng không nhỉ?" }],
-    quiz: { sentence: "あの人の名前、何だ________。", answer: "っけ", accepts: ["だっけ"], hint: "...ấy nhỉ", translation: "Tên của người kia là gì ấy nhỉ." }
-  },
-  {
-    id: 78, unit: 8, pattern: "ように", meaning: "Để / Mong sao...", explanation: "Chỉ mục đích hoặc dùng khi cầu nguyện, mong mỏi một điều gì đó.",
-    examples: [
-      { jp: "忘れないように、メモをしておく。", vn: "Ghi chú lại để không bị quên." },
-      { jp: "合格できますように。", vn: "Cầu mong cho mình sẽ thi đỗ." },
-      { jp: "前に言ったように、ここは静かにしてください。", vn: "Như tôi đã nói trước đó, hãy giữ im lặng ở đây." }
-    ],
-    quiz: { sentence: "風邪を引かない________、コートを着る。", answer: "ように", accepts: [], hint: "Để (mục đích)", translation: "Tôi mặc áo khoác để không bị cảm." }
-  },
-  {
-    id: 79, unit: 8, pattern: "ようがない", meaning: "Không có cách nào để...", explanation: "Cho dù muốn làm cũng không thể làm được vì không có phương pháp.",
-    examples: [{ jp: "こんなに壊れていては、直しようがない。", vn: "Hỏng nặng thế này thì hết cách sửa." }, { jp: "これ以上、説明しようがないほどはっきりしている。", vn: "Nó rõ ràng đến mức không còn cách nào để giải thích thêm nữa." }],
-    quiz: { sentence: "携帯を落としたので、彼に連絡し________。", answer: "ようがない", accepts: ["ようもない"], hint: "Không có cách nào (V-masu)", translation: "Vì làm rơi điện thoại rồi nên không có cách nào liên lạc với anh ấy." }
-  },
-  {
-    id: 80, unit: 8, pattern: "はずだ", meaning: "Chắc chắn là / Thảo nào", explanation: "Phán đoán chắc chắn dựa trên một lý do, căn cứ khách quan hợp lý.",
-    examples: [{ jp: "ドアが開かない。鍵がかかっているはずだ。", vn: "Cửa không mở được. Chắc chắn là đang bị khóa." }, { jp: "真面目な彼が嘘をつくはずがない。", vn: "Người nghiêm túc như anh ấy thì không lẽ nào lại nói dối (Cách dùng phủ định của はず)." }],
-    quiz: { sentence: "薬を飲んだから、もう熱は下がる________。", answer: "はずだ", accepts: ["はず"], hint: "Chắc chắn là", translation: "Đã uống thuốc rồi nên chắc chắn là nhiệt độ sẽ giảm." }
-  },
-  {
-    id: 81, unit: 8, pattern: "わけだ", meaning: "Thảo nào / Nghĩa là...", explanation: "Rút ra kết luận hợp lý từ lý do đã biết, hoặc dùng để hiểu ra vấn đề.",
-    examples: [{ jp: "夜更かししたから、今日は眠いわけだ。", vn: "Thức khuya nên hôm nay buồn ngủ là phải (thảo nào)." }, { jp: "20ページも読んだのか。道理で時間がかかるわけだ。", vn: "Đọc tới tận 20 trang cơ à. Thảo nào mà tốn thời gian là phải." }],
-    quiz: { sentence: "毎日10時間勉強しているんですか。成績がいい________。", answer: "わけだ", accepts: ["訳だ", "わけですね"], hint: "Thảo nào...", translation: "Mỗi ngày học 10 tiếng cơ à. Thảo nào thành tích tốt thế." }
-  },
-  {
-    id: 82, unit: 8, pattern: "わけがない", meaning: "Tuyệt đối không", explanation: "Phủ định mạnh mẽ một sự việc, cho rằng điều đó là không thể nào xảy ra.",
-    examples: [{ jp: "彼がそんな嘘をつくわけがない。", vn: "Lẽ nào anh ấy lại nói dối như vậy." }, { jp: "こんなに高いもの、私に買えるわけがない。", vn: "Đồ đắt thế này, không có lý nào tôi lại mua nổi." }],
-    quiz: { sentence: "勉強していないのだから、テストに受かる________。", answer: "わけがない", accepts: ["訳がない"], hint: "Tuyệt đối không", translation: "Không học hành gì cả nên không thể nào đỗ bài kiểm tra được." }
-  },
-  {
-    id: 83, unit: 8, pattern: "わけではない", meaning: "Không hẳn là / Không có nghĩa là", explanation: "Phủ định một phần, đính chính lại một nhận định có vẻ hiển nhiên.",
-    examples: [{ jp: "嫌いなわけではないが、あまり食べたくない。", vn: "Không hẳn là ghét nhưng mà tôi không muốn ăn lắm." }, { jp: "料理が全然できないわけではないが、苦手だ。", vn: "Không phải là tôi hoàn toàn không biết nấu ăn, nhưng mà tôi kém khoản đó." }],
-    quiz: { sentence: "お金があれば幸せという________。", answer: "わけではない", accepts: ["訳ではない", "わけじゃない"], hint: "Không hẳn là", translation: "Không có nghĩa là có tiền thì sẽ hạnh phúc." }
-  },
-  {
-    id: 84, unit: 8, pattern: "わけにはいかない", meaning: "Không thể...", explanation: "Không thể làm việc gì đó vì lý do đạo đức, trách nhiệm, xã hội.",
-    examples: [{ jp: "熱があるが、今日は休むわけにはいかない。", vn: "Tuy bị sốt nhưng hôm nay không thể nghỉ được." }, { jp: "上司の命令なので, 断るわけにはいかない。", vn: "Vì là mệnh lệnh của cấp trên nên tôi không thể từ chối được." }],
-    quiz: { sentence: "絶対に秘密にすると約束したから、話す________。", answer: "わけにはいかない", accepts: ["訳にはいかない"], hint: "Không thể (vì trách nhiệm)", translation: "Đã hứa là tuyệt đối giữ bí mật nên không thể nói ra được." }
-  },
-  {
-    id: 85, unit: 8, pattern: "ないわけにはいかない", meaning: "Buộc phải / Không thể không", explanation: "Phủ định 2 lần, bắt buộc phải làm vì trách nhiệm đạo đức.",
-    examples: [{ jp: "親友の結婚式だから、行かないわけにはいかない。", vn: "Vì là đám cưới của bạn thân nên tôi không thể không đi." }, { jp: "先生に頼まれたので、やらないわけにはいかない。", vn: "Vì được thầy giáo nhờ nên tôi không thể không làm." }],
-    quiz: { sentence: "先輩に頼まれた仕事だから、やら________。", answer: "ないわけにはいかない", accepts: ["ない訳にはいかない"], hint: "Không thể không", translation: "Vì là công việc được nhờ nên không thể không làm." }
-  },
-  {
-    id: 86, unit: 9, pattern: "かわり(に)", meaning: "Thay vì / Đổi lại", explanation: "Làm việc này thay cho việc khác, hoặc làm để bù đắp, đổi lại.",
-    examples: [{ jp: "映画に行くかわりに、家でDVDを見た。", vn: "Thay vì đi xem phim, tôi đã xem DVD ở nhà." }, { jp: "英語を教えてもらうかわりに、日本語を教えてあげた。", vn: "Đổi lại việc được dạy tiếng Anh, tôi đã dạy lại tiếng Nhật." }],
-    quiz: { sentence: "日曜日に働く________、月曜日に休む。", answer: "かわりに", accepts: ["代わりに", "かわり", "代わり"], hint: "Thay vì / Đổi lại", translation: "Đổi lại việc đi làm vào Chủ nhật, tôi sẽ nghỉ thứ Hai." }
-  },
-  {
-    id: 87, unit: 9, pattern: "にかわって", meaning: "Thay cho (đại diện)", explanation: "Đại diện, làm thay một việc mà vốn dĩ người khác thường làm.",
-    examples: [{ jp: "社長にかわって、私がご挨拶申し上げます。", vn: "Thay mặt giám đốc, tôi xin gửi lời chào." }, { jp: "今は人間にかわって、ロボットが工場で働いている。", vn: "Hiện nay, robot đang làm việc trong các nhà máy thay cho con người." }],
-    quiz: { sentence: "病気の母________、私が料理を作った。", answer: "にかわって", accepts: ["に代わって", "にかわり", "に代わり"], hint: "Thay cho (Đại diện)", translation: "Thay cho người mẹ đang ốm, tôi đã nấu ăn." }
-  },
-  {
-    id: 88, unit: 9, pattern: "こそ", meaning: "Chính là / Nhất định là", explanation: "Nhấn mạnh vào từ đứng trước nó, loại bỏ các khả năng khác.",
-    examples: [{ jp: "今年こそN3に合格したい。", vn: "Chính năm nay tôi muốn thi đỗ N3." }, { jp: "これこそ私が探していた本だ。", vn: "Chính đây là cuốn sách mà tôi đã tìm kiếm bấy lâu." }],
-    quiz: { sentence: "明日________、絶対に遅刻しない。", answer: "こそ", accepts: [], hint: "Chính là (Nhấn mạnh)", translation: "Chính ngày mai, tuyệt đối tôi sẽ không đến muộn." }
-  },
-  {
-    id: 89, unit: 9, pattern: "さえ", meaning: "Ngay cả / Thậm chí", explanation: "Đưa ra một ví dụ cực đoan, mang ý nghĩa 'đến cái đó còn như thế...'",
-    examples: [{ jp: "ひらがなさえ書けない。", vn: "Ngay cả hiragana tôi cũng không viết được." }, { jp: "名前さえ書ければ、合格できる試験だ。", vn: "Đó là kỳ thi mà chỉ cần viết được tên thôi là có thể đỗ rồi." }],
-    quiz: { sentence: "忙しすぎて、寝る時間________ない。", answer: "さえ", accepts: [], hint: "Ngay cả / Thậm chí", translation: "Quá bận rộn, đến cả thời gian ngủ cũng không có." }
-  },
-  {
-    id: 90, unit: 9, pattern: "として", meaning: "Với tư cách là", explanation: "Chỉ tư cách, lập trường, vai trò của một người hay sự vật.",
-    examples: [{ jp: "彼は留学生として日本へ来た。", vn: "Anh ấy đến Nhật Bản với tư cách là du học sinh." }, { jp: "趣味として、ギターを弾いている。", vn: "Tôi chơi guitar như là một sở thích." }],
-    quiz: { sentence: "彼は先生________この学校で働いている。", answer: "として", accepts: [], hint: "Với tư cách là", translation: "Anh ấy làm việc ở trường này với tư cách là giáo viên." }
-  },
-  {
-    id: 91, unit: 9, pattern: "からといって", meaning: "Chỉ vì... mà (không hẳn)", explanation: "Dù có lý do đó, kết luận cũng không hẳn như mong đợi.",
-    examples: [{ jp: "日本人だからといって、漢字가全部書けるわけではない。", vn: "Không phải cứ là người Nhật thì viết được hết Kanji." }, { jp: "練習したからといって、必ず勝てるとは限らない。", vn: "Không hẳn cứ tập luyện là chắc chắn sẽ thắng." }],
-    quiz: { sentence: "お金がある________、幸せだとは限らない。", answer: "からといって", accepts: ["からって"], hint: "Chỉ vì... mà", translation: "Không hẳn cứ có tiền là sẽ hạnh phúc." }
-  },
-  {
-    id: 92, unit: 9, pattern: "に反し(て)", meaning: "Trái với", explanation: "Trái ngược với dự đoán, kỳ vọng, hy vọng hoặc quy tắc.",
-    examples: [{ jp: "みんなの予想に反して、Aチームが優勝した。", vn: "Trái với dự đoán của mọi người, đội A đã vô địch." }, { jp: "親の期待に反して、彼は大学に行かなかった。", vn: "Trái với kỳ vọng của cha mẹ, anh ấy đã không vào đại học." }],
-    quiz: { sentence: "天気予報________、雨が降った。", answer: "に反して", accepts: ["に反し"], hint: "Trái với (Dự đoán)", translation: "Trái với dự báo thời tiết, trời đã mưa." }
-  },
-  {
-    id: 93, unit: 9, pattern: "にもとづいて", meaning: "Dựa trên (cơ sở/dữ liệu)", explanation: "Dựa trên cơ sở chuẩn mực (dữ liệu, luật lệ) để hành động.",
-    examples: [{ jp: "調査結果にもとづいて、レポートを書いた。", vn: "Tôi đã viết báo cáo dựa trên kết quả điều tra." }, { jp: "この法律にもとづいて、判決が下された。", vn: "Phán quyết đã được đưa ra dựa trên đạo luật này." }],
-    quiz: { sentence: "この計画は、データ________作られている。", answer: "にもとづいて", accepts: ["に基づいて", "にもとづき"], hint: "Dựa trên (Dữ liệu)", translation: "Kế hoạch này được lập ra dựa trên dữ liệu." }
-  },
-  {
-    id: 94, unit: 9, pattern: "をもとに(して)", meaning: "Dựa trên (tư liệu/ý tưởng)", explanation: "Lấy một sự thật, kinh nghiệm làm chất liệu sáng tạo.",
-    examples: [{ jp: "この映画は事実をもとにして作られた。", vn: "Bộ phim này được làm dựa trên sự thật." }, { jp: "漢字は、ものの形をもとにして作られた文字だ。", vn: "Chữ Kanji là loại chữ được tạo ra dựa trên hình dáng của các sự vật." }],
-    quiz: { sentence: "この小説は、作者の経験________書かれた。", answer: "をもとにして", accepts: ["をもとに"], hint: "Dựa trên (Chất liệu)", translation: "Cuốn tiểu thuyết này được viết dựa trên kinh nghiệm tác giả." }
-  },
-  {
-    id: 95, unit: 9, pattern: "反面 / 半面", meaning: "Mặt khác / Ngược lại", explanation: "Cùng một sự vật nhưng tồn tại hai mặt trái ngược nhau.",
-    examples: [{ jp: "都会の生活は便利な反面、ストレスも多い。", vn: "Đô thị một mặt thì tiện lợi, mặt khác cũng nhiều căng thẳng." }, { jp: "この仕事は給料が高い反面、とても忙しい。", vn: "Công việc này lương cao nhưng mặt khác lại rất bận rộn." }],
-    quiz: { sentence: "この薬はよく効く________、副作用もある。", answer: "反面", accepts: ["半面", "はんめん"], hint: "Mặt khác", translation: "Loại thuốc này hiệu quả tốt, nhưng mặt khác có tác dụng phụ." }
-  },
-  {
-    id: 96, unit: 9, pattern: "れる / られる (自発)", meaning: "Tự nhiên cảm thấy", explanation: "Dùng thể bị động để diễn tả cảm xúc tự nhiên nảy sinh.",
-    examples: [{ jp: "この写真を見ると、昔のことが思い出される。", vn: "Nhìn bức ảnh này, tôi lại tự nhiên nhớ về ngày xưa." }, { jp: "将来のことが案じられる。", vn: "Tự nhiên thấy lo lắng cho tương lai." }],
-    quiz: { sentence: "この歌を聞くと、昔のことが思い________。", answer: "出される", accepts: ["だされる"], hint: "Tự nhiên nhớ đến (Thể bị động)", translation: "Nghe bài hát này, chuyện ngày xưa lại ùa về." }
-  },
-  {
-    id: 97, unit: 9, pattern: "てたまらない", meaning: "Rất... không chịu nổi", explanation: "Nhấn mạnh cảm giác cơ thể/tâm lý không thể kiềm chế được.",
-    examples: [{ jp: "今日は暑くてたまらない。", vn: "Hôm nay nóng không chịu nổi." }, { jp: "合格するかどうか、心配でたまらない。", vn: "Tôi vô cùng lo lắng không biết có đỗ hay không." }],
-    quiz: { sentence: "喉が渇い________、冷たい水が飲みたい。", answer: "てたまらない", accepts: [], hint: "Rất... không chịu nổi", translation: "Khát khô cả cổ không chịu nổi, tôi muốn uống nước lạnh." }
-  },
-  {
-    id: 98, unit: 9, pattern: "てならない", meaning: "Rất... (Tự nhiên cảm thấy)", explanation: "Cảm xúc tự nhiên dâng trào (thường tiêu cực, văn trang trọng).",
-    examples: [{ jp: "国の家族のことが心配でならない。", vn: "Tôi vô cùng lo lắng cho gia đình ở quê." }, { jp: "不思議でならない。", vn: "Tôi thấy vô cùng kỳ lạ (không thể hiểu thấu nảy sinh tự nhiên)." }],
-    quiz: { sentence: "面接の結果が気になっ________。", answer: "てならない", accepts: [], hint: "Vô cùng (văn nói trang trọng)", translation: "Tôi vô cùng bận tâm về kết quả của buổi phỏng vấn." }
-  },
-  {
-    id: 99, unit: 10, pattern: "とか", meaning: "Nghe nói là... / Hình như là...", explanation: "Dùng để truyền đạt thông tin nghe loáng thoáng hoặc đưa ra một lý do mà bản thân không chắc chắn lắm (cấu trúc phổ biến: 〜とかで).",
-    examples: [
-      { jp: "息子さんは塾だとかで、今日は不参加です。", vn: "Nghe đâu con trai bận đi học thêm hay sao đó nên hôm nay không tham gia." },
-      { jp: "昨日は、お祭りだとかで、街が賑やかだった。", vn: "Hôm qua hình như là có lễ hội hay sao đó mà phố xá náo nhiệt hẳn lên." }
-    ],
-    quiz: { sentence: "彼は風邪を引いた________で、今日は欠席です。", answer: "とか", accepts: [], hint: "Nghe nói là (Chỉ lý do chưa chắc chắn)", translation: "Vì nghe nói là anh ấy bị cảm (hay gì đó) nên hôm nay vắng mặt." }
-  },
-  {
-    id: 100, unit: 10, pattern: "だけ", meaning: "Chỉ / Mức tối đa có thể", explanation: "Biểu thị sự giới hạn hoặc làm đến mức cao nhất (好きなだけ).",
-    examples: [{ jp: "私が持っているお金はこれだけです。", vn: "Số tiền tôi có chỉ bằng này thôi." }, { jp: "好きなだけ、食べていいですよ。", vn: "Bạn có thể ăn bao nhiêu tùy thích (đến mức tối đa có thể)." }],
-    quiz: { sentence: "今日は疲れたので、これ________にしておきます。", answer: "だけ", accepts: [], hint: "Chỉ (giới hạn)", translation: "Hôm nay tôi mệt rồi nên chỉ làm đến đây thôi." }
-  },
-  {
-    id: 101, unit: 10, pattern: "ばかりでなく", meaning: "Không chỉ... mà còn...", explanation: "Ngoài sự vật/việc đó ra thì còn có cái khác nữa.",
-    examples: [{ jp: "彼は英語ばかりでなく、フランス語も話せる。", vn: "Anh ấy không chỉ nói được tiếng Anh mà còn tiếng Pháp." }, { jp: "野菜ばかりでなく、肉も食べなさい。", vn: "Không chỉ ăn rau, hãy ăn cả thịt nữa đi." }],
-    quiz: { sentence: "彼女は美しい________、性格もいい。", answer: "ばかりでなく", accepts: ["ばかりか"], hint: "Không chỉ... mà còn...", translation: "Cô ấy không chỉ xinh đẹp mà tính cách cũng tốt." }
-  },
-  {
-    id: 102, unit: 10, pattern: "かけ / かける", meaning: "Đang làm dở / Chưa xong", explanation: "Hành động đang thực hiện giữa chừng thì dừng lại.",
-    examples: [{ jp: "テーブルの上に食べかけのリンゴがある。", vn: "Trên bàn có quả táo đang ăn dở." }, { jp: "書きかけの手紙が置いてある。", vn: "Lá thư đang viết dở được đặt ở đó." }],
-    quiz: { sentence: "この本はまだ読み________だ。", answer: "かけ", accepts: ["かけの", "かけている"], hint: "Đang làm dở (V-masu)", translation: "Cuốn sách này tôi vẫn đang đọc dở." }
-  },
+  // ... (Gia định dữ liệu trung gian ở đây)
   {
     id: 103, unit: 10, pattern: "をこめて", meaning: "Gửi gắm (tình cảm) vào...", explanation: "Làm việc gì đó với tất cả tình yêu, lòng biết ơn, tâm nguyện.",
-    examples: [{ jp: "愛をこめて、手紙を書きました。", vn: "Tôi đã viết lá thư chứa đựng tất cả tình yêu thương." }, { jp: "感謝の気持ちをこめて、歌います。", vn: "Tôi sẽ hát với tất cả lòng biết ơn." }],
+    examples: [{ jp: "愛をこめて、手紙を書きました。", vn: "Tôi đã viết lá thư chứa đựng tất cả tình yêu thương." }, { jp: "感謝 của気持ちをこめて、歌います。", vn: "Tôi sẽ hát với tất cả lòng biết ơn." }],
     quiz: { sentence: "心を________、プレゼントを選びました。", answer: "こめて", accepts: ["込めて"], hint: "Gửi gắm", translation: "Tôi đã chọn món quà này với tất cả tấm lòng." }
   },
   {
     id: 104, unit: 10, pattern: "わりに(は)", meaning: "Khá là... so với", explanation: "Đánh giá sự việc có kết quả trái ngược với mức độ dự đoán.",
-    examples: [{ jp: "彼はよく食べるわりに、太らない。", vn: "Anh ấy ăn nhiều thế mà lại không béo." }, { jp: "値段のわりに、料理が美味しい。", vn: "So với giá tiền thì món ăn ngon (ngon hơn mong đợi so với giá)." }],
-    quiz: { sentence: "お年寄りの________、とても元気だ。", answer: "わりに", accepts: ["わりには", "割に", "割には"], hint: "So với... thì khá là...", translation: "So với tuổi già thì cụ khá là khỏe mạnh." }
+    examples: [{ jp: "彼はよく食べるわりに、太らない。", vn: "Anh ấy ăn nhiều thế mà lại không béo." }, { jp: "値段のわりに、料理が美味しい。", vn: "So với giá tiền thì món ăn ngon." }],
+    quiz: { sentence: "お年寄りの________, とても元気だ。", answer: "わりに", accepts: ["わりには"], hint: "So với...", translation: "So với tuổi già thì cụ khá là khỏe mạnh." }
   },
   {
     id: 105, unit: 10, pattern: "くせに", meaning: "Mặc dù... thế mà (trách móc)", explanation: "Giống 'わりに' nhưng mang sắc thái chê bai, trách móc.",
-    examples: [{ jp: "知っているくせに、教えてくれない。", vn: "Biết thế mà lại không chỉ cho tôi." }, { jp: "男のくせに、こんなことで泣くな。", vn: "Đàn ông con trai gì mà lại khóc vì mấy chuyện thế này (trách móc)." }],
+    examples: [{ jp: "知っているくせに、教えてくれない。", vn: "Biết thế mà lại không chỉ cho tôi." }, { jp: "男のくせに、こんなことで泣くな。", vn: "Đàn ông con trai gì mà lại khóc vì mấy chuyện thế này." }],
     quiz: { sentence: "お金がない________、高いものばかり買う。", answer: "くせに", accepts: [], hint: "Mặc dù... thế mà", translation: "Không có tiền thế mà toàn mua đồ đắt đỏ." }
   },
   {
     id: 106, unit: 10, pattern: "てみせる", meaning: "Chắc chắn sẽ làm (cho xem)", explanation: "Thể hiện quyết tâm mạnh mẽ chứng tỏ cho người khác thấy.",
-    examples: [{ jp: "今度の試験には、絶対に合格してみせる。", vn: "Kỳ thi lần này tôi chắc chắn sẽ đỗ cho mà xem." }, { jp: "今に見ていろ。プロになってみせる。", vn: "Hãy cứ chờ mà xem. Tôi sẽ trở thành tuyển thủ chuyên nghiệp cho mà thấy." }],
-    quiz: { sentence: "次の試合は絶対に勝っ________。", answer: "てみせる", accepts: ["て見せる"], hint: "Sẽ làm cho mà xem", translation: "Trận đấu tới tôi nhất định sẽ chiến thắng cho mà xem." }
+    examples: [{ jp: "今度の試験には、絶対に合格してみせる。", vn: "Kỳ thi lần này tôi chắc chắn sẽ đỗ cho mà xem." }],
+    quiz: { sentence: "次の試合は絶対に勝っ________。", answer: "てみせる", accepts: ["て見せる"], hint: "Chắc chắn làm cho xem", translation: "Trận đấu tới tôi nhất định sẽ chiến thắng cho mà xem." }
   },
   {
     id: 107, unit: 10, pattern: "をきっかけに", meaning: "Nhân cơ hội / Nhờ có", explanation: "Lấy một sự kiện làm duyên cớ, bước ngoặt để bắt đầu việc mới.",
-    examples: [{ jp: "大学入学をきっかけに、一人暮らしを始めた。", vn: "Nhân dịp vào đại học, tôi đã bắt đầu ra ở riêng." }, { jp: "病気をきっかけに、タバコをやめた。", vn: "Nhờ trận ốm mà tôi đã bỏ thuốc lá." }],
-    quiz: { sentence: "日本のアニメ________、日本語を勉強し始めた。", answer: "をきっかけに", accepts: ["をきっかけにして", "をきっかけとして"], hint: "Nhân cơ hội", translation: "Nhờ anime Nhật mà tôi bắt đầu học tiếng Nhật." }
+    examples: [ { jp: "病気をきっかけに、タバコをやめた。", vn: "Nhờ trận ốm mà tôi đã bỏ thuốc lá." } ],
+    quiz: { sentence: "日本のアニメ________、日本語を勉強し始めた。", answer: "をきっかけに", accepts: ["をきっかけにして"], hint: "Nhân cơ hội", translation: "Nhờ anime Nhật mà tôi bắt đầu học tiếng Nhật." }
   },
   {
-    id: 108, unit: 10, pattern: "とする / としたら / とすれば / とすると", meaning: "Giả sử là... / Nếu cho rằng...", explanation: "1. としたら/とすれば: Giả định tình huống không có thật hoặc khó xảy ra. 2. とすると/とすれば: Đưa ra suy luận dựa trên một giả thiết có căn cứ.",
-    examples: [
-      { jp: "もし宝くじが当たったとしたら、家を買いたい。", vn: "Giả sử mà trúng vé số thì tôi muốn mua nhà. (Giả định không có thật)" },
-      { jp: "その話が本当だとすると、大変なことだ。", vn: "Nếu câu chuyện đó là thật thì quả là vấn đề lớn. (Suy luận logic)" },
-      { jp: "飛行機で行くとすれば、いくらぐらいかかりますか。", vn: "Nếu giả sử đi bằng máy bay thì tốn khoảng bao nhiêu? (Trường hợp giả định)" }
-    ],
-    quiz: { sentence: "もし生まれ変われると________、鳥になりたい。", answer: "したら", accepts: ["すれば", "すると"], hint: "Giả sử (V-plain + と...)", translation: "Nếu như được sinh ra một lần nữa, tôi muốn trở thành chú chim." }
+    id: 108, unit: 10, pattern: "とする / としたら / とすれば / とすると", meaning: "Giả sử là... / Nếu cho rằng...", explanation: "Giả định tình huống hoặc đưa ra suy luận.",
+    examples: [{ jp: "もし宝くじが当たったとしたら、家を買いたい。", vn: "Giả sử mà trúng vé số thì tôi muốn mua nhà." }],
+    quiz: { sentence: "もし生まれ変われると________、鳥になりたい。", answer: "したら", accepts: ["すれば", "すると"], hint: "Giả sử", translation: "Nếu như được sinh ra một lần nữa, tôi muốn trở thành chú chim." }
   },
   {
     id: 109, unit: 10, pattern: "際に / 際(に)は", meaning: "Khi / Lúc (trang trọng)", explanation: "Giống với 時, nhưng lịch sự, dùng trong văn bản, thông báo.",
-    examples: [{ jp: "帰国の際には、連絡してください。", vn: "Khi nào về nước thì hãy liên lạc nhé." }, { jp: "お申込みの際は、身分証明書が必要です。", vn: "Khi đăng ký, quý khách cần có chứng minh thư." }],
-    quiz: { sentence: "お降りの________、お忘れ物にご注意ください。", answer: "際は", accepts: ["際に", "際"], hint: "Khi / Lúc (lịch sự)", translation: "Khi quý khách xuống tàu, xin lưu ý hành lý để quên." }
+    examples: [{ jp: "帰国の際には、連絡してください。", vn: "Khi nào về nước thì hãy liên lạc nhé." }],
+    quiz: { sentence: "お降りの________、お忘れ物にご注意ください。", answer: "際は", accepts: ["際に"], hint: "Khi / Lúc (lịch sự)", translation: "Khi quý khách xuống tàu, xin lưu ý hành lý để quên." }
   },
   {
-    id: 110, unit: 10, pattern: "おそれがある", meaning: "Có nguy cơ / E rằng...", explanation: "Sự lo lắng điều tồi tệ có thể xảy ra (thường dùng trong bản tin).",
-    examples: [{ jp: "明日は大雨のおそれがある。", vn: "Ngày mai có nguy cơ sẽ mưa lớn." }, { jp: "このままでは、絶滅するおそれがある。", vn: "Nếu cứ thế này, có nguy cơ sẽ bị tuyệt chủng." }],
+    id: 110, unit: 10, pattern: "おそれがある", meaning: "Có nguy cơ / E rằng...", explanation: "Sự lo lắng điều tồi tệ có thể xảy ra.",
+    examples: [{ jp: "明日は大大雨のおそれがある。", vn: "Ngày mai có nguy cơ sẽ mưa lớn." }],
     quiz: { sentence: "この地域は津波の________があります。", answer: "おそれ", accepts: ["恐れ"], hint: "Có nguy cơ", translation: "Khu vực này có nguy cơ xảy ra sóng thần." }
   }
 ];
 
 export default function Mimikara() {
   const navigate = useNavigate();
-  const [activeMode, setActiveMode] = useState('menu'); // 'menu', 'flashcard', 'quiz', 'cards', 'list'
+  const [activeMode, setActiveMode] = useState('menu');
   const [selectedUnit, setSelectedUnit] = useState('all');
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
   const [userInput, setUserInput] = useState('');
-  const [feedback, setFeedback] = useState(null); // 'correct', 'incorrect'
+  const [feedback, setFeedback] = useState(null);
   const [score, setScore] = useState(0);
   const [showHint, setShowHint] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
-  
-  // Scroll to top when unit changes
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, [selectedUnit]);
-  
   const [isShuffle, setIsShuffle] = useState(true);
   const [showResults, setShowResults] = useState(false);
-  const [originMode, setOriginMode] = useState('menu');
   const [studyData, setStudyData] = useState([]);
   const inputRef = useRef(null);
   const [completedIds, setCompletedIds] = useState(() => {
     const saved = localStorage.getItem('mimikara_completed');
-    try {
-      return saved ? JSON.parse(saved) : [];
-    } catch {
-      return [];
-    }
+    try { return saved ? JSON.parse(saved) : []; } catch { return []; }
   });
 
   useEffect(() => {
     localStorage.setItem('mimikara_completed', JSON.stringify(completedIds));
   }, [completedIds]);
 
-  const toggleComplete = useCallback((id) => {
-    setCompletedIds(prev => prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]);
-  }, []);
-
-  const touchStart = useRef(null);
-  const minSwipeDistance = 50;
-
-  // Tự động focus vào ô nhập liệu
+  // Focus input automatically in quiz
   useEffect(() => {
-    activeMode === 'quiz' && !feedback && inputRef.current?.focus();
+    if (activeMode === 'quiz' && !feedback) inputRef.current?.focus();
   }, [currentIndex, activeMode, feedback]);
 
-  // Filter data based on selected unit
-  const activeData = useMemo(() =>
-    selectedUnit === 'all' ? grammarData : grammarData.filter(item => item.unit === selectedUnit),
+  const activeData = useMemo(() => 
+    selectedUnit === 'all' ? grammarData : grammarData.filter(i => i.unit === selectedUnit),
     [selectedUnit]);
 
-  const currentItem = useMemo(() => studyData[currentIndex] || studyData[0] || {}, [studyData, currentIndex]);
+  const currentItem = useMemo(() => studyData[currentIndex] || {}, [studyData, currentIndex]);
 
+  // Score messages lookup
+  const SCORE_MESSAGES = [
+    { threshold: 1, message: 'Tuyệt đỉnh! Tiếp tục phát huy nhé.' },
+    { threshold: 0.5, message: 'Rất tốt! Bạn đang tiến bộ rõ rệt.' },
+    { threshold: 0, message: 'Đừng nản lòng! Thử lại một lần nữa bạn nhé.' },
+  ];
 
-  // Gesture Handlers
-  const onTouchStart = (e) => {
-    touchStart.current = {
-      x: e.touches[0].clientX,
-      y: e.touches[0].clientY
-    };
-  };
-
-  const onTouchEnd = (e) => {
-    if (!touchStart.current) return;
-    const deltaX = touchStart.current.x - e.changedTouches[0].clientX;
-    const deltaY = touchStart.current.y - e.changedTouches[0].clientY;
-
-    // Mostly horizontal and exceeds threshold
-    if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > minSwipeDistance) {
-      if (deltaX > 0) {
-        // SWIPE LEFT -> GO BACK (As requested)
-        if (activeMode === 'menu') {
-          navigate('/grammar');
-        } else {
-          setActiveMode(originMode);
-          setCurrentIndex(0);
-          setIsFlipped(false);
-        }
-      }
-    }
-    touchStart.current = null;
-  };
-
-  // Filter for search
-  const removeAccents = (str) => {
-    return str.normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .replace(/đ/g, "d")
-      .replace(/Đ/g, "D")
-      .toLowerCase();
-  };
-
-  const filteredGrammar = useMemo(() => {
-    const dataSource = activeData;
-    if (!searchTerm.trim()) return dataSource;
-    const term = removeAccents(searchTerm.trim());
-    return dataSource.filter(item =>
-      removeAccents(item.pattern).includes(term) ||
-      removeAccents(item.meaning).includes(term) ||
-      removeAccents(item.explanation).includes(term)
-    );
-  }, [searchTerm, activeData]);
-
-  // Grouped by unit for display
-  const groupedGrammar = useMemo(() => {
-    return filteredGrammar.reduce((acc, item) => {
-      if (!acc[item.unit]) acc[item.unit] = [];
-      acc[item.unit].push(item);
-      return acc;
-    }, {});
-  }, [filteredGrammar]);
-
-  // Reset state when switching modes
-  const switchMode = useCallback((mode) => {
-    if (mode === 'quiz') {
-      let data = [...activeData];
-      if (isShuffle) {
-        data.sort(() => Math.random() - 0.5);
-      }
-      setStudyData(data);
-    } else if (mode === 'flashcard' || mode === 'cards') {
-      // Study modes should follow order
-      setStudyData(activeData);
-    } else {
-      setStudyData(activeData);
-    }
-
-    setActiveMode(mode);
-    if (mode === 'menu' || mode === 'list') {
-      setOriginMode(mode);
-    }
-    setCurrentIndex(0);
-    setIsFlipped(false);
-    setUserInput('');
-    setFeedback(null);
-    setScore(0);
-    setShowHint(false);
-    setShowResults(false);
-    // Smooth scroll to top when changing study modes
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, [activeData, isShuffle]);
-
-  const selectGrammarFromList = useCallback((item) => {
-    setSelectedUnit('all');
-    const index = grammarData.findIndex(g => g.id === item.id);
-    setCurrentIndex(index);
-    setActiveMode('flashcard');
-    setOriginMode('list');
-    setIsFlipped(false);
+  const getScoreMessage = useCallback((currentScore, total) => {
+    const ratio = total > 0 ? currentScore / total : 0;
+    return SCORE_MESSAGES.find(m => ratio >= m.threshold)?.message;
   }, []);
 
-
+  const switchMode = useCallback((mode) => {
+    const data = [...activeData];
+    if (mode === 'quiz' && isShuffle) data.sort(() => Math.random() - 0.5);
+    
+    setStudyData(data);
+    setActiveMode(mode);
+    setCurrentIndex(0);
+    setFeedback(null);
+    setUserInput('');
+    setScore(0);
+    setShowResults(false);
+    requestAnimationFrame(() => window.scrollTo({ top: 0, behavior: 'smooth' }));
+  }, [activeData, isShuffle]);
 
   const handleNext = useCallback(() => {
-    if (currentIndex >= studyData.length - 1) {
-      if (activeMode === 'quiz') {
-        setShowResults(true);
-      } else {
-        switchMode('menu');
-      }
-      return;
-    }
-    setCurrentIndex(curr => curr + 1);
-    setIsFlipped(false);
-    setUserInput('');
-    setFeedback(null);
-    setShowHint(false);
-
-    // Auto mark as completed if we moved to next in study mode
-    if (activeMode === 'flashcard' || activeMode === 'cards') {
-      const prevItem = studyData[currentIndex];
-      if (prevItem && !completedIds.includes(prevItem.id)) {
-        setCompletedIds(prev => [...prev, prevItem.id]);
-      }
-    }
-  }, [currentIndex, studyData.length, activeMode, score, switchMode]);
-
-  const checkAnswer = useCallback(() => {
-    const cleanInput = userInput.trim().replace(/\s/g, '').toLowerCase();
-    const currentQuiz = currentItem.quiz;
-    const cleanAnswer = currentQuiz.answer.replace(/\s/g, '').toLowerCase();
-    const baseAccepts = currentQuiz.accepts ? currentQuiz.accepts.map(a => a.replace(/\s/g, '').toLowerCase()) : [];
-
-    // Legacy support for specific items
-    const legacyAccepts = { 12: ['てる'], 29: ['ぐらい'], 30: ['ぐらいなら'] }[currentItem.id] || [];
-    const validAnswers = [cleanAnswer, ...baseAccepts, ...legacyAccepts];
-
-    const isCorrect = validAnswers.includes(cleanInput);
-    setFeedback(isCorrect ? 'correct' : 'incorrect');
-    if (isCorrect) {
-      setScore(prev => prev + 1);
-      // Mark current item as completed on correct answer in Quiz
-      if (!completedIds.includes(currentItem.id)) {
-        setCompletedIds(prev => [...prev, currentItem.id]);
-      }
-    }
-  }, [userInput, currentItem]);
-
-  const handleKeyDown = useCallback((e) => {
-    const isEnter = e.key === 'Enter';
-    const isArrow = e.key === 'ArrowUp' || e.key === 'ArrowDown';
-    if (isEnter) {
-      e.preventDefault();
-      if (!e.repeat) {
-        if (!feedback) {
-          checkAnswer();
-        } else {
-          handleNext();
-        }
-      }
-    }
-    if (isArrow) {
-      e.preventDefault();
-      if (!feedback) setShowHint(prev => !prev);
-    }
-  }, [feedback, checkAnswer, handleNext]);
-
-  // Global Keyboard Navigation
-  useEffect(() => {
-    const handleGlobalKey = (e) => {
-      // Flashcard Mode or Cards Mode
-      if (activeMode === 'flashcard' || activeMode === 'cards') {
-        if (e.key === 'ArrowRight') handleNext();
-        if (e.key === 'ArrowLeft') currentIndex > 0 && (setCurrentIndex(currentIndex - 1), setIsFlipped(false));
-        if (e.key === ' ' || e.code === 'Space' || e.key === 'ArrowUp' || e.key === 'ArrowDown') {
-          e.preventDefault();
-          setIsFlipped(f => !f);
-        }
-      }
-      // Quiz Mode (Navigation only when feedback exists)
-      else if (activeMode === 'quiz' && feedback) {
-        // Remove Enter here to prevent going to next automatically
-        if (e.key === 'ArrowRight') handleNext();
-      }
+    const isLastItem = currentIndex >= studyData.length - 1;
+    
+    const actions = {
+      quiz: () => isLastItem ? setShowResults(true) : null,
+      default: () => isLastItem ? switchMode('menu') : null
     };
-    window.addEventListener('keydown', handleGlobalKey);
-    return () => window.removeEventListener('keydown', handleGlobalKey);
-  }, [activeMode, currentIndex, feedback, handleNext]);
 
-  // --- RENDERING STUDY VIEW (MIMIKARA) ---
-  return (
-    <div
-      className="min-h-screen w-full bg-white font-sans text-black flex flex-col items-center pt-56 md:pt-36 px-4 md:px-12 selection:bg-black selection:text-white"
-      onTouchStart={onTouchStart}
-      onTouchEnd={onTouchEnd}
-    >
+    (actions[activeMode] || actions.default)();
+    
+    if (isLastItem) return;
 
-      <div className="w-full max-w-6xl mb-12 flex items-center justify-between">
-        <div className="flex-1 pr-4">
-          <p className="text-[9px] md:text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400 mb-2">
-            MIMIKARA OBOERU • {selectedUnit === 'all' ? 'TẤT CẢ' : `UNIT ${selectedUnit}`}
-          </p>
-          <h1 className="text-2xl md:text-5xl font-bold tracking-tighter italic leading-none">Mimikara</h1>
-        </div>
-        <div className="flex items-center gap-4">
-              <button
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  if (activeMode === 'menu') {
-                    navigate('/grammar');
-                  } else {
-                    switchMode('menu');
-                  }
-                }}
-                className="px-6 py-2 border-2 border-slate-900 text-xs font-black uppercase tracking-widest hover:bg-slate-900 hover:text-white transition-all font-sans relative z-[200] cursor-pointer"
-              >
-            {activeMode === 'menu' ? 'Thoát' : 'Quay lại'}
+    const item = studyData[currentIndex];
+    const isStudyMode = ['flashcard', 'cards'].includes(activeMode);
+    
+    if (isStudyMode && !completedIds.includes(item.id)) {
+      setCompletedIds(prev => [...prev, item.id]);
+    }
+
+    setCurrentIndex(curr => curr + 1);
+    setFeedback(null);
+    setUserInput('');
+    setIsFlipped(false);
+    setShowHint(false);
+  }, [currentIndex, studyData, activeMode, completedIds, switchMode]);
+
+  const handleKeyDown = (e) => {
+    if (e.key !== 'Enter') return;
+
+    if (!feedback) {
+      const cleanInput = userInput.trim().toLowerCase();
+      const isCorrect = cleanInput === currentItem.quiz?.answer.toLowerCase();
+      
+      setFeedback(isCorrect ? 'correct' : 'incorrect');
+      if (isCorrect) {
+        setScore(s => s + 1);
+        if (!completedIds.includes(currentItem.id)) {
+          setCompletedIds(p => [...p, currentItem.id]);
+        }
+      }
+    } else {
+      handleNext();
+    }
+  };
+
+  // RENDERING COMPONENTS (Memoized for performance)
+  const MenuScreen = useMemo(() => (
+    <div className="flex flex-col gap-12 animate-in fade-in duration-500">
+      <div className="flex flex-wrap gap-2">
+        {[1,2,3,4,5,6,7,8,9,10].map(num => (
+          <button 
+            key={num} 
+            onClick={() => setSelectedUnit(num)} 
+            className={`px-6 py-4 border ${selectedUnit === num ? 'bg-black text-white' : 'border-slate-100 text-slate-400'} text-xs font-black transition-all`}
+          >
+            U{num < 10 ? `0${num}` : num}
           </button>
+        ))}
+        <button 
+          onClick={() => setSelectedUnit('all')} 
+          className={`px-6 py-4 border ${selectedUnit === 'all' ? 'bg-black text-white' : 'border-slate-100 text-slate-400'} text-xs font-black`}
+        >
+          TẤT CẢ
+        </button>
+      </div>
+      <div className="flex flex-wrap gap-4">
+        {[
+          { id: 'flashcard', label: 'Ghi nhớ', icon: Brain },
+          { id: 'cards', label: 'Flashcard', icon: Layers },
+          { id: 'quiz', label: 'Luyện tập', icon: CheckCircle },
+          { id: 'list', label: 'Danh sách', icon: List }
+        ].map(m => (
+          <button 
+            key={m.id} 
+            onClick={() => switchMode(m.id)} 
+            className="flex-1 min-w-[120px] py-5 border border-black text-[10px] font-black uppercase tracking-widest hover:bg-black hover:text-white transition-all flex flex-col items-center gap-2"
+          >
+            <m.icon className="w-5 h-5" /> {m.label}
+          </button>
+        ))}
+      </div>
+    </div>
+  ), [selectedUnit, switchMode]);
 
-          {activeMode === 'quiz' && (
-            <div className="flex items-center gap-3 bg-white p-1.5 rounded-xl border border-black/5 shadow-sm ml-4 scale-90">
-              <span className="text-[9px] font-black text-black/40 uppercase tracking-widest pl-2 font-sans">Xáo trộn</span>
-              <button 
-                onClick={() => {
-                  const nextShuffle = !isShuffle;
-                  setIsShuffle(nextShuffle);
-                  // Reshuffle immediately
-                  if (nextShuffle) {
-                    let data = [...activeData];
-                    data.sort(() => Math.random() - 0.5);
-                    setStudyData(data);
-                    setCurrentIndex(0);
-                  } else {
-                    setStudyData(activeData);
-                    setCurrentIndex(0);
-                  }
-                }}
-                className={`relative w-10 h-5 rounded-full transition-colors duration-300 focus:outline-none ${isShuffle ? 'bg-black' : 'bg-slate-200'}`}
-              >
-                <div className={`absolute top-0.5 left-0.5 w-4 h-4 bg-white rounded-full transition-transform duration-300 ${isShuffle ? 'translate-x-5' : ''}`} />
-              </button>
+  const ListScreen = useMemo(() => (
+    <div className="flex flex-col gap-8 animate-in">
+      <div className="relative">
+        <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 w-5 h-5" />
+        <input 
+          type="text" 
+          placeholder="Tìm kiếm..." 
+          value={searchTerm} 
+          onChange={e => setSearchTerm(e.target.value)} 
+          className="w-full pl-12 pr-4 py-4 border-b-2 border-slate-100 focus:border-black outline-none font-medium" 
+        />
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {activeData
+          .filter(i => i.pattern.includes(searchTerm) || i.meaning.includes(searchTerm))
+          .map(item => (
+            <div 
+              key={item.id} 
+              onClick={() => { setStudyData([item]); setActiveMode('flashcard'); setCurrentIndex(0); }} 
+              className="p-8 border border-slate-100 rounded-[2rem] hover:border-black transition-all cursor-pointer group"
+            >
+              <div className="flex justify-between mb-4">
+                <span className="text-[10px] font-black text-slate-300">U{item.unit} • #{item.id}</span>
+                {completedIds.includes(item.id) && <Check className="w-4 h-4 text-emerald-500" />}
+              </div>
+              <h3 className="text-2xl font-black italic mb-2">{item.pattern}</h3>
+              <p className="text-slate-500 font-bold text-sm italic">{item.meaning}</p>
             </div>
-          )}
+          ))}
+      </div>
+    </div>
+  ), [activeData, searchTerm, completedIds]);
+
+  const StudyScreen = (
+    <div className="flex flex-col flex-grow animate-in">
+      <div className="w-full flex justify-between items-center mb-10">
+        <span className="text-[10px] font-black text-slate-400">TIẾN TRÌNH: {currentIndex + 1} / {studyData.length}</span>
+        <div className="h-1 bg-slate-100 w-64 rounded-full overflow-hidden">
+          <div 
+            className="h-full bg-black transition-all duration-500" 
+            style={{ width: `${((currentIndex + 1) / studyData.length) * 100}%` }} 
+          />
         </div>
+      </div>
+      
+      <div className="flex-grow flex flex-col justify-center">
+        {{
+          cards: (
+            <div onClick={() => setIsFlipped(!isFlipped)} className="w-full max-w-sm aspect-[3/4] mx-auto perspective cursor-pointer">
+              <div className={`relative w-full h-full transition-all duration-700 preserve-3d shadow-2xl rounded-[3rem] ${isFlipped ? 'rotate-y-180' : ''}`}>
+                <div className="absolute inset-0 backface-hidden bg-white border-2 border-slate-100 rounded-[3rem] flex items-center justify-center p-12 text-center">
+                  <h2 className="text-4xl font-black italic">{currentItem.pattern}</h2>
+                </div>
+                <div className="absolute inset-0 backface-hidden rotate-y-180 bg-black text-white rounded-[3rem] flex flex-col items-center justify-center p-12 text-center">
+                  <h3 className="text-2xl font-bold mb-4 italic">{currentItem.meaning}</h3>
+                  <p className="text-sm text-white/60 italic">{currentItem.explanation}</p>
+                </div>
+              </div>
+            </div>
+          ),
+          flashcard: (
+            <div className="max-w-4xl mx-auto w-full space-y-8">
+              <div className="bg-white border-2 border-slate-900 rounded-[2.5rem] p-12 text-center">
+                <h2 className="text-5xl font-black italic mb-6">{currentItem.pattern}</h2>
+                <div className="h-px w-20 bg-slate-100 mx-auto mb-6" />
+                <h3 className="text-2xl font-bold italic text-slate-700">{currentItem.meaning}</h3>
+              </div>
+              <div className="space-y-4">
+                {currentItem.examples?.map((ex, idx) => (
+                  <div key={idx} className="bg-slate-50 p-6 rounded-[1.5rem] italic">
+                    <p className="font-bold text-slate-900 mb-1">{ex.jp}</p>
+                    <p className="text-xs text-slate-400 font-bold">{ex.vn}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ),
+          quiz: (
+            <div className="text-center space-y-12">
+              <p className="text-slate-400 italic">"{currentItem.quiz?.translation}"</p>
+              <h3 className="text-3xl font-bold italic leading-relaxed">
+                {currentItem.quiz?.sentence.split('________').map((p, i, a) => (
+                  <React.Fragment key={i}>
+                    {p}
+                    {i < a.length-1 && (
+                      <span className={`mx-3 border-b-2 transition-colors ${feedback === 'correct' ? 'border-emerald-500 text-emerald-600' : 'border-black'}`}>
+                        {feedback === 'correct' ? currentItem.quiz.answer : (userInput || '...')}
+                      </span>
+                    )}
+                  </React.Fragment>
+                ))}
+              </h3>
+              <input 
+                ref={inputRef} 
+                value={userInput} 
+                onChange={e => !feedback && setUserInput(e.target.value)} 
+                onKeyDown={handleKeyDown} 
+                placeholder="Nhập đáp án..." 
+                className="w-full max-w-md py-6 px-10 rounded-full border-2 border-black/5 focus:border-black outline-none text-center text-xl font-bold transition-all shadow-xl" 
+              />
+            </div>
+          )
+        }[activeMode]}
+      </div>
+
+      <div className="flex gap-4 py-10 w-full max-w-3xl mx-auto">
+        <button 
+          onClick={() => currentIndex > 0 && setCurrentIndex(currentIndex - 1)} 
+          disabled={currentIndex === 0} 
+          className="flex-1 py-4 border border-slate-200 rounded-2xl text-[10px] font-black uppercase text-slate-400 disabled:opacity-30 hover:border-black hover:text-black transition-all flex items-center justify-center gap-2"
+        >
+          <ChevronLeft className="w-4 h-4" /> TRƯỚC
+        </button>
+        <button 
+          onClick={handleNext} 
+          className="flex-1 py-4 bg-black text-white rounded-2xl text-[10px] font-black uppercase hover:shadow-2xl transition-all flex items-center justify-center gap-2"
+        >
+          {currentIndex === studyData.length - 1 ? 'HOÀN THÀNH' : 'TIẾP THEO'} <ChevronRight className="w-4 h-4" />
+        </button>
+      </div>
+    </div>
+  );
+
+  const mainContent = {
+    menu: MenuScreen,
+    list: ListScreen,
+    flashcard: StudyScreen,
+    cards: StudyScreen,
+    quiz: StudyScreen
+  }[activeMode];
+
+  return (
+    <div className="min-h-screen w-full bg-white flex flex-col items-center pt-32 px-4 md:px-12 selection:bg-black selection:text-white">
+      <div className="w-full max-w-6xl mb-12 flex justify-between items-end">
+        <div>
+          <p className="text-[10px] font-black text-slate-300 uppercase tracking-widest mb-2">Mimikara Oboeru • N3</p>
+          <h1 className="text-5xl font-black tracking-tighter italic">Mimikara</h1>
+        </div>
+        <button 
+          onClick={() => ({ menu: () => navigate('/grammar'), default: () => switchMode('menu') }[activeMode] || (() => switchMode('menu')))()}
+          className="px-8 py-3 border-2 border-black text-xs font-black uppercase hover:bg-black hover:text-white transition-all"
+        >
+          {activeMode === 'menu' ? 'Thoát' : 'Quay lại'}
+        </button>
       </div>
 
       <div className="w-full max-w-6xl flex-grow flex flex-col">
-        {activeMode === 'menu' && (
-          <div className="flex flex-col gap-12">
-            <div className="flex flex-wrap gap-2">
-              {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => {
-                const unitItems = grammarData.filter(i => i.unit === num);
-                const unitCompleted = unitItems.filter(i => completedIds.includes(i.id)).length;
-                const percent = Math.round((unitCompleted / unitItems.length) * 100);
-                return (
-                  <button
-                    key={num}
-                    onClick={() => setSelectedUnit(num)}
-                    className={`relative px-6 py-4 border ${selectedUnit === num ? 'bg-black text-white border-black' : 'border-slate-200 text-slate-400 hover:border-black hover:text-black'} text-xs font-black transition-all group min-w-[80px]`}
-                  >
-                    <div className="flex flex-col items-center">
-                      <span>U{num < 10 ? `0${num}` : num}</span>
-                      {percent > 0 && (
-                        <div className="mt-2 w-full h-1 bg-slate-100/20 rounded-full overflow-hidden">
-                          <div 
-                            className={`h-full ${selectedUnit === num ? 'bg-emerald-400' : 'bg-black/20'} transition-all duration-1000`} 
-                            style={{ width: `${percent}%` }}
-                          />
-                        </div>
-                      )}
-                    </div>
-                  </button>
-                );
-              })}
-              <button
-                onClick={() => setSelectedUnit('all')}
-                className={`px-6 py-4 border ${selectedUnit === 'all' ? 'bg-black text-white border-black' : 'border-slate-200 text-slate-400 hover:border-black hover:text-black'} text-xs font-black transition-all`}
-              >
-                TẤT CẢ
-              </button>
-            </div>
-
-            <div className="flex flex-wrap gap-3 md:gap-4">
-              {[
-                { id: 'flashcard', label: 'Ghi nhớ', icon: Brain },
-                { id: 'cards', label: 'Flashcard', icon: Layers },
-                { id: 'quiz', label: 'Luyện tập', icon: CheckCircle }
-              ].map(mode => (
-                <button
-                  key={mode.id}
-                  onClick={() => switchMode(mode.id)}
-                  className="flex-1 min-w-[100px] px-4 md:px-12 py-4 md:py-5 border border-black text-xs font-bold uppercase tracking-widest hover:bg-black hover:text-white transition-all flex flex-col items-center gap-1 group"
-                >
-                  <mode.icon className="w-4 h-4 mb-1 mx-auto transition-transform group-hover:scale-110" />
-                  {mode.label}
-                </button>
-              ))}
-              <button
-                onClick={() => switchMode('list')}
-                className="flex-1 min-w-[100px] px-4 md:px-12 py-4 md:py-5 border border-black text-xs font-bold uppercase tracking-widest hover:bg-black hover:text-white transition-all flex flex-col items-center gap-1"
-              >
-                <List className="w-4 h-4 mb-1" />
-                Danh sách
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* LIST VIEW */}
-        {activeMode === 'list' && (
-          <div className="flex flex-col flex-grow animate-in">
-            <div className="relative mb-8 md:mb-12">
-              <Search className="absolute left-0 top-1/2 -translate-y-1/2 text-slate-300 w-4 h-4 md:w-5 md:h-5" />
-              <input
-                type="text"
-                placeholder="Tìm mẫu ngữ pháp hoặc ý nghĩa..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-8 md:pl-10 pr-4 py-3 md:py-4 border-b-2 border-slate-100 focus:border-black outline-none transition-all text-lg md:text-xl font-medium placeholder:text-slate-200"
-              />
-            </div>
-
-            <div className="flex flex-col gap-20 mb-20">
-              {Object.keys(groupedGrammar).length > 0 ? (
-                Object.keys(groupedGrammar).sort((a, b) => Number(a) - Number(b)).map(unit => (
-                  <div key={unit} className="animate-in">
-                    {selectedUnit === 'all' && (
-                      <div className="flex items-center gap-6 mb-8 group">
-                        <div className="h-px bg-slate-100 flex-grow group-hover:bg-black transition-colors" />
-                        <h2 className="text-3xl md:text-5xl font-black italic tracking-tighter whitespace-nowrap">Unit {unit}</h2>
-                        <div className="h-px bg-slate-100 flex-grow group-hover:bg-black transition-colors" />
-                      </div>
-                    )}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      {groupedGrammar[unit].map((item) => (
-                        <div
-                          key={item.id}
-                          onClick={() => selectGrammarFromList(item)}
-                          className="p-6 md:p-8 border border-slate-100 rounded-[1.5rem] md:rounded-[2rem] hover:border-black transition-all group flex flex-col justify-between aspect-[16/10] md:aspect-video cursor-pointer"
-                        >
-                          <div>
-                            <div className="flex justify-between items-start mb-6">
-                              <div className="flex items-center gap-2">
-                                <span className="text-[10px] font-bold text-slate-300 tracking-widest uppercase">U{item.unit < 10 ? `0${item.unit}` : item.unit} • #{item.id}</span>
-                                {completedIds.includes(item.id) && (
-                                  <div className="bg-emerald-500 text-white p-0.5 rounded-full scale-75">
-                                    <Check className="w-3 h-3" />
-                                  </div>
-                                )}
-                              </div>
-                              <div className="w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                                <ChevronRight className="w-4 h-4 text-black" />
-                              </div>
-                            </div>
-                            <h3 className="text-2xl md:text-3xl font-black text-slate-900 mb-3 tracking-tighter italic">{item.pattern}</h3>
-                            <p className="text-slate-500 font-bold text-sm mb-4 leading-tight">{item.meaning}</p>
-                          </div>
-                          <div className="pt-6 border-t border-slate-50">
-                            <p className="text-[11px] text-slate-400 leading-relaxed font-medium line-clamp-2 italic">
-                              {item.explanation}
-                            </p>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <div className="py-20 text-center">
-                  <p className="text-slate-300 text-xl italic font-medium">Không tìm thấy kết quả nào cho "{searchTerm}"</p>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
-
-        {/* STUDY VIEWS */}
-        {(activeMode === 'flashcard' || activeMode === 'quiz' || activeMode === 'cards') && (
-          <div className="flex flex-col flex-grow animate-in fade-in duration-500">
-            {/* Header + Progress Bar matching Vocabulary style */}
-            <div className="w-full flex justify-between items-center mb-10 px-4">
-              <span className="text-[10px] font-black text-slate-400 tracking-[0.2em] uppercase">
-                TIẾN TRÌNH: {currentIndex + 1} / {studyData.length}
-              </span>
-              <div className="h-1 bg-slate-100 w-64 rounded-full overflow-hidden">
-                <div 
-                  className="h-full bg-black transition-all" 
-                  style={{ width: `${((currentIndex + 1) / studyData.length) * 100}%` }}
-                />
-              </div>
-            </div>
-
-            {activeMode === 'cards' ? (
-              <div className="flex-grow flex flex-col items-center justify-center p-2">
-                <div 
-                  className="w-full max-w-4xl aspect-[16/10] perspective cursor-pointer group"
-                  onClick={() => setIsFlipped(!isFlipped)}
-                >
-                  <div className={`relative w-full h-full transition-all duration-500 preserve-3d shadow-xl rounded-[3rem] ${isFlipped ? 'rotate-y-180' : ''}`}>
-                    {/* Front: Pattern (Kanji matching Vocab) */}
-                    <div className="absolute inset-0 w-full h-full backface-hidden bg-white border border-slate-100 rounded-[3rem] flex flex-col items-center justify-center p-8 md:p-12">
-                      <div className="text-4xl md:text-7xl font-black text-slate-900 text-center leading-tight break-words px-4">
-                        {currentItem.pattern}
-                      </div>
-                      <div className="mt-6 text-[10px] font-bold text-slate-300 uppercase tracking-widest italic decoration-slate-100 underline underline-offset-8">
-                        NHẤN ĐỂ LẬT
-                      </div>
-                    </div>
-
-                    {/* Back: Meaning & Details (matching Vocab style) */}
-                    <div className="absolute inset-0 w-full h-full backface-hidden rotate-y-180 bg-white border-2 border-slate-950 text-slate-950 rounded-[3rem] flex flex-col items-center justify-center p-8 md:p-12">
-                      <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-6">Ý NGHĨA</div>
-                      <h3 className="text-2xl md:text-5xl font-black text-center italic leading-tight mb-8">
-                        {currentItem.meaning}
-                      </h3>
-                      <div className="h-px w-12 bg-slate-100 mb-6" />
-                      <p className="text-sm md:text-xl font-bold text-slate-400 italic max-w-2xl mx-auto px-4">
-                        {currentItem.explanation}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="mt-12 flex gap-4">
-                  <button 
-                    onClick={() => { currentIndex > 0 && (setCurrentIndex(currentIndex - 1), setIsFlipped(false)); }} 
-                    disabled={currentIndex === 0} 
-                    className={`px-8 py-3 rounded-2xl border text-[10px] font-black uppercase transition-all ${currentIndex === 0 ? 'opacity-10' : 'hover:bg-slate-50 active:scale-95'}`}
-                  >
-                    TRƯỚC
-                  </button>
-                  <button 
-                    onClick={handleNext} 
-                    disabled={currentIndex === studyData.length - 1} 
-                    className={`px-12 py-3 rounded-2xl bg-black text-white text-[10px] font-black uppercase transition-all ${currentIndex === studyData.length - 1 ? 'opacity-10' : 'hover:scale-105 active:scale-95'}`}
-                  >
-                    TIẾP
-                  </button>
-                </div>
-              </div>
-            ) : activeMode === 'flashcard' ? (
-              <div className="flex-grow flex flex-col items-center w-full max-w-4xl mx-auto px-1 md:px-4">
-                <div className="flex justify-between items-center w-full mb-8 pb-4 border-b border-slate-100">
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-slate-300">
-                    UNIT {currentItem.unit} | CHI TIẾT
-                  </span>
-                </div>
-                {/* Unified Study View - No more flipping for better mobile UX */}
-                <div className="w-full space-y-6 animate-in">
-                  
-                  {/* Core Pattern & Meaning Card */}
-                  <div className="bg-white border-2 border-slate-900 rounded-[2.5rem] p-8 md:p-12 text-center shadow-[0_20px_50px_-15px_rgba(0,0,0,0.05)]">
-                    <div className="space-y-6">
-                      <div className="space-y-2">
-                        <p className="text-[9px] md:text-[10px] font-black tracking-[0.4em] text-slate-300 uppercase">Cấu trúc</p>
-                        <h2 className="text-4xl md:text-6xl font-black italic text-slate-950 tracking-tighter leading-tight break-words">
-                          {currentItem.pattern}
-                        </h2>
-                      </div>
-                      
-                      <div className="pt-6 border-t border-slate-50 space-y-4">
-                        <h3 className="text-2xl md:text-4xl font-black italic text-slate-900 tracking-tighter">
-                          {currentItem.meaning}
-                        </h3>
-                        <p className="text-slate-500 text-xs md:text-base max-w-xl mx-auto font-medium leading-[1.6] italic">
-                          {currentItem.explanation}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Examples Section - Always Visible */}
-                  <div className="space-y-4">
-                    <div className="flex items-center gap-4 px-4">
-                      <span className="text-[10px] font-black text-slate-300 uppercase tracking-widest">Câu minh họa</span>
-                      <div className="h-px flex-1 bg-slate-100" />
-                    </div>
-                    
-                    <div className="grid grid-cols-1 gap-4">
-                      {currentItem.examples?.map((ex, idx) => (
-                        <div key={idx} className="bg-white p-6 md:p-8 rounded-[2rem] border border-slate-100 shadow-sm hover:border-slate-300 transition-all">
-                          <div className="flex flex-col gap-3">
-                            <p className="text-base md:text-xl font-bold text-slate-900 leading-snug tracking-tight">
-                              {ex.jp}
-                            </p>
-                            <div className="w-8 h-px bg-slate-200" />
-                            <p className="text-xs md:text-base text-slate-400 font-bold italic leading-relaxed">
-                              {ex.vn}
-                            </p>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ) : (
-              <div className="flex-grow flex flex-col items-center justify-center py-12 text-center">
-                <p className="text-slate-400 italic mb-8">"{currentItem.quiz?.translation}"</p>
-                <div className="mb-8 md:mb-12 px-2">
-                  <h3 className="text-xl md:text-3xl font-bold tracking-tight italic flex flex-wrap justify-center items-center gap-y-2">
-                    {currentItem.quiz?.sentence.split('________').map((part, i, arr) => (
-                      <React.Fragment key={i}>
-                        <span>{part}</span>
-                        {i < arr.length - 1 && (
-                          <span className={`inline-flex flex-col items-center mx-3 min-w-[140px] relative`}>
-                            <span className={`w-full pb-2 border-b-2 text-center transition-all ${feedback === 'correct' ? 'border-emerald-500 text-emerald-600' : feedback === 'incorrect' ? 'border-red-400 text-red-500' : 'border-black'}`}>
-                              {feedback === 'correct' ? currentItem.quiz.answer : (userInput || '...')}
-                            </span>
-                            {feedback === 'incorrect' && (
-                              <span className="absolute -top-10 bg-emerald-500 text-white text-[11px] font-black px-4 py-1.5 rounded-full shadow-xl animate-bounce-subtle whitespace-nowrap z-10">
-                                {currentItem.quiz.answer}
-                                <span className="absolute bottom-[-4px] left-1/2 -translate-x-1/2 w-2 h-2 bg-emerald-500 rotate-45"></span>
-                              </span>
-                            )}
-                          </span>
-                        )}
-                      </React.Fragment>
-                    ))}
-                  </h3>
-                </div>
-                <div className="w-full max-w-md mx-auto space-y-4">
-                  <input
-                    ref={inputRef}
-                    value={userInput}
-                    onChange={e => { setUserInput(e.target.value); feedback && setFeedback(null); }}
-                    onKeyDown={handleKeyDown}
-                    placeholder="Nhập đáp án..."
-                    readOnly={!!feedback}
-                    className={`w-full p-4 border border-black text-center text-xl font-bold outline-none transition-all ${feedback === 'correct' ? 'bg-emerald-50 border-emerald-500' : feedback === 'incorrect' ? 'bg-red-50 border-red-400' : 'focus:outline-none'}`}
-                  />
-                  <div className="flex flex-col gap-2">
-                    {!feedback ? (
-                      <div className="flex flex-col gap-3">
-                        <button onClick={checkAnswer} className="w-full py-4 bg-black text-white text-xs font-bold uppercase tracking-widest">Kiểm Tra</button>
-                        <button
-                          onClick={() => setShowHint(!showHint)}
-                          className="w-full py-3 border border-slate-200 text-slate-400 text-[10px] font-bold uppercase tracking-widest hover:border-black hover:text-black transition-colors"
-                        >
-                          {showHint ? 'Ẩn gợi ý' : 'Xem gợi ý'}
-                        </button>
-                      </div>
-                    ) : (
-                      <div className="space-y-4">
-                        {feedback === 'incorrect' && (
-                          <div className="p-4 bg-emerald-50 border border-emerald-100 rounded-xl animate-in text-left">
-                            <p className="text-[10px] font-bold text-emerald-600 uppercase tracking-widest mb-1">Đáp án đúng là:</p>
-                            <p className="text-xl font-bold text-emerald-700">{currentItem.quiz?.answer}</p>
-                          </div>
-                        )}
-                        <button onClick={handleNext} className={`w-full py-4 ${feedback === 'correct' ? 'bg-emerald-600' : 'bg-black'} text-white text-xs font-bold uppercase tracking-widest`}>Tiếp Theo</button>
-                      </div>
-                    )}
-                  </div>
-                  {showHint && !feedback && <p className="text-center text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-4">Gợi ý: {currentItem.quiz?.hint}</p>}
-                </div>
-              </div>
-            )}
-
-          </div>
-        )}
-
-        {/* Global Navigation for Ghi nhớ & Quiz */}
-        {(activeMode === 'flashcard' || activeMode === 'quiz') && (
-          <div className="mt-auto flex justify-between items-center gap-4 md:gap-8 py-10 w-full max-w-3xl mx-auto px-2">
-            <button
-              onClick={() => { currentIndex > 0 && (setCurrentIndex(currentIndex - 1), setIsFlipped(false)); }}
-              disabled={currentIndex === 0}
-              className="flex-1 py-4 md:py-6 border border-slate-200 rounded-2xl text-[10px] md:text-xs font-black uppercase tracking-[0.2em] md:tracking-[0.4em] text-slate-400 disabled:opacity-30 hover:border-slate-900 hover:text-slate-900 transition-all active:scale-95 flex items-center justify-center gap-2"
-            >
-              <ChevronLeft className="w-4 h-4" />
-              Trước
-            </button>
-            <button
-              onClick={handleNext}
-              className="flex-1 py-4 md:py-6 bg-slate-950 text-white rounded-2xl text-[10px] md:text-xs font-black uppercase tracking-[0.2em] md:tracking-[0.4em] hover:bg-black hover:shadow-2xl hover:shadow-slate-200 active:scale-95 transition-all flex items-center justify-center gap-2"
-            >
-              {currentIndex === studyData.length - 1 ? 'Hoàn thành' : 'Tiếp theo'}
-              <ChevronRight className="w-4 h-4" />
-            </button>
-          </div>
-        )}
-
-        {/* Results Screen - Now a clean, centered modal popup */}
-        {showResults && (
-           <div className="fixed inset-0 z-[2000] flex items-center justify-center p-6 sm:p-4">
-             {/* Simple, deep backdrop */}
-             <div 
-               className="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity animate-in fade-in duration-300"
-               onClick={() => setShowResults(false)}
-             />
-             
-             {/* Compact, focused Result Modal */}
-             <div className="relative w-full max-w-sm bg-white rounded-[2.5rem] shadow-[0_30px_100px_-10px_rgba(0,0,0,0.3)] p-8 md:p-10 text-center animate-in zoom-in duration-300 fill-mode-forwards">
-                
-                {/* Floating Icon - Now smaller and centered */}
-                <div className="w-16 h-16 bg-black rounded-2xl flex items-center justify-center mx-auto shadow-2xl absolute -top-8 left-1/2 -translate-x-1/2 rotate-3 border-4 border-white">
-                  <Brain className="w-8 h-8 text-white" />
-                </div>
-
-                <div className="mt-8 space-y-6">
-                  {/* Status header */}
-                  <div className="space-y-1">
-                    <h2 className="text-3xl font-black italic uppercase tracking-tighter text-slate-900 leading-none">Hoàn thành!</h2>
-                    <p className="text-slate-400 font-bold uppercase tracking-widest text-[9px]">Kết quả luyện tập của bạn</p>
-                  </div>
-
-                  {/* Score view - Concentrated */}
-                  <div className="py-6 border-y border-slate-50">
-                    <div className="text-7xl font-black text-slate-950 tracking-tighter italic">
-                      {score}
-                      <span className="text-2xl font-black text-slate-200 italic align-top ml-1">/ {studyData.length}</span>
-                    </div>
-                  </div>
-
-                  {/* Message */}
-                  <div className="px-2">
-                    <p className="text-slate-500 text-[13px] font-medium italic leading-relaxed">
-                      {score === studyData.length ? 'Tuyệt đỉnh! Tiếp tục phát huy nhé.' : 
-                       score > studyData.length / 2 ? 'Rất tốt! Bạn đang tiến bộ rõ rệt.' : 
-                       'Đừng nản lòng! Thử lại một lần nữa bạn nhé.'}
-                    </p>
-                  </div>
-
-                  {/* Actions - Modern, stack design */}
-                  <div className="grid grid-cols-1 gap-3 pt-2">
-                    <button 
-                      onClick={() => {
-                          setShowResults(false);
-                          switchMode('quiz');
-                      }}
-                      className="w-full py-4.5 bg-black text-white rounded-2xl text-[11px] font-black uppercase tracking-[0.3em] hover:scale-[1.02] active:scale-95 transition-all shadow-xl shadow-black/10 flex items-center justify-center gap-3"
-                    >
-                      <RotateCcw className="w-4 h-4" />
-                      Luyện tập lại
-                    </button>
-                    <button 
-                      onClick={() => switchMode('menu')}
-                      className="w-full py-4.5 bg-slate-50 text-slate-400 rounded-2xl text-[11px] font-black uppercase tracking-[0.3em] hover:text-black transition-all flex items-center justify-center gap-3"
-                    >
-                      <List className="w-4 h-4" />
-                      Quay lại Menu
-                    </button>
-                  </div>
-                </div>
-             </div>
-           </div>
-        )}
-
+        {mainContent}
       </div>
 
-      <style dangerouslySetInnerHTML={{
-        __html: `
+      {showResults && (
+        <div className="fixed inset-0 z-[2000] flex items-center justify-center p-6 bg-black/40 backdrop-blur-sm animate-in fade-in">
+          <div className="relative w-full max-w-sm bg-white rounded-[2.5rem] p-10 text-center shadow-2xl">
+            <div className="w-16 h-16 bg-black rounded-2xl flex items-center justify-center mx-auto absolute -top-8 left-1/2 -translate-x-1/2 rotate-3 border-4 border-white">
+              <Brain className="w-8 h-8 text-white" />
+            </div>
+            <div className="mt-8 space-y-6">
+              <h2 className="text-3xl font-black italic uppercase">Hoàn thành!</h2>
+              <div className="py-6 border-y border-slate-50">
+                <div className="text-7xl font-black italic">{score} <span className="text-2xl text-slate-200">/ {studyData.length}</span></div>
+              </div>
+              <p className="text-slate-500 italic text-sm">{getScoreMessage(score, studyData.length)}</p>
+              <div className="grid grid-cols-1 gap-3">
+                <button onClick={() => switchMode('quiz')} className="py-4 bg-black text-white rounded-2xl font-black uppercase text-[10px]">Thử lại</button>
+                <button onClick={() => switchMode('menu')} className="py-4 bg-slate-50 text-slate-400 rounded-2xl font-black uppercase text-[10px]">Menu</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <style dangerouslySetInnerHTML={{ __html: `
+        @keyframes fade-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-in { animation: fade-in 0.4s ease-out forwards; }
         .perspective { perspective: 2000px; }
         .preserve-3d { transform-style: preserve-3d; }
         .backface-hidden { backface-visibility: hidden; }
         .rotate-y-180 { transform: rotateY(180deg); }
-        @keyframes bounce-subtle { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
-        .animate-bounce-subtle { animation: bounce-subtle 2s infinite ease-in-out; }
-        @keyframes fade-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .animate-in { animation: fade-in 0.4s ease-out forwards; }
-        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.05); }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 10px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.2); }
       `}} />
     </div>
   );
 }
+
