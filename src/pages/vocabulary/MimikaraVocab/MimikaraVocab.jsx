@@ -21,6 +21,7 @@ export default function MimikaraVocab() {
   const [showHint, setShowHint] = useState(false);
   const [quizType, setQuizType] = useState('jp-to-vn'); // 'jp-to-vn', 'vn-to-jp'
   const [isShuffle, setIsShuffle] = useState(true);
+  const [showResults, setShowResults] = useState(false);
   const inputRef = useRef(null);
 
   const currentData = useMemo(() => {
@@ -120,13 +121,12 @@ export default function MimikaraVocab() {
       setFeedback(null);
       setShowHint(false);
     } else {
-      alert(`Xong! Bạn đúng ${score + (feedback === 'correct' ? 1 : 0)}/${quizData.length}`);
-      setViewMode('list');
+      setShowResults(true);
     }
   };
 
   return (
-    <div className="min-h-screen bg-white flex flex-col items-center pt-32 md:pt-24 pb-20 px-4 md:px-6 font-sans relative overflow-hidden text-slate-900">
+    <div className="min-h-screen bg-white flex flex-col items-center pt-52 md:pt-44 pb-20 px-4 md:px-6 font-sans relative overflow-hidden text-slate-900">
 
       {/* Background Watermark */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[20vw] font-black text-slate-100 opacity-[0.03] pointer-events-none select-none leading-none z-0 whitespace-nowrap uppercase">
@@ -138,16 +138,18 @@ export default function MimikaraVocab() {
         {/* Navigation & Header */}
         <div className="mb-12">
           <button
-            onClick={() => {
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
               if (viewMode !== 'list') {
                 setViewMode('list');
               } else {
                 navigate('/vocabulary');
               }
             }}
-            className="text-[10px] font-bold uppercase tracking-[0.4em] text-slate-400 hover:text-black transition-colors mb-8 decoration-slate-100 relative z-50 cursor-pointer"
+            className="px-6 py-2 border-2 border-slate-900 text-[10px] font-black uppercase tracking-widest hover:bg-slate-900 hover:text-white transition-all font-sans relative z-[200] cursor-pointer mb-8"
           >
-            {viewMode === 'list' ? 'Danh sách từ vựng' : 'Quay lại'}
+            {viewMode === 'list' ? 'Quay lại' : 'Thoát luyện tập'}
           </button>
 
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-12">
@@ -346,6 +348,67 @@ export default function MimikaraVocab() {
                     </div>
                   )}
                 </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Results Screen */}
+        {showResults && (
+          <div className="fixed inset-0 z-[200] bg-white flex flex-col items-center justify-center p-6 animate-in fade-in duration-500">
+            <div className="absolute inset-0 bg-slate-50/50 -z-10" />
+            <div className="w-full max-w-md space-y-12 text-center">
+              <div className="space-y-4">
+                <div className="w-24 h-24 bg-black rounded-[2.5rem] flex items-center justify-center mx-auto shadow-2xl rotate-3">
+                  <Brain className="w-12 h-12 text-white" />
+                </div>
+                <h2 className="text-4xl md:text-5xl font-black italic uppercase tracking-tighter text-slate-900">Kết quả</h2>
+                <p className="text-slate-400 font-bold uppercase tracking-widest text-[10px]">Hoàn thành bài luyện tập</p>
+              </div>
+
+              <div className="relative py-12">
+                 <div className="absolute inset-0 flex items-center justify-center opacity-[0.03] select-none pointer-events-none text-9xl font-black">Score</div>
+                 <div className="relative">
+                   <span className="text-8xl md:text-9xl font-black text-slate-950 tracking-tighter italic">
+                     {score + (feedback === 'correct' ? 1 : 0)}
+                   </span>
+                   <span className="text-3xl md:text-4xl font-black text-slate-300 italic align-top ml-2">
+                     / {quizData.length}
+                   </span>
+                 </div>
+              </div>
+
+              <div className="space-y-4 px-4">
+                 <div className="p-6 bg-slate-50 border border-slate-100 rounded-[2rem] mb-8">
+                    <p className="text-slate-500 font-medium italic leading-relaxed">
+                      {score === quizData.length ? 'Tuyệt đỉnh! Bạn đã chinh phục hoàn toàn bài học này.' : 
+                       score > quizData.length / 2 ? 'Rất tốt! Bạn đang tiến bộ rõ rệt qua từng bài tập.' : 
+                       'Đừng nản lòng! Hãy ôn lại từ vựng và thử sức một lần nữa nhé.'}
+                    </p>
+                 </div>
+
+                 <div className="grid grid-cols-1 gap-3">
+                    <button 
+                      onClick={() => {
+                          setShowResults(false);
+                          startQuiz(quizType);
+                      }}
+                      className="w-full py-5 bg-black text-white rounded-2xl text-[11px] font-black uppercase tracking-[0.3em] hover:scale-[1.02] active:scale-95 transition-all shadow-xl shadow-black/10 flex items-center justify-center gap-3"
+                    >
+                      <List className="w-4 h-4" />
+                      Luyện tập lại
+                    </button>
+                    <button 
+                      onClick={() => {
+                          setShowResults(false);
+                          setViewMode('list');
+                      }}
+                      className="w-full py-5 bg-white border-2 border-slate-900 text-slate-900 rounded-2xl text-[11px] font-black uppercase tracking-[0.3em] hover:bg-slate-50 active:scale-95 transition-all flex items-center justify-center gap-3"
+                    >
+                      <List className="w-4 h-4" />
+                      Danh sách từ vựng
+                    </button>
+                 </div>
               </div>
             </div>
           </div>
