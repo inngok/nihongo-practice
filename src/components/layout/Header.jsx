@@ -5,7 +5,7 @@ export default function Header() {
   const { pathname } = useLocation();
 
   return (
-    <header className="fixed top-0 z-[100] w-full bg-white/95 backdrop-blur-sm border-b border-slate-50 px-4 md:px-12 py-4 flex flex-col md:flex-row items-center justify-between gap-4">
+    <header className="fixed top-0 z-[1000] w-full bg-white/95 backdrop-blur-sm border-b border-slate-50 px-4 md:px-12 py-4 flex flex-col md:flex-row items-center justify-between gap-4">
       <div className="flex w-full md:w-auto items-center justify-between">
         <Link to="/" className="font-black text-xl tracking-tighter text-black uppercase">
           Nihongo

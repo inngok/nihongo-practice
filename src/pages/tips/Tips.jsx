@@ -92,7 +92,7 @@ export default function Tips() {
   ];
 
   return (
-    <div className="min-h-screen bg-slate-50/30 flex flex-col items-center pt-14 md:pt-16 pb-20 px-4 md:px-8 font-sans">
+    <div className="min-h-screen bg-slate-50/30 flex flex-col items-center pt-48 md:pt-40 pb-20 px-4 md:px-8 font-sans">
       
       <div className="w-full max-w-4xl space-y-12">
         {/* Simple Header */}

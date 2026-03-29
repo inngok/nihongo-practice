@@ -43,29 +43,23 @@ const Layout = () => {
   return (
     <div className="flex flex-col min-h-screen bg-white relative">
       <ScrollToTop />
+      <Header />
       
-      {/* Conditionally render Header */}
-      {!isStudyPage && <Header />}
-
-      {/* Conditionally render Slogan */}
-      {!isStudyPage && (
-        <div className="fixed right-6 top-6 z-[100] hidden lg:block pointer-events-none select-none">
-          <div className="bg-white/80 backdrop-blur-md border border-slate-100 px-4 py-2 rounded-xl shadow-sm flex items-center gap-3">
-            <p className="text-[9px] font-bold uppercase tracking-[0.1em] text-slate-400 italic whitespace-nowrap">
-              "If you can dream it, you can do it"
-            </p>
-          </div>
+      {/* Slogan - Top Right Corner Badge */}
+      <div className="fixed right-6 top-6 z-[1001] hidden lg:block pointer-events-none select-none">
+        <div className="bg-white/80 backdrop-blur-md border border-slate-100 px-4 py-2 rounded-xl shadow-sm flex items-center gap-3">
+          <p className="text-[9px] font-bold uppercase tracking-[0.1em] text-slate-400 italic whitespace-nowrap">
+            "If you can dream it, you can do it"
+          </p>
         </div>
-      )}
+      </div>
 
       <main className="flex-grow flex flex-col">
         <Suspense fallback={<PageLoader />}>
           <Outlet />
         </Suspense>
       </main>
-      
-      {/* Conditionally render Footer */}
-      {!isStudyPage && <Footer />}
+      <Footer />
     </div>
   );
 };
