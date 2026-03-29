@@ -85,6 +85,13 @@ export default function TryN3() {
       setFeedback('incorrect');
     }
   };
+  // Auto focus input on each question
+  useEffect(() => {
+    if (viewMode === 'quiz' && !feedback) {
+      inputRef.current?.focus();
+    }
+  }, [quizIndex, viewMode, feedback]);
+
   const nextQuiz = () => {
     if (quizIndex < quizData.length - 1) {
       setQuizIndex(i => i + 1);
@@ -136,16 +143,29 @@ export default function TryN3() {
 
             <div className="flex flex-col gap-3 self-start md:self-end items-start md:items-end">
               <div className="flex flex-col md:flex-row items-start md:items-center gap-4">
-                {/* Shuffle Toggle */}
-                <div className="flex items-center gap-3 bg-slate-50 p-1.5 rounded-xl border border-slate-100 shadow-sm">
-                  <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest pl-2">Xáo trộn</span>
-                  <button 
-                    onClick={() => setIsShuffle(!isShuffle)}
-                    className={`relative w-10 h-5 rounded-full transition-colors duration-300 focus:outline-none ${isShuffle ? 'bg-black' : 'bg-slate-200'}`}
-                  >
-                    <div className={`absolute top-0.5 left-0.5 w-4 h-4 bg-white rounded-full transition-transform duration-300 ${isShuffle ? 'translate-x-5' : ''}`} />
-                  </button>
-                </div>
+                {/* Shuffle Toggle - Only show in Quiz Mode */}
+                {viewMode === 'quiz' && (
+                  <div className="flex items-center gap-3 bg-slate-50 p-1.5 rounded-xl border border-slate-100 shadow-sm animate-in fade-in duration-300">
+                    <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest pl-2 font-sans">Xáo trộn</span>
+                    <button 
+                      onClick={() => {
+                        const nextShuffle = !isShuffle;
+                        setIsShuffle(nextShuffle);
+                        // Reshuffle immediately
+                        if (nextShuffle) {
+                          const data = [...quizData].sort(() => Math.random() - 0.5);
+                          setQuizData(data);
+                        } else {
+                          setQuizData([...currentData.words]);
+                        }
+                        setQuizIndex(0);
+                      }}
+                      className={`relative w-10 h-5 rounded-full transition-colors duration-300 focus:outline-none ${isShuffle ? 'bg-black' : 'bg-slate-200'}`}
+                    >
+                      <div className={`absolute top-0.5 left-0.5 w-4 h-4 bg-white rounded-full transition-transform duration-300 ${isShuffle ? 'translate-x-5' : ''}`} />
+                    </button>
+                  </div>
+                )}
 
                 {/* Mode Switcher */}
                 <div className="flex bg-slate-50 p-1 rounded-full border border-slate-100 whitespace-nowrap overflow-x-auto no-scrollbar max-w-full">

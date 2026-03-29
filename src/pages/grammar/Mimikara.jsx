@@ -791,15 +791,6 @@ export default function Mimikara() {
           <h1 className="text-2xl md:text-5xl font-bold tracking-tighter italic leading-none">Mimikara</h1>
         </div>
         <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2 bg-slate-50 p-1 rounded-full border border-slate-100 shadow-sm mr-2 invisible md:visible">
-            <span className="text-[8px] font-black text-slate-300 uppercase tracking-widest pl-3">Xáo trộn</span>
-            <button 
-              onClick={() => setIsShuffle(!isShuffle)}
-              className={`relative w-8 h-4 rounded-full transition-colors duration-300 focus:outline-none ${isShuffle ? 'bg-black' : 'bg-slate-200'}`}
-            >
-              <div className={`absolute top-0.5 left-0.5 w-3 h-3 bg-white rounded-full transition-transform duration-300 ${isShuffle ? 'translate-x-4' : ''}`} />
-            </button>
-          </div>
           <button
             onClick={() => {
               if (activeMode === 'menu') {
@@ -809,16 +800,40 @@ export default function Mimikara() {
                 setOriginMode('menu');
                 setCurrentIndex(0);
               } else {
-                // Quay lại menu hoặc danh sách tìm kiếm (tùy xuất thân)
                 setActiveMode(originMode);
                 setCurrentIndex(0);
                 setIsFlipped(false);
               }
             }}
-            className="px-6 py-2 border border-black text-xs font-bold uppercase tracking-widest hover:bg-black hover:text-white transition-all"
+            className="px-6 py-2 border border-black text-xs font-bold uppercase tracking-widest hover:bg-black hover:text-white transition-all font-sans"
           >
             {activeMode === 'menu' ? 'Thoát' : 'Quay lại'}
           </button>
+
+          {activeMode === 'quiz' && (
+            <div className="flex items-center gap-3 bg-white p-1.5 rounded-xl border border-black/5 shadow-sm ml-4 scale-90">
+              <span className="text-[9px] font-black text-black/40 uppercase tracking-widest pl-2 font-sans">Xáo trộn</span>
+              <button 
+                onClick={() => {
+                  const nextShuffle = !isShuffle;
+                  setIsShuffle(nextShuffle);
+                  // Reshuffle immediately
+                  if (nextShuffle) {
+                    let data = [...activeData];
+                    data.sort(() => Math.random() - 0.5);
+                    setStudyData(data);
+                    setCurrentIndex(0);
+                  } else {
+                    setStudyData(activeData);
+                    setCurrentIndex(0);
+                  }
+                }}
+                className={`relative w-10 h-5 rounded-full transition-colors duration-300 focus:outline-none ${isShuffle ? 'bg-black' : 'bg-slate-200'}`}
+              >
+                <div className={`absolute top-0.5 left-0.5 w-4 h-4 bg-white rounded-full transition-transform duration-300 ${isShuffle ? 'translate-x-5' : ''}`} />
+              </button>
+            </div>
+          )}
         </div>
       </div>
 
