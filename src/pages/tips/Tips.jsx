@@ -1,5 +1,5 @@
 import React from 'react';
-import { Headset, CheckCircle, ArrowRight, Clock, AlertCircle, Target, Zap, Lightbulb } from 'lucide-react';
+import { Headset, CheckCircle, ArrowRight, Clock, AlertCircle, Target, Zap, Lightbulb, Search } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 export default function Tips() {
