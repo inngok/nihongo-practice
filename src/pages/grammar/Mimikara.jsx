@@ -604,6 +604,21 @@ export default function Mimikara() {
     [selectedUnit]);
 
 
+  // Back navigation function
+  const handleBack = useCallback(() => {
+    if (activeMode === 'menu') {
+      navigate('/grammar');
+    } else if (activeMode === 'list') {
+      setActiveMode('menu');
+      setOriginMode('menu');
+    } else {
+      // From flashcard or quiz, return to where we came from (menu or list)
+      setActiveMode(originMode);
+      setCurrentIndex(0);
+      setIsFlipped(false);
+    }
+  }, [activeMode, originMode, navigate]);
+
   // Gesture Handlers
   const onTouchStart = (e) => {
     touchStart.current = {
@@ -621,13 +636,7 @@ export default function Mimikara() {
     if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > minSwipeDistance) {
       if (deltaX > 0) {
         // SWIPE LEFT -> GO BACK (As requested)
-        if (activeMode === 'menu') {
-          navigate('/grammar');
-        } else {
-          setActiveMode(originMode);
-          setCurrentIndex(0);
-          setIsFlipped(false);
-        }
+        handleBack();
       }
     }
     touchStart.current = null;
@@ -766,16 +775,7 @@ export default function Mimikara() {
           <h1 className="text-2xl md:text-5xl font-bold tracking-tighter italic leading-none">Mimikara</h1>
         </div>
         <button
-          onClick={() => {
-            if (activeMode === 'menu') {
-              navigate('/grammar');
-            } else {
-              // Return to selection source (menu or list)
-              setActiveMode(originMode);
-              setCurrentIndex(0);
-              setIsFlipped(false);
-            }
-          }}
+          onClick={handleBack}
           className="px-6 py-2 border border-black text-xs font-bold uppercase tracking-widest hover:bg-black hover:text-white transition-all"
         >
           {activeMode === 'menu' ? 'Thoát' : 'Quay lại'}
