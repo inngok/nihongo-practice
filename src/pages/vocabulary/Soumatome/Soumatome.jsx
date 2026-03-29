@@ -111,10 +111,16 @@ export default function Soumatome() {
         {/* Navigation & Header */}
         <div className="mb-12">
           <button
-            onClick={() => navigate('/vocabulary')}
+            onClick={() => {
+              if (viewMode !== 'list') {
+                setViewMode('list');
+              } else {
+                navigate('/vocabulary');
+              }
+            }}
             className="text-[10px] font-bold uppercase tracking-[0.4em] text-slate-400 hover:text-black transition-colors mb-8 decoration-slate-100"
           >
-            Danh sách từ vựng
+            {viewMode === 'list' ? 'Danh sách từ vựng' : 'Quay lại'}
           </button>
 
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-12">
