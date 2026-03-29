@@ -604,21 +604,6 @@ export default function Mimikara() {
     [selectedUnit]);
 
 
-  // Back navigation function
-  const handleBack = useCallback(() => {
-    if (activeMode === 'menu') {
-      navigate('/grammar');
-    } else if (activeMode === 'list') {
-      setActiveMode('menu');
-      setOriginMode('menu');
-    } else {
-      // From flashcard or quiz, return to where we came from (menu or list)
-      setActiveMode(originMode);
-      setCurrentIndex(0);
-      setIsFlipped(false);
-    }
-  }, [activeMode, originMode, navigate]);
-
   // Gesture Handlers
   const onTouchStart = (e) => {
     touchStart.current = {
@@ -636,7 +621,13 @@ export default function Mimikara() {
     if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > minSwipeDistance) {
       if (deltaX > 0) {
         // SWIPE LEFT -> GO BACK (As requested)
-        handleBack();
+        if (activeMode === 'menu') {
+          navigate('/grammar');
+        } else {
+          setActiveMode(originMode);
+          setCurrentIndex(0);
+          setIsFlipped(false);
+        }
       }
     }
     touchStart.current = null;
@@ -655,8 +646,8 @@ export default function Mimikara() {
     const dataSource = activeData;
     if (!searchTerm.trim()) return dataSource;
     const term = removeAccents(searchTerm.trim());
-    return dataSource.filter(item => 
-      removeAccents(item.pattern).includes(term) || 
+    return dataSource.filter(item =>
+      removeAccents(item.pattern).includes(term) ||
       removeAccents(item.meaning).includes(term) ||
       removeAccents(item.explanation).includes(term)
     );
@@ -749,7 +740,7 @@ export default function Mimikara() {
           e.preventDefault();
           setIsFlipped(f => !f);
         }
-      } 
+      }
       // Quiz Mode (Navigation only when feedback exists)
       else if (activeMode === 'quiz' && feedback) {
         if (e.key === 'Enter') handleNext();
@@ -761,7 +752,7 @@ export default function Mimikara() {
 
   // --- RENDERING STUDY VIEW (MIMIKARA) ---
   return (
-    <div 
+    <div
       className="min-h-screen w-full bg-white font-sans text-black flex flex-col items-center pt-44 md:pt-48 px-4 md:px-12 selection:bg-black selection:text-white"
       onTouchStart={onTouchStart}
       onTouchEnd={onTouchEnd}
@@ -775,7 +766,16 @@ export default function Mimikara() {
           <h1 className="text-2xl md:text-5xl font-bold tracking-tighter italic leading-none">Mimikara</h1>
         </div>
         <button
-          onClick={handleBack}
+          onClick={() => {
+            if (activeMode === 'menu') {
+              navigate('/grammar');
+            } else {
+              // Return to selection source (menu or list)
+              setActiveMode(originMode);
+              setCurrentIndex(0);
+              setIsFlipped(false);
+            }
+          }}
           className="px-6 py-2 border border-black text-xs font-bold uppercase tracking-widest hover:bg-black hover:text-white transition-all"
         >
           {activeMode === 'menu' ? 'Thoát' : 'Quay lại'}
@@ -856,7 +856,7 @@ export default function Mimikara() {
                     )}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       {groupedGrammar[unit].map((item) => (
-                        <div 
+                        <div
                           key={item.id}
                           onClick={() => selectGrammarFromList(item)}
                           className="p-6 md:p-8 border border-slate-100 rounded-[1.5rem] md:rounded-[2rem] hover:border-black transition-all group flex flex-col justify-between aspect-[16/10] md:aspect-video cursor-pointer"
@@ -904,12 +904,12 @@ export default function Mimikara() {
               <div
                 className="flex-grow flex flex-col items-center justify-center py-6 md:py-12 w-full"
               >
-                <div 
+                <div
                   className="group perspective w-full max-w-3xl aspect-[16/10] md:aspect-[16/9] min-h-[400px] md:min-h-[500px] cursor-pointer"
                   onClick={() => setIsFlipped(!isFlipped)}
                 >
                   <div className={`relative w-full h-full duration-700 preserve-3d shadow-[0_30px_60px_-15px_rgba(0,0,0,0.05)] rounded-[3rem] ${isFlipped ? 'rotate-y-180' : ''}`}>
-                    
+
                     {/* FRONT SIDE */}
                     <div className="absolute inset-0 backface-hidden bg-white border-2 border-slate-100 rounded-[3rem] flex flex-col items-center justify-center p-8 md:p-12 text-center">
                       <div className="space-y-4 md:space-y-8">
@@ -953,7 +953,7 @@ export default function Mimikara() {
                             </div>
                           ))}
                         </div>
-                        
+
                         <p className="text-[9px] font-black text-slate-200 uppercase tracking-widest text-center italic mb-4">NHẤN ĐỂ QUAY LẠI</p>
                       </div>
                     </div>
@@ -999,8 +999,8 @@ export default function Mimikara() {
                     {!feedback ? (
                       <div className="flex flex-col gap-3">
                         <button onClick={checkAnswer} className="w-full py-4 bg-black text-white text-xs font-bold uppercase tracking-widest">Kiểm Tra</button>
-                        <button 
-                          onClick={() => setShowHint(!showHint)} 
+                        <button
+                          onClick={() => setShowHint(!showHint)}
                           className="w-full py-3 border border-slate-200 text-slate-400 text-[10px] font-bold uppercase tracking-widest hover:border-black hover:text-black transition-colors"
                         >
                           {showHint ? 'Ẩn gợi ý' : 'Xem gợi ý'}

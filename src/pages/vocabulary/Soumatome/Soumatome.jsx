@@ -19,6 +19,8 @@ export default function Soumatome() {
   const [feedback, setFeedback] = useState(null);
   const [score, setScore] = useState(0);
   const [showHint, setShowHint] = useState(false);
+  const [quizType, setQuizType] = useState('jp-to-vn'); // 'jp-to-vn', 'vn-to-jp'
+  const [isShuffle, setIsShuffle] = useState(true);
   const inputRef = useRef(null);
 
   const currentData = useMemo(() => {
@@ -26,14 +28,15 @@ export default function Soumatome() {
   }, [activeWeek, activeDay]);
 
   // Actions
-  const startQuiz = useCallback(() => {
-    const shuffled = [...currentData.words].sort(() => Math.random() - 0.5);
-    setQuizData(shuffled);
+  const startQuiz = useCallback((type = 'jp-to-vn') => {
+    const data = isShuffle ? [...currentData.words].sort(() => Math.random() - 0.5) : [...currentData.words];
+    setQuizData(data);
     setQuizIndex(0);
     setScore(0);
     setUserInput('');
     setFeedback(null);
     setShowHint(false);
+    setQuizType(type);
     setViewMode('quiz');
   }, [currentData]);
 
@@ -49,8 +52,6 @@ export default function Soumatome() {
         }
       } else if (viewMode === 'quiz' && !feedback) {
         if (e.key === 'Enter') checkAnswer();
-      } else if (viewMode === 'quiz' && feedback) {
-        if (e.key === 'Enter') nextQuiz();
       }
     };
     window.addEventListener('keydown', handleKey);
@@ -63,8 +64,22 @@ export default function Soumatome() {
 
   // Quiz logic
   const checkAnswer = () => {
-    const answer = quizData[quizIndex].meaning.toLowerCase().trim();
-    if (userInput.toLowerCase().trim() === answer) {
+    const currentWord = quizData[quizIndex];
+    const input = userInput.toLowerCase().trim();
+    
+    let isCorrect = false;
+    if (quizType === 'jp-to-vn') {
+      const answer = currentWord.meaning.toLowerCase().trim();
+      isCorrect = input === answer;
+    } else {
+      // vn-to-jp: Allow kanji, kana or alternative accepts
+      const kanji = currentWord.kanji.toLowerCase().trim();
+      const kana = currentWord.kana.toLowerCase().trim();
+      const accepts = (currentWord.accepts || []).map(a => a.toLowerCase().trim());
+      isCorrect = input === kanji || input === kana || accepts.includes(input);
+    }
+
+    if (isCorrect) {
       setFeedback('correct');
       setScore(s => s + 1);
     } else {
@@ -111,7 +126,7 @@ export default function Soumatome() {
                     <button
                       key={week}
                       onClick={() => { setActiveWeek(week); setViewMode('list'); }}
-                      className={`px-4 py-2 border ${activeWeek === week ? 'bg-black text-white border-black shadow-lg text-nowrap' : 'border-slate-100 text-slate-400 hover:border-black hover:text-black'} text-xs font-bold transition-all duration-300`}
+                      className={`px-4 py-1.5 border ${activeWeek === week ? 'bg-black text-white border-black shadow-sm' : 'border-slate-100 text-slate-400 hover:border-black hover:text-black'} text-[10px] font-bold transition-all duration-300`}
                     >
                       TUẦN {week}
                     </button>
@@ -121,25 +136,58 @@ export default function Soumatome() {
 
               <div className="flex flex-col gap-2">
                 <span className="text-slate-300 font-bold text-[10px] tracking-[0.3em] uppercase">Chọn ngày</span>
-                <div className="flex gap-2 flex-wrap">
+                <div className="flex gap-4 overflow-x-auto no-scrollbar pb-2">
                   {[1, 2, 3, 4, 5, 6].map(day => (
                     <button
                       key={day}
                       onClick={() => { setActiveDay(day); setViewMode('list'); }}
-                      className={`px-3 py-1 text-[10px] font-black tracking-widest uppercase rounded-full transition-all ${activeDay === day ? 'bg-white text-black border border-black shadow-sm' : 'bg-slate-50 text-slate-400 hover:bg-slate-100'}`}
+                      className={`px-3 py-1 text-[9px] font-bold tracking-widest uppercase rounded-full border border-slate-100 transition-all ${activeDay === day ? 'bg-black text-white border-black' : 'bg-white text-slate-400 hover:border-slate-300'}`}
                     >
-                      Ngày {day}
+                      NGÀY {day}
                     </button>
                   ))}
                 </div>
               </div>
             </div>
 
-            {/* Mode Switcher */}
-            <div className="flex bg-slate-50 p-1.5 rounded-2xl border border-slate-100 shadow-sm self-start md:self-end whitespace-nowrap">
-              <button onClick={() => setViewMode('list')} className={`px-6 py-2.5 rounded-xl text-[10px] font-bold transition-all ${viewMode === 'list' ? 'bg-black text-white shadow-md' : 'text-slate-400 hover:text-slate-600'}`}>Danh sách</button>
-              <button onClick={() => { setViewMode('flashcard'); setCardIndex(0); setIsFlipped(false); }} className={`px-6 py-2.5 rounded-xl text-[10px] font-bold transition-all ${viewMode === 'flashcard' ? 'bg-black text-white shadow-md' : 'text-slate-400 hover:text-slate-600'}`}>Flashcard</button>
-              <button onClick={startQuiz} className={`px-6 py-2.5 rounded-xl text-[10px] font-bold transition-all ${viewMode === 'quiz' ? 'bg-black text-white shadow-md' : 'text-slate-400 hover:text-slate-600'}`}>Luyện tập</button>
+            <div className="flex flex-col gap-3 self-start md:self-end items-start md:items-end">
+              <div className="flex flex-col md:flex-row items-start md:items-center gap-4">
+                {/* Shuffle Toggle */}
+                <div className="flex items-center gap-3 bg-slate-50 p-1.5 rounded-xl border border-slate-100 shadow-sm">
+                  <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest pl-2">Xáo trộn</span>
+                  <button 
+                    onClick={() => setIsShuffle(!isShuffle)}
+                    className={`relative w-10 h-5 rounded-full transition-colors duration-300 focus:outline-none ${isShuffle ? 'bg-black' : 'bg-slate-200'}`}
+                  >
+                    <div className={`absolute top-0.5 left-0.5 w-4 h-4 bg-white rounded-full transition-transform duration-300 ${isShuffle ? 'translate-x-5' : ''}`} />
+                  </button>
+                </div>
+
+                {/* Mode Switcher */}
+                <div className="flex bg-slate-50 p-1 rounded-full border border-slate-100 whitespace-nowrap overflow-x-auto no-scrollbar max-w-full">
+                  <button onClick={() => setViewMode('list')} className={`px-5 py-2 rounded-full text-[10px] font-medium transition-all ${viewMode === 'list' ? 'bg-black text-white shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}>Danh sách</button>
+                  <button onClick={() => { setViewMode('flashcard'); setCardIndex(0); setIsFlipped(false); }} className={`px-5 py-2 rounded-full text-[10px] font-medium transition-all ${viewMode === 'flashcard' ? 'bg-black text-white shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}>Flashcard</button>
+                  <button onClick={() => setViewMode('quiz')} className={`px-5 py-2 rounded-full text-[10px] font-medium transition-all ${viewMode === 'quiz' ? 'bg-black text-white shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}>Luyện tập</button>
+                </div>
+              </div>
+
+              {/* Quiz Selection Sub-menu */}
+              {viewMode === 'quiz' && (
+                <div className="flex bg-white p-1 rounded-xl border border-dotted border-slate-200 animate-in fade-in slide-in-from-top-2 duration-300">
+                  <button 
+                    onClick={() => startQuiz('jp-to-vn')} 
+                    className={`px-4 py-1.5 rounded-lg text-[9px] font-bold transition-all ${quizType === 'jp-to-vn' ? 'bg-slate-100 text-black shadow-none' : 'text-slate-400 hover:text-slate-600'}`}
+                  >
+                    NHẬT - VIỆT
+                  </button>
+                  <button 
+                    onClick={() => startQuiz('vn-to-jp')} 
+                    className={`px-4 py-1.5 rounded-lg text-[9px] font-bold transition-all ${quizType === 'vn-to-jp' ? 'bg-slate-100 text-black shadow-none' : 'text-slate-400 hover:text-slate-600'}`}
+                  >
+                    VIỆT - NHẬT
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -218,11 +266,25 @@ export default function Soumatome() {
             </div>
             <div className="text-center w-full space-y-16">
               <div className="space-y-4">
-                <div className="text-6xl md:text-8xl font-black text-slate-900 leading-tight">{quizData[quizIndex].kanji}</div>
-                <div className="text-2xl font-bold text-slate-300 italic">{quizData[quizIndex].kana}</div>
+                {quizType === 'jp-to-vn' ? (
+                  <>
+                    <div className="text-6xl md:text-8xl font-black text-slate-900 leading-tight italic">{quizData[quizIndex].kanji}</div>
+                    <div className="text-2xl font-bold text-slate-300 italic uppercase tracking-widest">{quizData[quizIndex].kana}</div>
+                  </>
+                ) : (
+                  <div className="text-4xl md:text-6xl font-black text-slate-900 leading-tight italic">"{quizData[quizIndex].meaning}"</div>
+                )}
               </div>
               <div className="space-y-6 w-full max-w-md mx-auto">
-                <input ref={inputRef} disabled={!!feedback} value={userInput} onChange={e => setUserInput(e.target.value)} type="text" placeholder="Gõ nghĩa tiếng Việt..." className={`w-full text-center py-6 text-3xl font-black border-b-4 outline-none transition-all ${feedback === 'correct' ? 'border-emerald-500 text-emerald-600 bg-emerald-50/20' : feedback === 'incorrect' ? 'border-red-500 text-red-600 bg-red-50/20' : 'border-black focus:border-slate-300'}`} />
+                <input 
+                  ref={inputRef} 
+                  disabled={!!feedback} 
+                  value={userInput} 
+                  onChange={e => setUserInput(e.target.value)} 
+                  type="text" 
+                  placeholder={quizType === 'jp-to-vn' ? "Gõ nghĩa tiếng Việt..." : "Gõ từ tiếng Nhật (Kanji/Kana)..."}
+                  className={`w-full text-center py-6 text-2xl md:text-3xl font-black border-b-4 outline-none transition-all ${feedback === 'correct' ? 'border-emerald-500 text-emerald-600 bg-emerald-50/20' : feedback === 'incorrect' ? 'border-red-500 text-red-600 bg-red-50/20' : 'border-black focus:border-slate-300'}`} 
+                />
                 <div className="flex flex-col gap-4">
                   {!feedback ? (
                     <div className="grid grid-cols-2 gap-4">
@@ -232,8 +294,24 @@ export default function Soumatome() {
                   ) : (
                     <button onClick={nextQuiz} className="py-4 bg-black text-white text-[10px] font-bold uppercase rounded-2xl animate-in zoom-in-95 duration-300">{quizIndex === quizData.length - 1 ? 'XEM KẾT QUẢ' : 'CÂU TIẾP THEO'}</button>
                   )}
-                  {showHint && !feedback && <div className="bg-slate-50 p-4 rounded-xl text-xs font-bold text-slate-400 italic">Gợi ý: {quizData[quizIndex].meaning.substring(0, 2)}...</div>}
-                  {feedback === 'incorrect' && <div className="bg-emerald-50 p-6 rounded-2xl text-center"><p className="text-[10px] font-black text-emerald-600 uppercase mb-1">DÁP ÁN ĐÚNG</p><p className="text-3xl font-black text-emerald-700">{quizData[quizIndex].meaning}</p></div>}
+                  {showHint && !feedback && (
+                    <div className="bg-slate-50 p-4 rounded-xl text-xs font-bold text-slate-400 italic">
+                      Gợi ý: {quizType === 'jp-to-vn' ? quizData[quizIndex].meaning.substring(0, 2) : quizData[quizIndex].kana.substring(0, 2)}...
+                    </div>
+                  )}
+                  {feedback === 'incorrect' && (
+                    <div className="bg-emerald-50 p-6 rounded-2xl text-center shadow-inner">
+                      <p className="text-[10px] font-black text-emerald-600 uppercase mb-1">ĐÁP ÁN ĐÚNG</p>
+                      {quizType === 'jp-to-vn' ? (
+                        <p className="text-3xl font-black text-emerald-700 italic">"{quizData[quizIndex].meaning}"</p>
+                      ) : (
+                        <div className="flex flex-col">
+                          <p className="text-3xl font-black text-emerald-700 italic">{quizData[quizIndex].kanji}</p>
+                          <p className="text-lg font-bold text-emerald-600">{quizData[quizIndex].kana}</p>
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
