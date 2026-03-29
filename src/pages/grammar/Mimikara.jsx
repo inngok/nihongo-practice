@@ -720,7 +720,11 @@ export default function Mimikara() {
     if (isEnter) {
       e.preventDefault();
       if (!e.repeat) {
-        !feedback ? checkAnswer() : handleNext();
+        if (!feedback) {
+          checkAnswer();
+        } else {
+          handleNext();
+        }
       }
     }
     if (isArrow) {
@@ -743,7 +747,8 @@ export default function Mimikara() {
       }
       // Quiz Mode (Navigation only when feedback exists)
       else if (activeMode === 'quiz' && feedback) {
-        if (e.key === 'Enter') handleNext();
+        // Remove Enter here to prevent going to next automatically
+        if (e.key === 'ArrowRight') handleNext();
       }
     };
     window.addEventListener('keydown', handleGlobalKey);

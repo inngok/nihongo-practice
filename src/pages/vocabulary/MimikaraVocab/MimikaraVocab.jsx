@@ -86,6 +86,26 @@ export default function MimikaraVocab() {
       setFeedback('incorrect');
     }
   };
+
+
+  // Keyboard support for Quiz
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (viewMode === 'quiz' && quizData.length > 0) {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          if (!feedback) {
+            checkAnswer();
+          } else {
+            nextQuiz();
+          }
+        }
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [viewMode, feedback, quizData, quizIndex, userInput, score]);
+
   const nextQuiz = () => {
     if (quizIndex < quizData.length - 1) {
       setQuizIndex(i => i + 1);
