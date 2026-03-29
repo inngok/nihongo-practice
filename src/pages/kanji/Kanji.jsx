@@ -13,22 +13,7 @@ export default function Kanji() {
       label: 'TRÌNH ĐỘ N3',
       path: '/kanji/set-4'
     },
-    {
-      id: 'kanji12',
-      num: '12',
-      title: 'Hán tự 12',
-      japanese: 'N2 漢字',
-      label: 'CƠ BẢN',
-      path: '#'
-    },
-    {
-      id: 'kanji3',
-      num: '03',
-      title: 'Hán tự 3',
-      japanese: 'N4 漢字',
-      label: 'SƠ CẤP',
-      path: '#'
-    }
+
   ];
 
   return (

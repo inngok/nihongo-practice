@@ -35,9 +35,12 @@ const grammarData = [
     quiz: { sentence: "噂によると、あの二人は結婚する________。", answer: "らしい", accepts: [], hint: "Nghe nói (tin đồn)", translation: "Theo lời đồn thì hai người đó nghe nói sắp kết hôn." }
   },
   {
-    id: 7, unit: 1, pattern: "つもり", meaning: "Dự định / Cứ ngỡ là", explanation: "Diễn tả dự định của bản thân hoặc niềm tin chủ quan về một trạng thái nào đó.",
-    examples: [{ jp: "来年、日本へ行くつもりです。", vn: "Năm sau tôi dự định sẽ đi Nhật Bản." }],
-    quiz: { sentence: "大学を卒業したら、日本で働く________です。", answer: "つもり", accepts: [], hint: "Dự định", translation: "Sau khi tốt nghiệp đại học, tôi dự định sẽ làm việc tại Nhật Bản." }
+    id: 7, unit: 1, pattern: "つもり", meaning: "Tưởng là / Cứ ngỡ là", explanation: "Diễn tả một ý định hoặc trạng thái mà bản thân tin là như vậy, nhưng thực tế lại không phải (hoặc chỉ là chủ quan).",
+    examples: [
+      { jp: "メールを送ったつもりだったが、届いていなかった。", vn: "Tôi cứ ngỡ là đã gửi mail rồi, nhưng hóa ra nó vẫn chưa tới." },
+      { jp: "バッグにさいふを入れたつもりだったが、なかった。", vn: "Tôi cứ ngõ là đã cho ví vào túi rồi, thế mà lúc tìm lại không thấy." }
+    ],
+    quiz: { sentence: "メールを________つもりだったが、届いていなかった。", answer: "送った", accepts: [], hint: "Cứ ngỡ là đã gửi (V-ta)", translation: "Tôi cứ nghĩ là đã gửi mail rồi, nhưng thực ra chưa tới." }
   },
   {
     id: 8, unit: 1, pattern: "てくる", meaning: "Bắt đầu / Trở nên / Tiến về phía mình", explanation: "Diễn tả hành động đang bắt đầu, thay đổi diễn ra hoặc hướng về phía người nói.",
@@ -72,14 +75,22 @@ const grammarData = [
     quiz: { sentence: "星空の美し________に感動した。", answer: "み", accepts: [], hint: "Hậu tố biến tính từ đuôi 'i' thành danh từ", translation: "Tôi đã xúc động trước vẻ đẹp của bầu trời sao." }
   },
   {
-    id: 14, unit: 2, pattern: "んじゃない？", meaning: "Chẳng phải là... hay sao?", explanation: "Cách nói vòng vo, rụt rè để đưa ra ý kiến, phỏng đoán của bản thân.",
-    examples: [{ jp: "このやり方のほうがいいのではないだろうか。", vn: "Tôi nghĩ cách làm này tốt hơn đó chứ?" }],
-    quiz: { sentence: "これ、ちょっと高すぎる________？", answer: "んじゃない", accepts: ["のではないだろうか", "のではないか"], hint: "Cách nói thân mật của 'のではないか'", translation: "Cái này, chẳng phải là hơi đắt quá sao?" }
+    id: 14, unit: 2, pattern: "のではないだろうか / じゃないかと思う", meaning: "Chẳng phải là... hay sao? / Tôi nghĩ là...", explanation: "Dùng để đưa ra ý kiến, chủ trương một cách nhẹ nhàng, rụt rè hoặc bày tỏ sự nghi ngờ. 'んじゃない？' là dạng hội thoại thân mật.",
+    examples: [
+      { jp: "道が込んでいる. これでは間に合わないのではないだろうか。", vn: "Đường đang tắc. Cứ thế này chẳng phải là sẽ không kịp hay sao?" },
+      { jp: "AチームよりBチームのほうが強いのではないかと思う。", vn: "Tôi nghĩ chẳng phải là đội B mạnh hơn đội A hay sao." },
+      { jp: "山田さんは甘いものが好きだから、美味しいお菓子がいいんじゃない？", vn: "Vì anh Yamada thích đồ ngọt, nên chẳng phải là tặng bánh kẹo ngon thì tốt sao?" }
+    ],
+    quiz: { sentence: "この仕事、６時までに終わらせるのは無理________？", answer: "なのではないだろうか", accepts: ["のではないか", "んじゃないか", "んじゃない", "のではないだろうか"], hint: "Chẳng phải là... hay sao? (Dạng trang trọng/thân mật)", translation: "Công việc này, chẳng phải là không thể xong trước 6 giờ hay sao?" }
   },
   {
-    id: 15, unit: 2, pattern: "縮約形 (てる/とく/なきゃ)", meaning: "Dạng rút gọn (văn nói)", explanation: "Các dạng nói tắt (ている→てる, ておく→とく, なければ→なきゃ).",
-    examples: [{ jp: "明日までにこの本、読んどくよ。(読んでおくよ)", vn: "Tôi sẽ đọc xong cuốn sách này trước ngày mai." }],
-    quiz: { sentence: "急が________、電車に遅れるよ！", answer: "なきゃ", accepts: [], hint: "Dạng rút gọn của 'なければ'", translation: "Nếu không nhanh lên, sẽ trễ tàu đấy!" }
+    id: 15, unit: 2, pattern: "〜ちゃ / 〜じゃ (縮約形)", meaning: "Dạng rút gọn (văn nói)", explanation: "Trong hội thoại thân mật, các âm 'te' hay 'de' thường được biến đổi: ては→ちゃ, では→じゃ, てしまう→ちゃう, でしまう→じゃう.",
+    examples: [
+      { jp: "これからは遅刻しちゃいけませんよ。(しちゃ ＝ しては)", vn: "Từ giờ trở đi là không được đi muộn đâu đấy." },
+      { jp: "そんなにお酒を飲んじゃだめだよ。(飲んじゃ ＝ 飲んでは)", vn: "Uống nhiều rượu như thế là không được đâu." },
+      { jp: "宿題、もうやっちゃった。(やっちゃった ＝ やってしまった)", vn: "Bài tập về nhà á, tôi làm xong hết tiêu rồi." }
+    ],
+    quiz: { sentence: "あー、宿題、家に忘れ________！", answer: "ちゃった", accepts: ["ちゃいました"], hint: "Dạng rút gọn của てしまった", translation: "A, bài tập về nhà tôi lỡ để quên ở nhà mất rồi!" }
   },
 
   // --- UNIT 3 ---
@@ -513,12 +524,12 @@ const grammarData = [
     quiz: { sentence: "面接の結果が気になっ________。", answer: "てならない", accepts: [], hint: "Vô cùng (văn nói trang trọng)", translation: "Tôi vô cùng bận tâm về kết quả của buổi phỏng vấn." }
   },
   {
-    id: 99, unit: 10, pattern: "とか", meaning: "Ví dụ như là / Nghe nói là... nên", explanation: "Dùng để liệt kê ví dụ hoặc diễn tả một lý do nghe loáng thoáng, không chắc chắn (thường đi với とかで).",
+    id: 99, unit: 10, pattern: "とか", meaning: "Nghe nói là... / Hình như là...", explanation: "Dùng để truyền đạt thông tin nghe loáng thoáng hoặc đưa ra một lý do mà bản thân không chắc chắn lắm (cấu trúc phổ biến: 〜とかで).",
     examples: [
-      { jp: "休日は映画を見るとか、買い物に行くとかして過ごします。", vn: "Ngày nghỉ tôi thường xem phim hoặc đi mua sắm." },
-      { jp: "息子さんは塾だとかで、今日は不参加です。", vn: "Vì nghe nói con trai bận đi học thêm hay sao đó nên hôm nay không tham gia." }
+      { jp: "息子さんは塾だとかで、今日は不参加です。", vn: "Nghe đâu con trai bận đi học thêm hay sao đó nên hôm nay không tham gia." },
+      { jp: "昨日は、お祭りだとかで、街が賑やかだった。", vn: "Hôm qua hình như là có lễ hội hay sao đó mà phố xá náo nhiệt hẳn lên." }
     ],
-    quiz: { sentence: "彼は風邪を引いた________で、今日は欠席です。", answer: "とか", accepts: [], hint: "Cụm 'とかで' (Nghe nói là... nên)", translation: "Vì nghe nói là anh ấy bị cảm nên hôm nay vắng mặt." }
+    quiz: { sentence: "彼は風邪を引いた________で、今日は欠席です。", answer: "とか", accepts: [], hint: "Nghe nói là (Chỉ lý do chưa chắc chắn)", translation: "Vì nghe nói là anh ấy bị cảm (hay gì đó) nên hôm nay vắng mặt." }
   },
   {
     id: 100, unit: 10, pattern: "だけ", meaning: "Chỉ / Mức tối đa có thể", explanation: "Biểu thị sự giới hạn hoặc làm đến mức cao nhất (好きなだけ).",
@@ -561,9 +572,13 @@ const grammarData = [
     quiz: { sentence: "日本のアニメ________、日本語を勉強し始めた。", answer: "をきっかけに", accepts: ["をきっかけにして", "をきっかけとして"], hint: "Nhân cơ hội", translation: "Nhờ anime Nhật mà tôi bắt đầu học tiếng Nhật." }
   },
   {
-    id: 108, unit: 10, pattern: "とする / としたら", meaning: "Giả sử (rằng)... / Nếu như", explanation: "Đưa ra một giả định không có thật hoặc khả năng xảy ra thấp.",
-    examples: [{ jp: "もし宝くじが当たったとしたら、家を買いたい。", vn: "Giả sử mà trúng vé số thì tôi muốn mua nhà." }],
-    quiz: { sentence: "もし生まれ変われると________、鳥になりたい。", answer: "したら", accepts: ["すれば", "すると"], hint: "Nếu như / Giả sử", translation: "Nếu như được sinh ra một lần nữa, tôi muốn trở thành chú chim." }
+    id: 108, unit: 10, pattern: "とする / としたら / とすれば / とすると", meaning: "Giả sử là... / Nếu cho rằng...", explanation: "1. としたら/とすれば: Giả định tình huống không có thật hoặc khó xảy ra. 2. とすると/とすれば: Đưa ra suy luận dựa trên một giả thiết có căn cứ.",
+    examples: [
+      { jp: "もし宝くじが当たったとしたら、家を買いたい。", vn: "Giả sử mà trúng vé số thì tôi muốn mua nhà. (Giả định không có thật)" },
+      { jp: "その話が本当だとすると、大変なことだ。", vn: "Nếu câu chuyện đó là thật thì quả là vấn đề lớn. (Suy luận logic)" },
+      { jp: "飛行機で行くとすれば、いくらぐらいかかりますか。", vn: "Nếu giả sử đi bằng máy bay thì tốn khoảng bao nhiêu? (Trường hợp giả định)" }
+    ],
+    quiz: { sentence: "もし生まれ変われると________、鳥になりたい。", answer: "したら", accepts: ["すれば", "すると"], hint: "Giả sử (V-plain + と...)", translation: "Nếu như được sinh ra một lần nữa, tôi muốn trở thành chú chim." }
   },
   {
     id: 109, unit: 10, pattern: "際に / 際(に)は", meaning: "Khi / Lúc (trang trọng)", explanation: "Giống với 時, nhưng lịch sự, dùng trong văn bản, thông báo.",
@@ -588,7 +603,10 @@ export default function Mimikara() {
   const [score, setScore] = useState(0);
   const [showHint, setShowHint] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
+  const [isShuffle, setIsShuffle] = useState(true);
+  const [showResults, setShowResults] = useState(false);
   const [originMode, setOriginMode] = useState('menu');
+  const [studyData, setStudyData] = useState([]);
   const inputRef = useRef(null);
   const touchStart = useRef(null);
   const minSwipeDistance = 50;
@@ -602,6 +620,8 @@ export default function Mimikara() {
   const activeData = useMemo(() =>
     selectedUnit === 'all' ? grammarData : grammarData.filter(item => item.unit === selectedUnit),
     [selectedUnit]);
+
+  const currentItem = useMemo(() => studyData[currentIndex] || studyData[0] || {}, [studyData, currentIndex]);
 
 
   // Gesture Handlers
@@ -646,8 +666,8 @@ export default function Mimikara() {
     const dataSource = activeData;
     if (!searchTerm.trim()) return dataSource;
     const term = removeAccents(searchTerm.trim());
-    return dataSource.filter(item => 
-      removeAccents(item.pattern).includes(term) || 
+    return dataSource.filter(item =>
+      removeAccents(item.pattern).includes(term) ||
       removeAccents(item.meaning).includes(term) ||
       removeAccents(item.explanation).includes(term)
     );
@@ -664,6 +684,16 @@ export default function Mimikara() {
 
   // Reset state when switching modes
   const switchMode = useCallback((mode) => {
+    if (mode === 'flashcard' || mode === 'quiz') {
+      let data = [...activeData];
+      if (isShuffle) {
+        data.sort(() => Math.random() - 0.5);
+      }
+      setStudyData(data);
+    } else {
+      setStudyData(activeData);
+    }
+
     setActiveMode(mode);
     if (mode === 'menu' || mode === 'list') {
       setOriginMode(mode);
@@ -674,8 +704,9 @@ export default function Mimikara() {
     setFeedback(null);
     setScore(0);
     setShowHint(false);
+    setShowResults(false);
     // Don't clear searchTerm here to allow "search tiếp"
-  }, []);
+  }, [activeData, isShuffle]);
 
   const selectGrammarFromList = useCallback((item) => {
     setSelectedUnit('all');
@@ -686,10 +717,15 @@ export default function Mimikara() {
     setIsFlipped(false);
   }, []);
 
+
+
   const handleNext = useCallback(() => {
-    if (currentIndex >= activeData.length - 1) {
-      activeMode === 'quiz' && alert(`Chúc mừng! Bạn đã hoàn thành bài luyện tập với số điểm: ${score}/${activeData.length}`);
-      switchMode('menu');
+    if (currentIndex >= studyData.length - 1) {
+      if (activeMode === 'quiz') {
+        setShowResults(true);
+      } else {
+        switchMode('menu');
+      }
       return;
     }
     setCurrentIndex(curr => curr + 1);
@@ -697,22 +733,22 @@ export default function Mimikara() {
     setUserInput('');
     setFeedback(null);
     setShowHint(false);
-  }, [currentIndex, activeData.length, activeMode, score, switchMode]);
+  }, [currentIndex, studyData.length, activeMode, score, switchMode]);
 
   const checkAnswer = useCallback(() => {
     const cleanInput = userInput.trim().replace(/\s/g, '').toLowerCase();
-    const currentQuiz = activeData[currentIndex].quiz;
+    const currentQuiz = currentItem.quiz;
     const cleanAnswer = currentQuiz.answer.replace(/\s/g, '').toLowerCase();
     const baseAccepts = currentQuiz.accepts ? currentQuiz.accepts.map(a => a.replace(/\s/g, '').toLowerCase()) : [];
 
     // Legacy support for specific items
-    const legacyAccepts = { 12: ['てる'], 29: ['ぐらい'], 30: ['ぐらいなら'] }[activeData[currentIndex].id] || [];
+    const legacyAccepts = { 12: ['てる'], 29: ['ぐらい'], 30: ['ぐらいなら'] }[currentItem.id] || [];
     const validAnswers = [cleanAnswer, ...baseAccepts, ...legacyAccepts];
 
     const isCorrect = validAnswers.includes(cleanInput);
     setFeedback(isCorrect ? 'correct' : 'incorrect');
     setScore(prev => isCorrect ? prev + 1 : prev);
-  }, [userInput, activeData, currentIndex]);
+  }, [userInput, currentItem]);
 
   const handleKeyDown = useCallback((e) => {
     const isEnter = e.key === 'Enter';
@@ -720,7 +756,11 @@ export default function Mimikara() {
     if (isEnter) {
       e.preventDefault();
       if (!e.repeat) {
-        !feedback ? checkAnswer() : handleNext();
+        if (!feedback) {
+          checkAnswer();
+        } else {
+          handleNext();
+        }
       }
     }
     if (isArrow) {
@@ -740,10 +780,11 @@ export default function Mimikara() {
           e.preventDefault();
           setIsFlipped(f => !f);
         }
-      } 
+      }
       // Quiz Mode (Navigation only when feedback exists)
       else if (activeMode === 'quiz' && feedback) {
-        if (e.key === 'Enter') handleNext();
+        // Remove Enter here to prevent going to next automatically
+        if (e.key === 'ArrowRight') handleNext();
       }
     };
     window.addEventListener('keydown', handleGlobalKey);
@@ -752,8 +793,8 @@ export default function Mimikara() {
 
   // --- RENDERING STUDY VIEW (MIMIKARA) ---
   return (
-    <div 
-      className="min-h-screen w-full bg-white font-sans text-black flex flex-col items-center pt-44 md:pt-48 px-4 md:px-12 selection:bg-black selection:text-white"
+    <div
+      className="min-h-screen w-full bg-white font-sans text-black flex flex-col items-center pt-52 md:pt-48 px-4 md:px-12 selection:bg-black selection:text-white"
       onTouchStart={onTouchStart}
       onTouchEnd={onTouchEnd}
     >
@@ -765,21 +806,47 @@ export default function Mimikara() {
           </p>
           <h1 className="text-2xl md:text-5xl font-bold tracking-tighter italic leading-none">Mimikara</h1>
         </div>
-        <button
-          onClick={() => {
-            if (activeMode === 'menu') {
-              navigate('/grammar');
-            } else {
-              // Return to selection source (menu or list)
-              setActiveMode(originMode);
-              setCurrentIndex(0);
-              setIsFlipped(false);
-            }
-          }}
-          className="px-6 py-2 border border-black text-xs font-bold uppercase tracking-widest hover:bg-black hover:text-white transition-all"
-        >
-          {activeMode === 'menu' ? 'Thoát' : 'Quay lại'}
-        </button>
+        <div className="flex items-center gap-4">
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  if (activeMode === 'menu') {
+                    navigate('/grammar');
+                  } else {
+                    switchMode('menu');
+                  }
+                }}
+                className="px-6 py-2 border-2 border-slate-900 text-xs font-black uppercase tracking-widest hover:bg-slate-900 hover:text-white transition-all font-sans relative z-[200] cursor-pointer"
+              >
+            {activeMode === 'menu' ? 'Thoát' : 'Quay lại'}
+          </button>
+
+          {activeMode === 'quiz' && (
+            <div className="flex items-center gap-3 bg-white p-1.5 rounded-xl border border-black/5 shadow-sm ml-4 scale-90">
+              <span className="text-[9px] font-black text-black/40 uppercase tracking-widest pl-2 font-sans">Xáo trộn</span>
+              <button 
+                onClick={() => {
+                  const nextShuffle = !isShuffle;
+                  setIsShuffle(nextShuffle);
+                  // Reshuffle immediately
+                  if (nextShuffle) {
+                    let data = [...activeData];
+                    data.sort(() => Math.random() - 0.5);
+                    setStudyData(data);
+                    setCurrentIndex(0);
+                  } else {
+                    setStudyData(activeData);
+                    setCurrentIndex(0);
+                  }
+                }}
+                className={`relative w-10 h-5 rounded-full transition-colors duration-300 focus:outline-none ${isShuffle ? 'bg-black' : 'bg-slate-200'}`}
+              >
+                <div className={`absolute top-0.5 left-0.5 w-4 h-4 bg-white rounded-full transition-transform duration-300 ${isShuffle ? 'translate-x-5' : ''}`} />
+              </button>
+            </div>
+          )}
+        </div>
       </div>
 
       <div className="w-full max-w-6xl flex-grow flex flex-col">
@@ -856,7 +923,7 @@ export default function Mimikara() {
                     )}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       {groupedGrammar[unit].map((item) => (
-                        <div 
+                        <div
                           key={item.id}
                           onClick={() => selectGrammarFromList(item)}
                           className="p-6 md:p-8 border border-slate-100 rounded-[1.5rem] md:rounded-[2rem] hover:border-black transition-all group flex flex-col justify-between aspect-[16/10] md:aspect-video cursor-pointer"
@@ -895,87 +962,78 @@ export default function Mimikara() {
           <div className="flex flex-col flex-grow animate-in fade-in duration-500">
             <div className="flex justify-between items-center mb-8 pb-4 border-b border-slate-100">
               <span className="text-[10px] font-bold uppercase tracking-widest">
-                UNIT {activeData[currentIndex].unit} | {activeMode === 'flashcard' ? 'GHI NHỚ' : 'LUYỆN TẬP'}
+                UNIT {currentItem.unit} | {activeMode === 'flashcard' ? 'GHI NHỚ' : 'LUYỆN TẬP'}
               </span>
-              <span className="text-xs text-slate-400 font-bold tracking-widest">{currentIndex + 1} / {activeData.length}</span>
+              <span className="text-xs text-slate-400 font-bold tracking-widest">{currentIndex + 1} / {studyData.length}</span>
             </div>
 
             {activeMode === 'flashcard' ? (
-              <div
-                className="flex-grow flex flex-col items-center justify-center py-6 md:py-12 w-full"
-              >
-                <div 
-                  className="group perspective w-full max-w-3xl aspect-[16/10] md:aspect-[16/9] min-h-[400px] md:min-h-[500px] cursor-pointer"
-                  onClick={() => setIsFlipped(!isFlipped)}
-                >
-                  <div className={`relative w-full h-full duration-700 preserve-3d shadow-[0_30px_60px_-15px_rgba(0,0,0,0.05)] rounded-[3rem] ${isFlipped ? 'rotate-y-180' : ''}`}>
-                    
-                    {/* FRONT SIDE */}
-                    <div className="absolute inset-0 backface-hidden bg-white border-2 border-slate-100 rounded-[3rem] flex flex-col items-center justify-center p-8 md:p-12 text-center">
-                      <div className="space-y-4 md:space-y-8">
-                        <p className="text-[9px] md:text-[10px] font-black tracking-[0.4em] text-slate-300 uppercase">Cấu trúc ngữ pháp</p>
-                        <h2 className="text-4xl md:text-7xl font-black italic text-slate-950 tracking-tighter leading-tight break-words px-2">
-                          {activeData[currentIndex].pattern}
+              <div className="flex-grow flex flex-col items-center w-full max-w-4xl mx-auto px-1 md:px-4">
+                {/* Unified Study View - No more flipping for better mobile UX */}
+                <div className="w-full space-y-6 animate-in">
+                  
+                  {/* Core Pattern & Meaning Card */}
+                  <div className="bg-white border-2 border-slate-900 rounded-[2.5rem] p-8 md:p-12 text-center shadow-[0_20px_50px_-15px_rgba(0,0,0,0.05)]">
+                    <div className="space-y-6">
+                      <div className="space-y-2">
+                        <p className="text-[9px] md:text-[10px] font-black tracking-[0.4em] text-slate-300 uppercase">Cấu trúc</p>
+                        <h2 className="text-4xl md:text-6xl font-black italic text-slate-950 tracking-tighter leading-tight break-words">
+                          {currentItem.pattern}
                         </h2>
-                        <div className="pt-6 md:pt-10">
-                          <span className="px-5 py-2 rounded-full border border-slate-100 text-[9px] md:text-[10px] font-black tracking-widest text-slate-400 group-hover:border-slate-900 group-hover:text-slate-900 transition-all uppercase">
-                            Nhấn để xem nghĩa
-                          </span>
-                        </div>
+                      </div>
+                      
+                      <div className="pt-6 border-t border-slate-50 space-y-4">
+                        <h3 className="text-2xl md:text-4xl font-black italic text-slate-900 tracking-tighter">
+                          {currentItem.meaning}
+                        </h3>
+                        <p className="text-slate-500 text-xs md:text-base max-w-xl mx-auto font-medium leading-[1.6] italic">
+                          {currentItem.explanation}
+                        </p>
                       </div>
                     </div>
+                  </div>
 
-                    {/* BACK SIDE */}
-                    <div className="absolute inset-0 backface-hidden bg-white border-2 border-slate-900 rounded-[3rem] rotate-y-180 flex flex-col items-center p-6 md:p-10 text-center overflow-y-auto overflow-x-hidden pt-12 md:pt-20">
-                      <div className="w-full">
-                        <div className="mb-6 md:mb-10">
-                          <h3 className="text-xl md:text-4xl font-black mb-2 md:mb-4 italic text-slate-900 tracking-tighter leading-tight">
-                            {activeData[currentIndex].meaning}
-                          </h3>
-                          <div className="w-12 md:w-16 h-1 bg-slate-950 mx-auto mb-4 rounded-full" />
-                          <p className="text-slate-500 text-xs md:text-base max-w-lg mx-auto font-medium leading-[1.6] italic px-4">
-                            {activeData[currentIndex].explanation}
-                          </p>
+                  {/* Examples Section - Always Visible */}
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-4 px-4">
+                      <span className="text-[10px] font-black text-slate-300 uppercase tracking-widest">Câu minh họa</span>
+                      <div className="h-px flex-1 bg-slate-100" />
+                    </div>
+                    
+                    <div className="grid grid-cols-1 gap-4">
+                      {currentItem.examples?.map((ex, idx) => (
+                        <div key={idx} className="bg-white p-6 md:p-8 rounded-[2rem] border border-slate-100 shadow-sm hover:border-slate-300 transition-all">
+                          <div className="flex flex-col gap-3">
+                            <p className="text-base md:text-xl font-bold text-slate-900 leading-snug tracking-tight">
+                              {ex.jp}
+                            </p>
+                            <div className="w-8 h-px bg-slate-200" />
+                            <p className="text-xs md:text-base text-slate-400 font-bold italic leading-relaxed">
+                              {ex.vn}
+                            </p>
+                          </div>
                         </div>
-
-                        <div className="space-y-3 w-full max-w-xl mx-auto text-left mb-8">
-                          {activeData[currentIndex].examples.map((ex, idx) => (
-                            <div key={idx} className="bg-slate-50 p-5 md:p-7 rounded-[1.5rem] md:rounded-[2rem] border border-slate-100 transition-all duration-500">
-                              <div className="flex flex-col gap-2 md:gap-3">
-                                <p className="text-base md:text-lg font-bold text-slate-900 leading-snug tracking-tight">
-                                  {ex.jp}
-                                </p>
-                                <div className="w-6 h-px bg-slate-200" />
-                                <p className="text-[11px] md:text-sm text-slate-400 font-bold italic leading-relaxed">
-                                  {ex.vn}
-                                </p>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                        
-                        <p className="text-[9px] font-black text-slate-200 uppercase tracking-widest text-center italic mb-4">NHẤN ĐỂ QUAY LẠI</p>
-                      </div>
+                      ))}
                     </div>
                   </div>
                 </div>
               </div>
             ) : (
               <div className="flex-grow flex flex-col items-center justify-center py-12 text-center">
-                <p className="text-slate-400 italic mb-8">"{activeData[currentIndex].quiz.translation}"</p>
+                <p className="text-slate-400 italic mb-8">"{currentItem.quiz?.translation}"</p>
                 <div className="mb-8 md:mb-12 px-2">
                   <h3 className="text-xl md:text-3xl font-bold tracking-tight italic flex flex-wrap justify-center items-center gap-y-2">
-                    {activeData[currentIndex].quiz.sentence.split('________').map((part, i, arr) => (
+                    {currentItem.quiz?.sentence.split('________').map((part, i, arr) => (
                       <React.Fragment key={i}>
                         <span>{part}</span>
                         {i < arr.length - 1 && (
                           <span className={`inline-flex flex-col items-center mx-3 min-w-[140px] relative`}>
                             <span className={`w-full pb-2 border-b-2 text-center transition-all ${feedback === 'correct' ? 'border-emerald-500 text-emerald-600' : feedback === 'incorrect' ? 'border-red-400 text-red-500' : 'border-black'}`}>
-                              {feedback === 'correct' ? activeData[currentIndex].quiz.answer : (userInput || '...')}
+                              {feedback === 'correct' ? currentItem.quiz.answer : (userInput || '...')}
                             </span>
                             {feedback === 'incorrect' && (
                               <span className="absolute -top-10 bg-emerald-500 text-white text-[11px] font-black px-4 py-1.5 rounded-full shadow-xl animate-bounce-subtle whitespace-nowrap z-10">
-                                {activeData[currentIndex].quiz.answer}
+                                {currentItem.quiz.answer}
                                 <span className="absolute bottom-[-4px] left-1/2 -translate-x-1/2 w-2 h-2 bg-emerald-500 rotate-45"></span>
                               </span>
                             )}
@@ -999,8 +1057,8 @@ export default function Mimikara() {
                     {!feedback ? (
                       <div className="flex flex-col gap-3">
                         <button onClick={checkAnswer} className="w-full py-4 bg-black text-white text-xs font-bold uppercase tracking-widest">Kiểm Tra</button>
-                        <button 
-                          onClick={() => setShowHint(!showHint)} 
+                        <button
+                          onClick={() => setShowHint(!showHint)}
                           className="w-full py-3 border border-slate-200 text-slate-400 text-[10px] font-bold uppercase tracking-widest hover:border-black hover:text-black transition-colors"
                         >
                           {showHint ? 'Ẩn gợi ý' : 'Xem gợi ý'}
@@ -1011,14 +1069,14 @@ export default function Mimikara() {
                         {feedback === 'incorrect' && (
                           <div className="p-4 bg-emerald-50 border border-emerald-100 rounded-xl animate-in text-left">
                             <p className="text-[10px] font-bold text-emerald-600 uppercase tracking-widest mb-1">Đáp án đúng là:</p>
-                            <p className="text-xl font-bold text-emerald-700">{activeData[currentIndex].quiz.answer}</p>
+                            <p className="text-xl font-bold text-emerald-700">{currentItem.quiz?.answer}</p>
                           </div>
                         )}
                         <button onClick={handleNext} className={`w-full py-4 ${feedback === 'correct' ? 'bg-emerald-600' : 'bg-black'} text-white text-xs font-bold uppercase tracking-widest`}>Tiếp Theo</button>
                       </div>
                     )}
                   </div>
-                  {showHint && !feedback && <p className="text-center text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-4">Gợi ý: {activeData[currentIndex].quiz.hint}</p>}
+                  {showHint && !feedback && <p className="text-center text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-4">Gợi ý: {currentItem.quiz?.hint}</p>}
                 </div>
               </div>
             )}
@@ -1036,9 +1094,67 @@ export default function Mimikara() {
                 onClick={handleNext}
                 className="flex-1 py-4 md:py-6 bg-slate-950 text-white rounded-2xl text-[10px] md:text-xs font-black uppercase tracking-[0.2em] md:tracking-[0.4em] hover:bg-black hover:shadow-2xl hover:shadow-slate-200 active:scale-95 transition-all flex items-center justify-center gap-2"
               >
-                {currentIndex === activeData.length - 1 ? 'Hoàn thành' : 'Tiếp theo'}
+                {currentIndex === studyData.length - 1 ? 'Hoàn thành' : 'Tiếp theo'}
                 <ChevronRight className="w-4 h-4" />
               </button>
+            </div>
+          </div>
+        )}
+
+        {/* Results Screen */}
+        {showResults && (
+          <div className="fixed inset-0 z-[200] bg-white flex flex-col items-center justify-center p-6 animate-in fade-in duration-500">
+            <div className="absolute inset-0 bg-slate-50/50 -z-10" />
+            <div className="w-full max-w-md space-y-12 text-center">
+              <div className="space-y-4">
+                <div className="w-24 h-24 bg-black rounded-[2.5rem] flex items-center justify-center mx-auto shadow-2xl rotate-3">
+                  <Brain className="w-12 h-12 text-white" />
+                </div>
+                <h2 className="text-4xl md:text-5xl font-black italic uppercase tracking-tighter text-slate-900">Kết quả</h2>
+                <p className="text-slate-400 font-bold uppercase tracking-widest text-[10px]">Hoàn thành bài luyện tập</p>
+              </div>
+
+              <div className="relative py-12">
+                 <div className="absolute inset-0 flex items-center justify-center opacity-[0.03] select-none pointer-events-none text-9xl font-black">Score</div>
+                 <div className="relative">
+                   <span className="text-8xl md:text-9xl font-black text-slate-950 tracking-tighter italic">
+                     {score}
+                   </span>
+                   <span className="text-3xl md:text-4xl font-black text-slate-300 italic align-top ml-2">
+                     / {studyData.length}
+                   </span>
+                 </div>
+              </div>
+
+              <div className="space-y-4 px-4">
+                 <div className="p-6 bg-slate-50 border border-slate-100 rounded-[2rem] mb-8">
+                    <p className="text-slate-500 font-medium italic leading-relaxed">
+                      {score === studyData.length ? 'Tuyệt đỉnh! Bạn đã chinh phục hoàn toàn bài học này.' : 
+                       score > studyData.length / 2 ? 'Rất tốt! Bạn đang tiến bộ rõ rệt qua từng bài tập.' : 
+                       'Đừng nản lòng! Hãy ôn lại bài và thử sức một lần nữa nhé.'}
+                    </p>
+                 </div>
+
+                 <div className="grid grid-cols-1 gap-3">
+                    <button 
+                      onClick={() => {
+                          setShowResults(false);
+                          switchMode('quiz');
+                      }}
+                      className="w-full py-5 bg-black text-white rounded-2xl text-[11px] font-black uppercase tracking-[0.3em] hover:scale-[1.02] active:scale-95 transition-all shadow-xl shadow-black/10 flex items-center justify-center gap-3"
+                    >
+                      <RotateCcw className="w-4 h-4" />
+                      Luyện tập lại
+                    </button>
+                    <button 
+                      onClick={() => switchMode('menu')}
+                      className="w-full py-5 bg-white border-2 border-slate-900 text-slate-900 rounded-2xl text-[11px] font-black uppercase tracking-[0.3em] hover:bg-slate-50 active:scale-95 transition-all flex items-center justify-center gap-3"
+                    >
+                      <List className="w-4 h-4" />
+                      Bảng điều khiển
+                    </button>
+                 </div>
+              </div>
             </div>
           </div>
         )}

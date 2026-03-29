@@ -5,44 +5,36 @@ export default function Grammar() {
   const navigate = useNavigate();
 
   const books = [
-    { 
-      id: 'mimikara', 
-      num: '01', 
-      title: 'Mimikara', 
-      japanese: '耳から覚える文法', 
-      label: 'TRÌNH ĐỘ N3 - N1', 
+    {
+      id: 'mimikara',
+      num: '01',
+      title: 'Mimikara',
+      japanese: '耳から覚える文法',
+      label: 'TRÌNH ĐỘ N3 - N1',
       path: '/grammar/mimikara'
     },
-    { 
-      id: 'dekiru', 
-      num: '02', 
-      title: 'Dekiru', 
-      japanese: 'できる日本語', 
-      label: 'GIAO TIẾP ỨNG DỤNG', 
+    {
+      id: 'dekiru',
+      num: '02',
+      title: 'Dekiru',
+      japanese: 'できる日本語',
+      label: 'GIAO TIẾP ỨNG DỤNG',
       path: '#'
     },
-    { 
-      id: 'fpt', 
-      num: '03', 
-      title: 'FPT', 
-      japanese: 'Giáo trình nội bộ', 
-      label: 'CHUYÊN NGÀNH CNTT', 
-      path: '#'
-    }
   ];
 
   return (
     <div className="min-h-screen bg-white flex flex-col items-center pt-44 md:pt-40 pb-20 px-6 font-sans relative overflow-hidden">
-      
+
       {/* Background Watermark */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[35vw] font-black text-slate-100 opacity-[0.03] pointer-events-none select-none leading-none z-0 whitespace-nowrap">
         文法
       </div>
 
       <div className="w-full max-w-5xl relative z-10">
-        
+
         {/* Back Button */}
-        <button 
+        <button
           onClick={() => navigate('/')}
           className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.4em] text-slate-400 hover:text-black transition-colors mb-12"
         >
@@ -58,11 +50,11 @@ export default function Grammar() {
             Chọn giáo trình để bắt đầu lộ trình rèn luyện cấu trúc ngữ pháp Tiếng Nhật từ cơ bản đến nâng cao.
           </p>
         </div>
-        
+
         {/* Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
           {books.map((book) => (
-            <div 
+            <div
               key={book.id}
               onClick={() => book.path !== '#' && navigate(book.path)}
               className={`group relative aspect-square bg-white border border-slate-100 rounded-[2.5rem] p-10 flex flex-col justify-between transition-all duration-500

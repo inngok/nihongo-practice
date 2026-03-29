@@ -19,6 +19,9 @@ export default function MimikaraVocab() {
   const [feedback, setFeedback] = useState(null);
   const [score, setScore] = useState(0);
   const [showHint, setShowHint] = useState(false);
+  const [quizType, setQuizType] = useState('jp-to-vn'); // 'jp-to-vn', 'vn-to-jp'
+  const [isShuffle, setIsShuffle] = useState(true);
+  const [showResults, setShowResults] = useState(false);
   const inputRef = useRef(null);
 
   const currentData = useMemo(() => {
@@ -26,14 +29,15 @@ export default function MimikaraVocab() {
   }, [activeLesson]);
 
   // Actions
-  const startQuiz = useCallback(() => {
-    const shuffled = [...currentData.words].sort(() => Math.random() - 0.5);
-    setQuizData(shuffled);
+  const startQuiz = useCallback((type = 'jp-to-vn') => {
+    const data = isShuffle ? [...currentData.words].sort(() => Math.random() - 0.5) : [...currentData.words];
+    setQuizData(data);
     setQuizIndex(0);
     setScore(0);
     setUserInput('');
     setFeedback(null);
     setShowHint(false);
+    setQuizType(type);
     setViewMode('quiz');
   }, [currentData]);
 
@@ -49,8 +53,6 @@ export default function MimikaraVocab() {
         }
       } else if (viewMode === 'quiz' && !feedback) {
         if (e.key === 'Enter') checkAnswer();
-      } else if (viewMode === 'quiz' && feedback) {
-        if (e.key === 'Enter') nextQuiz();
       }
     };
     window.addEventListener('keydown', handleKey);
@@ -63,14 +65,55 @@ export default function MimikaraVocab() {
 
   // Quiz logic
   const checkAnswer = () => {
-    const answer = quizData[quizIndex].meaning.toLowerCase().trim();
-    if (userInput.toLowerCase().trim() === answer) {
+    const currentWord = quizData[quizIndex];
+    const input = userInput.toLowerCase().trim();
+    
+    let isCorrect = false;
+    if (quizType === 'jp-to-vn') {
+      const answer = currentWord.meaning.toLowerCase().trim();
+      isCorrect = input === answer;
+    } else {
+      // vn-to-jp: Allow kanji, kana or alternative accepts
+      const kanji = currentWord.kanji.toLowerCase().trim();
+      const kana = currentWord.kana.toLowerCase().trim();
+      const accepts = (currentWord.accepts || []).map(a => a.toLowerCase().trim());
+      isCorrect = input === kanji || input === kana || accepts.includes(input);
+    }
+
+    if (isCorrect) {
       setFeedback('correct');
       setScore(s => s + 1);
     } else {
       setFeedback('incorrect');
     }
   };
+
+
+  // Auto focus input on each question
+  useEffect(() => {
+    if (viewMode === 'quiz' && !feedback) {
+      inputRef.current?.focus();
+    }
+  }, [quizIndex, viewMode, feedback]);
+
+  // Keyboard support for Quiz
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (viewMode === 'quiz' && quizData.length > 0) {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          if (!feedback) {
+            checkAnswer();
+          } else {
+            nextQuiz();
+          }
+        }
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [viewMode, feedback, quizData, quizIndex, userInput, score]);
+
   const nextQuiz = () => {
     if (quizIndex < quizData.length - 1) {
       setQuizIndex(i => i + 1);
@@ -78,13 +121,12 @@ export default function MimikaraVocab() {
       setFeedback(null);
       setShowHint(false);
     } else {
-      alert(`Xong! Bạn đúng ${score + (feedback === 'correct' ? 1 : 0)}/${quizData.length}`);
-      setViewMode('list');
+      setShowResults(true);
     }
   };
 
   return (
-    <div className="min-h-screen bg-white flex flex-col items-center pt-32 md:pt-24 pb-20 px-4 md:px-6 font-sans relative overflow-hidden text-slate-900">
+    <div className="min-h-screen bg-white flex flex-col items-center pt-52 md:pt-44 pb-20 px-4 md:px-6 font-sans relative overflow-hidden text-slate-900">
 
       {/* Background Watermark */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[20vw] font-black text-slate-100 opacity-[0.03] pointer-events-none select-none leading-none z-0 whitespace-nowrap uppercase">
@@ -96,10 +138,18 @@ export default function MimikaraVocab() {
         {/* Navigation & Header */}
         <div className="mb-12">
           <button
-            onClick={() => navigate('/vocabulary')}
-            className="text-[10px] font-bold uppercase tracking-[0.4em] text-slate-400 hover:text-black transition-colors mb-8 decoration-slate-100"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              if (viewMode !== 'list') {
+                setViewMode('list');
+              } else {
+                navigate('/vocabulary');
+              }
+            }}
+            className="px-6 py-2 border-2 border-slate-900 text-[10px] font-black uppercase tracking-widest hover:bg-slate-900 hover:text-white transition-all font-sans relative z-[200] cursor-pointer mb-8"
           >
-            Danh sách từ vựng
+            {viewMode === 'list' ? 'Quay lại' : 'Thoát luyện tập'}
           </button>
 
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-12">
@@ -118,7 +168,7 @@ export default function MimikaraVocab() {
                   ))}
                 </div>
               </div>
-               <div className="border-l-4 border-black pl-6 py-2 animate-in slide-in-from-left-4 duration-500">
+              <div className="border-l-4 border-black pl-6 py-2 animate-in slide-in-from-left-4 duration-500">
                 <h1 className="text-2xl md:text-4xl font-black text-slate-900 tracking-tighter leading-tight italic uppercase">
                   {currentData.title}
                 </h1>
@@ -128,11 +178,64 @@ export default function MimikaraVocab() {
               </div>
             </div>
 
-            {/* Mode Switcher */}
-            <div className="flex bg-slate-50 p-1.5 rounded-2xl border border-slate-100 shadow-sm self-start md:self-end whitespace-nowrap">
-              <button onClick={() => setViewMode('list')} className={`px-6 py-2.5 rounded-xl text-[10px] font-bold transition-all ${viewMode === 'list' ? 'bg-black text-white shadow-md' : 'text-slate-400 hover:text-slate-600'}`}>Danh sách</button>
-              <button onClick={() => { setViewMode('flashcard'); setCardIndex(0); setIsFlipped(false); }} className={`px-6 py-2.5 rounded-xl text-[10px] font-bold transition-all ${viewMode === 'flashcard' ? 'bg-black text-white shadow-md' : 'text-slate-400 hover:text-slate-600'}`}>Flashcard</button>
-              <button onClick={startQuiz} className={`px-6 py-2.5 rounded-xl text-[10px] font-bold transition-all ${viewMode === 'quiz' ? 'bg-black text-white shadow-md' : 'text-slate-400 hover:text-slate-600'}`}>Luyện tập</button>
+            <div className="flex flex-col gap-3 self-start md:self-end items-start md:items-end">
+              <div className="flex flex-col md:flex-row items-start md:items-center gap-4">
+                {/* Shuffle Toggle - Only show in Quiz Mode */}
+                {viewMode === 'quiz' && (
+                  <div className="flex items-center gap-3 bg-slate-50 p-1.5 rounded-xl border border-slate-100 shadow-sm animate-in fade-in duration-300">
+                    <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest pl-2 font-sans">Xáo trộn</span>
+                    <button 
+                      onClick={() => {
+                        const nextShuffle = !isShuffle;
+                        setIsShuffle(nextShuffle);
+                        // Reshuffle immediately
+                        if (nextShuffle) {
+                          const data = [...quizData].sort(() => Math.random() - 0.5);
+                          setQuizData(data);
+                          // For Flashcard too
+                          // (cardIndex would need to be reset if we use quizData for cards too, 
+                          // but cards currently use currentData.words)
+                        } else {
+                          // Reset to ordered
+                          if (viewMode === 'quiz') {
+                             setQuizData([...currentData.words]);
+                          }
+                        }
+                        setQuizIndex(0);
+                        setCardIndex(0);
+                      }}
+                      className={`relative w-10 h-5 rounded-full transition-colors duration-300 focus:outline-none ${isShuffle ? 'bg-black' : 'bg-slate-200'}`}
+                    >
+                      <div className={`absolute top-0.5 left-0.5 w-4 h-4 bg-white rounded-full transition-transform duration-300 ${isShuffle ? 'translate-x-5' : ''}`} />
+                    </button>
+                  </div>
+                )}
+
+                {/* Mode Switcher */}
+                <div className="flex bg-slate-50 p-1 rounded-full border border-slate-100 whitespace-nowrap overflow-x-auto no-scrollbar max-w-full">
+                  <button onClick={() => setViewMode('list')} className={`px-5 py-2 rounded-full text-[10px] font-medium transition-all ${viewMode === 'list' ? 'bg-black text-white shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}>Danh sách</button>
+                  <button onClick={() => { setViewMode('flashcard'); setCardIndex(0); setIsFlipped(false); }} className={`px-5 py-2 rounded-full text-[10px] font-medium transition-all ${viewMode === 'flashcard' ? 'bg-black text-white shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}>Flashcard</button>
+                  <button onClick={() => setViewMode('quiz')} className={`px-5 py-2 rounded-full text-[10px] font-medium transition-all ${viewMode === 'quiz' ? 'bg-black text-white shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}>Luyện tập</button>
+                </div>
+              </div>
+
+              {/* Quiz Selection Sub-menu */}
+              {viewMode === 'quiz' && (
+                <div className="flex bg-white p-1 rounded-xl border border-dotted border-slate-200 animate-in fade-in slide-in-from-top-2 duration-300">
+                  <button 
+                    onClick={() => startQuiz('jp-to-vn')} 
+                    className={`px-4 py-1.5 rounded-lg text-[9px] font-bold transition-all ${quizType === 'jp-to-vn' ? 'bg-slate-100 text-black shadow-none' : 'text-slate-400 hover:text-slate-600'}`}
+                  >
+                    NHẬT - VIỆT
+                  </button>
+                  <button 
+                    onClick={() => startQuiz('vn-to-jp')} 
+                    className={`px-4 py-1.5 rounded-lg text-[9px] font-bold transition-all ${quizType === 'vn-to-jp' ? 'bg-slate-100 text-black shadow-none' : 'text-slate-400 hover:text-slate-600'}`}
+                  >
+                    VIỆT - NHẬT
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -198,11 +301,25 @@ export default function MimikaraVocab() {
             </div>
             <div className="text-center w-full space-y-16">
               <div className="space-y-4">
-                <div className="text-6xl md:text-8xl font-black text-slate-900 leading-tight italic">{quizData[quizIndex].kanji}</div>
-                <div className="text-2xl font-bold text-slate-300 italic uppercase tracking-widest">{quizData[quizIndex].kana}</div>
+                {quizType === 'jp-to-vn' ? (
+                  <>
+                    <div className="text-6xl md:text-8xl font-black text-slate-900 leading-tight italic">{quizData[quizIndex].kanji}</div>
+                    <div className="text-2xl font-bold text-slate-300 italic uppercase tracking-widest">{quizData[quizIndex].kana}</div>
+                  </>
+                ) : (
+                  <div className="text-4xl md:text-6xl font-black text-slate-900 leading-tight italic">"{quizData[quizIndex].meaning}"</div>
+                )}
               </div>
               <div className="space-y-6 w-full max-w-md mx-auto">
-                <input ref={inputRef} disabled={!!feedback} value={userInput} onChange={e => setUserInput(e.target.value)} type="text" placeholder="Gõ nghĩa tiếng Việt..." className={`w-full text-center py-6 text-3xl font-black border-b-4 outline-none transition-all ${feedback === 'correct' ? 'border-emerald-500 text-emerald-600 bg-emerald-50/20' : feedback === 'incorrect' ? 'border-red-500 text-red-600 bg-red-50/20' : 'border-black focus:border-slate-300'}`} />
+                <input 
+                  ref={inputRef} 
+                  disabled={!!feedback} 
+                  value={userInput} 
+                  onChange={e => setUserInput(e.target.value)} 
+                  type="text" 
+                  placeholder={quizType === 'jp-to-vn' ? "Gõ nghĩa tiếng Việt..." : "Gõ từ tiếng Nhật (Kanji/Kana)..."}
+                  className={`w-full text-center py-6 text-2xl md:text-3xl font-black border-b-4 outline-none transition-all ${feedback === 'correct' ? 'border-emerald-500 text-emerald-600 bg-emerald-50/20' : feedback === 'incorrect' ? 'border-red-500 text-red-600 bg-red-50/20' : 'border-black focus:border-slate-300'}`} 
+                />
                 <div className="flex flex-col gap-4">
                   {!feedback ? (
                     <div className="grid grid-cols-2 gap-4">
@@ -212,9 +329,86 @@ export default function MimikaraVocab() {
                   ) : (
                     <button onClick={nextQuiz} className="py-4 bg-black text-white text-[10px] font-bold uppercase rounded-2xl animate-in zoom-in-95 duration-300">{quizIndex === quizData.length - 1 ? 'XEM KẾT QUẢ' : 'CÂU TIẾP THEO'}</button>
                   )}
-                  {showHint && !feedback && <div className="bg-slate-50 p-4 rounded-xl text-xs font-bold text-slate-400 italic">Gợi ý: {quizData[quizIndex].meaning.substring(0, 2)}...</div>}
-                  {feedback === 'incorrect' && <div className="bg-emerald-50 p-6 rounded-2xl text-center shadow-inner"><p className="text-[10px] font-black text-emerald-600 uppercase mb-1">ĐÁP ÁN ĐÚNG</p><p className="text-3xl font-black text-emerald-700 italic">"{quizData[quizIndex].meaning}"</p></div>}
+                  {showHint && !feedback && (
+                    <div className="bg-slate-50 p-4 rounded-xl text-xs font-bold text-slate-400 italic">
+                      Gợi ý: {quizType === 'jp-to-vn' ? quizData[quizIndex].meaning.substring(0, 2) : quizData[quizIndex].kana.substring(0, 2)}...
+                    </div>
+                  )}
+                  {feedback === 'incorrect' && (
+                    <div className="bg-emerald-50 p-6 rounded-2xl text-center shadow-inner">
+                      <p className="text-[10px] font-black text-emerald-600 uppercase mb-1">ĐÁP ÁN ĐÚNG</p>
+                      {quizType === 'jp-to-vn' ? (
+                        <p className="text-3xl font-black text-emerald-700 italic">"{quizData[quizIndex].meaning}"</p>
+                      ) : (
+                        <div className="flex flex-col">
+                          <p className="text-3xl font-black text-emerald-700 italic">{quizData[quizIndex].kanji}</p>
+                          <p className="text-lg font-bold text-emerald-600">{quizData[quizIndex].kana}</p>
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Results Screen */}
+        {showResults && (
+          <div className="fixed inset-0 z-[200] bg-white flex flex-col items-center justify-center p-6 animate-in fade-in duration-500">
+            <div className="absolute inset-0 bg-slate-50/50 -z-10" />
+            <div className="w-full max-w-md space-y-12 text-center">
+              <div className="space-y-4">
+                <div className="w-24 h-24 bg-black rounded-[2.5rem] flex items-center justify-center mx-auto shadow-2xl rotate-3">
+                  <Brain className="w-12 h-12 text-white" />
+                </div>
+                <h2 className="text-4xl md:text-5xl font-black italic uppercase tracking-tighter text-slate-900">Kết quả</h2>
+                <p className="text-slate-400 font-bold uppercase tracking-widest text-[10px]">Hoàn thành bài luyện tập</p>
+              </div>
+
+              <div className="relative py-12">
+                 <div className="absolute inset-0 flex items-center justify-center opacity-[0.03] select-none pointer-events-none text-9xl font-black">Score</div>
+                 <div className="relative">
+                   <span className="text-8xl md:text-9xl font-black text-slate-950 tracking-tighter italic">
+                     {score + (feedback === 'correct' ? 1 : 0)}
+                   </span>
+                   <span className="text-3xl md:text-4xl font-black text-slate-300 italic align-top ml-2">
+                     / {quizData.length}
+                   </span>
+                 </div>
+              </div>
+
+              <div className="space-y-4 px-4">
+                 <div className="p-6 bg-slate-50 border border-slate-100 rounded-[2rem] mb-8">
+                    <p className="text-slate-500 font-medium italic leading-relaxed">
+                      {score === quizData.length ? 'Tuyệt đỉnh! Bạn đã chinh phục hoàn toàn bài học này.' : 
+                       score > quizData.length / 2 ? 'Rất tốt! Bạn đang tiến bộ rõ rệt qua từng bài tập.' : 
+                       'Đừng nản lòng! Hãy ôn lại từ vựng và thử sức một lần nữa nhé.'}
+                    </p>
+                 </div>
+
+                 <div className="grid grid-cols-1 gap-3">
+                    <button 
+                      onClick={() => {
+                          setShowResults(false);
+                          startQuiz(quizType);
+                      }}
+                      className="w-full py-5 bg-black text-white rounded-2xl text-[11px] font-black uppercase tracking-[0.3em] hover:scale-[1.02] active:scale-95 transition-all shadow-xl shadow-black/10 flex items-center justify-center gap-3"
+                    >
+                      <List className="w-4 h-4" />
+                      Luyện tập lại
+                    </button>
+                    <button 
+                      onClick={() => {
+                          setShowResults(false);
+                          setViewMode('list');
+                      }}
+                      className="w-full py-5 bg-white border-2 border-slate-900 text-slate-900 rounded-2xl text-[11px] font-black uppercase tracking-[0.3em] hover:bg-slate-50 active:scale-95 transition-all flex items-center justify-center gap-3"
+                    >
+                      <List className="w-4 h-4" />
+                      Danh sách từ vựng
+                    </button>
+                 </div>
               </div>
             </div>
           </div>
