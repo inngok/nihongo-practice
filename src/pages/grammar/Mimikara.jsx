@@ -595,7 +595,8 @@ export default function Mimikara() {
   const [score, setScore] = useState(0);
   const [showHint, setShowHint] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
-  const [originMode, setOriginMode] = useState('menu');
+  const [isShuffle, setIsShuffle] = useState(true);
+  const [studyData, setStudyData] = useState([]);
   const inputRef = useRef(null);
   const touchStart = useRef(null);
   const minSwipeDistance = 50;
@@ -609,6 +610,8 @@ export default function Mimikara() {
   const activeData = useMemo(() =>
     selectedUnit === 'all' ? grammarData : grammarData.filter(item => item.unit === selectedUnit),
     [selectedUnit]);
+
+  const currentItem = useMemo(() => studyData[currentIndex] || studyData[0] || {}, [studyData, currentIndex]);
 
 
   // Gesture Handlers
@@ -671,6 +674,16 @@ export default function Mimikara() {
 
   // Reset state when switching modes
   const switchMode = useCallback((mode) => {
+    if (mode === 'flashcard' || mode === 'quiz') {
+      let data = [...activeData];
+      if (isShuffle) {
+        data.sort(() => Math.random() - 0.5);
+      }
+      setStudyData(data);
+    } else {
+      setStudyData(activeData);
+    }
+
     setActiveMode(mode);
     if (mode === 'menu' || mode === 'list') {
       setOriginMode(mode);
@@ -682,7 +695,7 @@ export default function Mimikara() {
     setScore(0);
     setShowHint(false);
     // Don't clear searchTerm here to allow "search tiếp"
-  }, []);
+  }, [activeData, isShuffle]);
 
   const selectGrammarFromList = useCallback((item) => {
     setSelectedUnit('all');
@@ -694,8 +707,8 @@ export default function Mimikara() {
   }, []);
 
   const handleNext = useCallback(() => {
-    if (currentIndex >= activeData.length - 1) {
-      activeMode === 'quiz' && alert(`Chúc mừng! Bạn đã hoàn thành bài luyện tập với số điểm: ${score}/${activeData.length}`);
+    if (currentIndex >= studyData.length - 1) {
+      activeMode === 'quiz' && alert(`Chúc mừng! Bạn đã hoàn thành bài luyện tập với số điểm: ${score}/${studyData.length}`);
       switchMode('menu');
       return;
     }
@@ -704,22 +717,22 @@ export default function Mimikara() {
     setUserInput('');
     setFeedback(null);
     setShowHint(false);
-  }, [currentIndex, activeData.length, activeMode, score, switchMode]);
+  }, [currentIndex, studyData.length, activeMode, score, switchMode]);
 
   const checkAnswer = useCallback(() => {
     const cleanInput = userInput.trim().replace(/\s/g, '').toLowerCase();
-    const currentQuiz = activeData[currentIndex].quiz;
+    const currentQuiz = currentItem.quiz;
     const cleanAnswer = currentQuiz.answer.replace(/\s/g, '').toLowerCase();
     const baseAccepts = currentQuiz.accepts ? currentQuiz.accepts.map(a => a.replace(/\s/g, '').toLowerCase()) : [];
 
     // Legacy support for specific items
-    const legacyAccepts = { 12: ['てる'], 29: ['ぐらい'], 30: ['ぐらいなら'] }[activeData[currentIndex].id] || [];
+    const legacyAccepts = { 12: ['てる'], 29: ['ぐらい'], 30: ['ぐらいなら'] }[currentItem.id] || [];
     const validAnswers = [cleanAnswer, ...baseAccepts, ...legacyAccepts];
 
     const isCorrect = validAnswers.includes(cleanInput);
     setFeedback(isCorrect ? 'correct' : 'incorrect');
     setScore(prev => isCorrect ? prev + 1 : prev);
-  }, [userInput, activeData, currentIndex]);
+  }, [userInput, currentItem]);
 
   const handleKeyDown = useCallback((e) => {
     const isEnter = e.key === 'Enter';
@@ -777,25 +790,36 @@ export default function Mimikara() {
           </p>
           <h1 className="text-2xl md:text-5xl font-bold tracking-tighter italic leading-none">Mimikara</h1>
         </div>
-        <button
-          onClick={() => {
-            if (activeMode === 'menu') {
-              navigate('/grammar');
-            } else if (activeMode === 'list') {
-              setActiveMode('menu');
-              setOriginMode('menu');
-              setCurrentIndex(0);
-            } else {
-              // Quay lại menu hoặc danh sách tìm kiếm (tùy xuất thân)
-              setActiveMode(originMode);
-              setCurrentIndex(0);
-              setIsFlipped(false);
-            }
-          }}
-          className="px-6 py-2 border border-black text-xs font-bold uppercase tracking-widest hover:bg-black hover:text-white transition-all"
-        >
-          {activeMode === 'menu' ? 'Thoát' : 'Quay lại'}
-        </button>
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 bg-slate-50 p-1 rounded-full border border-slate-100 shadow-sm mr-2 invisible md:visible">
+            <span className="text-[8px] font-black text-slate-300 uppercase tracking-widest pl-3">Xáo trộn</span>
+            <button 
+              onClick={() => setIsShuffle(!isShuffle)}
+              className={`relative w-8 h-4 rounded-full transition-colors duration-300 focus:outline-none ${isShuffle ? 'bg-black' : 'bg-slate-200'}`}
+            >
+              <div className={`absolute top-0.5 left-0.5 w-3 h-3 bg-white rounded-full transition-transform duration-300 ${isShuffle ? 'translate-x-4' : ''}`} />
+            </button>
+          </div>
+          <button
+            onClick={() => {
+              if (activeMode === 'menu') {
+                navigate('/grammar');
+              } else if (activeMode === 'list') {
+                setActiveMode('menu');
+                setOriginMode('menu');
+                setCurrentIndex(0);
+              } else {
+                // Quay lại menu hoặc danh sách tìm kiếm (tùy xuất thân)
+                setActiveMode(originMode);
+                setCurrentIndex(0);
+                setIsFlipped(false);
+              }
+            }}
+            className="px-6 py-2 border border-black text-xs font-bold uppercase tracking-widest hover:bg-black hover:text-white transition-all"
+          >
+            {activeMode === 'menu' ? 'Thoát' : 'Quay lại'}
+          </button>
+        </div>
       </div>
 
       <div className="w-full max-w-6xl flex-grow flex flex-col">
@@ -911,9 +935,9 @@ export default function Mimikara() {
           <div className="flex flex-col flex-grow animate-in fade-in duration-500">
             <div className="flex justify-between items-center mb-8 pb-4 border-b border-slate-100">
               <span className="text-[10px] font-bold uppercase tracking-widest">
-                UNIT {activeData[currentIndex].unit} | {activeMode === 'flashcard' ? 'GHI NHỚ' : 'LUYỆN TẬP'}
+                UNIT {currentItem.unit} | {activeMode === 'flashcard' ? 'GHI NHỚ' : 'LUYỆN TẬP'}
               </span>
-              <span className="text-xs text-slate-400 font-bold tracking-widest">{currentIndex + 1} / {activeData.length}</span>
+              <span className="text-xs text-slate-400 font-bold tracking-widest">{currentIndex + 1} / {studyData.length}</span>
             </div>
 
             {activeMode === 'flashcard' ? (
@@ -931,7 +955,7 @@ export default function Mimikara() {
                       <div className="space-y-4 md:space-y-8">
                         <p className="text-[9px] md:text-[10px] font-black tracking-[0.4em] text-slate-300 uppercase">Cấu trúc ngữ pháp</p>
                         <h2 className="text-4xl md:text-7xl font-black italic text-slate-950 tracking-tighter leading-tight break-words px-2">
-                          {activeData[currentIndex].pattern}
+                          {currentItem.pattern}
                         </h2>
                         <div className="pt-6 md:pt-10">
                           <span className="px-5 py-2 rounded-full border border-slate-100 text-[9px] md:text-[10px] font-black tracking-widest text-slate-400 group-hover:border-slate-900 group-hover:text-slate-900 transition-all uppercase">
@@ -946,16 +970,16 @@ export default function Mimikara() {
                       <div className="w-full">
                         <div className="mb-6 md:mb-10">
                           <h3 className="text-xl md:text-4xl font-black mb-2 md:mb-4 italic text-slate-900 tracking-tighter leading-tight">
-                            {activeData[currentIndex].meaning}
+                            {currentItem.meaning}
                           </h3>
                           <div className="w-12 md:w-16 h-1 bg-slate-950 mx-auto mb-4 rounded-full" />
                           <p className="text-slate-500 text-xs md:text-base max-w-lg mx-auto font-medium leading-[1.6] italic px-4">
-                            {activeData[currentIndex].explanation}
+                            {currentItem.explanation}
                           </p>
                         </div>
 
                         <div className="space-y-3 w-full max-w-xl mx-auto text-left mb-8">
-                          {activeData[currentIndex].examples.map((ex, idx) => (
+                          {currentItem.examples?.map((ex, idx) => (
                             <div key={idx} className="bg-slate-50 p-5 md:p-7 rounded-[1.5rem] md:rounded-[2rem] border border-slate-100 transition-all duration-500">
                               <div className="flex flex-col gap-2 md:gap-3">
                                 <p className="text-base md:text-lg font-bold text-slate-900 leading-snug tracking-tight">
@@ -978,20 +1002,20 @@ export default function Mimikara() {
               </div>
             ) : (
               <div className="flex-grow flex flex-col items-center justify-center py-12 text-center">
-                <p className="text-slate-400 italic mb-8">"{activeData[currentIndex].quiz.translation}"</p>
+                <p className="text-slate-400 italic mb-8">"{currentItem.quiz?.translation}"</p>
                 <div className="mb-8 md:mb-12 px-2">
                   <h3 className="text-xl md:text-3xl font-bold tracking-tight italic flex flex-wrap justify-center items-center gap-y-2">
-                    {activeData[currentIndex].quiz.sentence.split('________').map((part, i, arr) => (
+                    {currentItem.quiz?.sentence.split('________').map((part, i, arr) => (
                       <React.Fragment key={i}>
                         <span>{part}</span>
                         {i < arr.length - 1 && (
                           <span className={`inline-flex flex-col items-center mx-3 min-w-[140px] relative`}>
                             <span className={`w-full pb-2 border-b-2 text-center transition-all ${feedback === 'correct' ? 'border-emerald-500 text-emerald-600' : feedback === 'incorrect' ? 'border-red-400 text-red-500' : 'border-black'}`}>
-                              {feedback === 'correct' ? activeData[currentIndex].quiz.answer : (userInput || '...')}
+                              {feedback === 'correct' ? currentItem.quiz.answer : (userInput || '...')}
                             </span>
                             {feedback === 'incorrect' && (
                               <span className="absolute -top-10 bg-emerald-500 text-white text-[11px] font-black px-4 py-1.5 rounded-full shadow-xl animate-bounce-subtle whitespace-nowrap z-10">
-                                {activeData[currentIndex].quiz.answer}
+                                {currentItem.quiz.answer}
                                 <span className="absolute bottom-[-4px] left-1/2 -translate-x-1/2 w-2 h-2 bg-emerald-500 rotate-45"></span>
                               </span>
                             )}
@@ -1027,14 +1051,14 @@ export default function Mimikara() {
                         {feedback === 'incorrect' && (
                           <div className="p-4 bg-emerald-50 border border-emerald-100 rounded-xl animate-in text-left">
                             <p className="text-[10px] font-bold text-emerald-600 uppercase tracking-widest mb-1">Đáp án đúng là:</p>
-                            <p className="text-xl font-bold text-emerald-700">{activeData[currentIndex].quiz.answer}</p>
+                            <p className="text-xl font-bold text-emerald-700">{currentItem.quiz?.answer}</p>
                           </div>
                         )}
                         <button onClick={handleNext} className={`w-full py-4 ${feedback === 'correct' ? 'bg-emerald-600' : 'bg-black'} text-white text-xs font-bold uppercase tracking-widest`}>Tiếp Theo</button>
                       </div>
                     )}
                   </div>
-                  {showHint && !feedback && <p className="text-center text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-4">Gợi ý: {activeData[currentIndex].quiz.hint}</p>}
+                  {showHint && !feedback && <p className="text-center text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-4">Gợi ý: {currentItem.quiz?.hint}</p>}
                 </div>
               </div>
             )}
@@ -1052,7 +1076,7 @@ export default function Mimikara() {
                 onClick={handleNext}
                 className="flex-1 py-4 md:py-6 bg-slate-950 text-white rounded-2xl text-[10px] md:text-xs font-black uppercase tracking-[0.2em] md:tracking-[0.4em] hover:bg-black hover:shadow-2xl hover:shadow-slate-200 active:scale-95 transition-all flex items-center justify-center gap-2"
               >
-                {currentIndex === activeData.length - 1 ? 'Hoàn thành' : 'Tiếp theo'}
+                {currentIndex === studyData.length - 1 ? 'Hoàn thành' : 'Tiếp theo'}
                 <ChevronRight className="w-4 h-4" />
               </button>
             </div>
