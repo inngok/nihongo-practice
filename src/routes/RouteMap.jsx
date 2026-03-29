@@ -1,7 +1,7 @@
 import React, { Suspense, lazy } from "react";
 import { Routes, Route, Outlet, useLocation } from "react-router-dom";
-import ScrollToTop from "../components/layout/ScrollToTop";
 import Header from "../components/layout/Header";
+import ScrollToTopButton from "../components/layout/ScrollToTopButton";
 import Footer from "../components/layout/Footer";
 
 // Lazy loading components for performance optimization
@@ -42,7 +42,7 @@ const Layout = () => {
 
   return (
     <div className="flex flex-col min-h-screen bg-white relative">
-      <ScrollToTop />
+      <ScrollToTopButton />
       <Header />
       
       {/* Slogan - Top Right Corner Badge */}

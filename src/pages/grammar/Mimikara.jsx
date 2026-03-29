@@ -603,6 +603,12 @@ export default function Mimikara() {
   const [score, setScore] = useState(0);
   const [showHint, setShowHint] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
+  
+  // Scroll to top when unit changes
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [selectedUnit]);
+  
   const [isShuffle, setIsShuffle] = useState(true);
   const [showResults, setShowResults] = useState(false);
   const [originMode, setOriginMode] = useState('menu');
@@ -701,12 +707,15 @@ export default function Mimikara() {
 
   // Reset state when switching modes
   const switchMode = useCallback((mode) => {
-    if (mode === 'flashcard' || mode === 'quiz' || mode === 'cards') {
+    if (mode === 'quiz') {
       let data = [...activeData];
       if (isShuffle) {
         data.sort(() => Math.random() - 0.5);
       }
       setStudyData(data);
+    } else if (mode === 'flashcard' || mode === 'cards') {
+      // Study modes should follow order
+      setStudyData(activeData);
     } else {
       setStudyData(activeData);
     }
@@ -722,7 +731,8 @@ export default function Mimikara() {
     setScore(0);
     setShowHint(false);
     setShowResults(false);
-    // Don't clear searchTerm here to allow "search tiếp"
+    // Smooth scroll to top when changing study modes
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [activeData, isShuffle]);
 
   const selectGrammarFromList = useCallback((item) => {
