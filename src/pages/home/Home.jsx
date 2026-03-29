@@ -1,5 +1,5 @@
 import React from 'react';
-import { Book, Languages, ArrowRight, Sparkles } from 'lucide-react';
+import { Book, Languages, ArrowRight, Sparkles, PenTool } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export default function Home() {
