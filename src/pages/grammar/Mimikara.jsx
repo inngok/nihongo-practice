@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { BookOpen, Brain, CheckCircle, ChevronLeft, ChevronRight, RotateCcw, HelpCircle, Layers, ArrowLeft, User, Search, List } from 'lucide-react';
+import { BookOpen, Brain, CheckCircle, Check, ChevronLeft, ChevronRight, RotateCcw, HelpCircle, Layers, ArrowLeft, User, Search, List } from 'lucide-react';
 
 const grammarData = [
   // --- UNIT 1 ---
@@ -608,6 +608,23 @@ export default function Mimikara() {
   const [originMode, setOriginMode] = useState('menu');
   const [studyData, setStudyData] = useState([]);
   const inputRef = useRef(null);
+  const [completedIds, setCompletedIds] = useState(() => {
+    const saved = localStorage.getItem('mimikara_completed');
+    try {
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  });
+
+  useEffect(() => {
+    localStorage.setItem('mimikara_completed', JSON.stringify(completedIds));
+  }, [completedIds]);
+
+  const toggleComplete = useCallback((id) => {
+    setCompletedIds(prev => prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]);
+  }, []);
+
   const touchStart = useRef(null);
   const minSwipeDistance = 50;
 
@@ -733,6 +750,14 @@ export default function Mimikara() {
     setUserInput('');
     setFeedback(null);
     setShowHint(false);
+
+    // Auto mark as completed if we moved to next in study mode
+    if (activeMode === 'flashcard' || activeMode === 'cards') {
+      const prevItem = studyData[currentIndex];
+      if (prevItem && !completedIds.includes(prevItem.id)) {
+        setCompletedIds(prev => [...prev, prevItem.id]);
+      }
+    }
   }, [currentIndex, studyData.length, activeMode, score, switchMode]);
 
   const checkAnswer = useCallback(() => {
@@ -747,7 +772,13 @@ export default function Mimikara() {
 
     const isCorrect = validAnswers.includes(cleanInput);
     setFeedback(isCorrect ? 'correct' : 'incorrect');
-    setScore(prev => isCorrect ? prev + 1 : prev);
+    if (isCorrect) {
+      setScore(prev => prev + 1);
+      // Mark current item as completed on correct answer in Quiz
+      if (!completedIds.includes(currentItem.id)) {
+        setCompletedIds(prev => [...prev, currentItem.id]);
+      }
+    }
   }, [userInput, currentItem]);
 
   const handleKeyDown = useCallback((e) => {
@@ -853,18 +884,33 @@ export default function Mimikara() {
         {activeMode === 'menu' && (
           <div className="flex flex-col gap-12">
             <div className="flex flex-wrap gap-2">
-              {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => (
-                <button
-                  key={num}
-                  onClick={() => setSelectedUnit(num)}
-                  className={`px-6 py-2 border ${selectedUnit === num ? 'bg-black text-white border-black' : 'border-slate-200 text-slate-400 hover:border-black hover:text-black'} text-xs font-bold transition-all`}
-                >
-                  U{num < 10 ? `0${num}` : num}
-                </button>
-              ))}
+              {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => {
+                const unitItems = grammarData.filter(i => i.unit === num);
+                const unitCompleted = unitItems.filter(i => completedIds.includes(i.id)).length;
+                const percent = Math.round((unitCompleted / unitItems.length) * 100);
+                return (
+                  <button
+                    key={num}
+                    onClick={() => setSelectedUnit(num)}
+                    className={`relative px-6 py-4 border ${selectedUnit === num ? 'bg-black text-white border-black' : 'border-slate-200 text-slate-400 hover:border-black hover:text-black'} text-xs font-black transition-all group min-w-[80px]`}
+                  >
+                    <div className="flex flex-col items-center">
+                      <span>U{num < 10 ? `0${num}` : num}</span>
+                      {percent > 0 && (
+                        <div className="mt-2 w-full h-1 bg-slate-100/20 rounded-full overflow-hidden">
+                          <div 
+                            className={`h-full ${selectedUnit === num ? 'bg-emerald-400' : 'bg-black/20'} transition-all duration-1000`} 
+                            style={{ width: `${percent}%` }}
+                          />
+                        </div>
+                      )}
+                    </div>
+                  </button>
+                );
+              })}
               <button
                 onClick={() => setSelectedUnit('all')}
-                className={`px-6 py-2 border ${selectedUnit === 'all' ? 'bg-black text-white border-black' : 'border-slate-200 text-slate-400 hover:border-black hover:text-black'} text-xs font-bold transition-all`}
+                className={`px-6 py-4 border ${selectedUnit === 'all' ? 'bg-black text-white border-black' : 'border-slate-200 text-slate-400 hover:border-black hover:text-black'} text-xs font-black transition-all`}
               >
                 TẤT CẢ
               </button>
@@ -930,7 +976,14 @@ export default function Mimikara() {
                         >
                           <div>
                             <div className="flex justify-between items-start mb-6">
-                              <span className="text-[10px] font-bold text-slate-300 tracking-widest uppercase">U{item.unit < 10 ? `0${item.unit}` : item.unit} • #{item.id}</span>
+                              <div className="flex items-center gap-2">
+                                <span className="text-[10px] font-bold text-slate-300 tracking-widest uppercase">U{item.unit < 10 ? `0${item.unit}` : item.unit} • #{item.id}</span>
+                                {completedIds.includes(item.id) && (
+                                  <div className="bg-emerald-500 text-white p-0.5 rounded-full scale-75">
+                                    <Check className="w-3 h-3" />
+                                  </div>
+                                )}
+                              </div>
                               <div className="w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                                 <ChevronRight className="w-4 h-4 text-black" />
                               </div>
