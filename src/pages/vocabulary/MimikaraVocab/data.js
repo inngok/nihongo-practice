@@ -6,6 +6,10 @@ import { lesson5Data } from './lesson5';
 import { lesson6Data } from './lesson6';
 import { lesson7Data } from './lesson7';
 import { lesson8Data } from './lesson8';
+import { lesson9Data } from './lesson9';
+import { lesson10Data } from './lesson10';
+import { lesson11Data } from './lesson11';
+import { lesson12Data } from './lesson12';
 
 export const mimikaraData = {
   1: lesson1Data,
@@ -15,5 +19,9 @@ export const mimikaraData = {
   5: lesson5Data,
   6: lesson6Data,
   7: lesson7Data,
-  8: lesson8Data
+  8: lesson8Data,
+  9: lesson9Data,
+  10: lesson10Data,
+  11: lesson11Data,
+  12: lesson12Data
 };
