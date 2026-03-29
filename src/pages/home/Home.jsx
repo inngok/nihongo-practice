@@ -1,5 +1,5 @@
 import React from 'react';
-import { Book, Languages, ArrowRight, PenTool } from 'lucide-react';
+import { Book, Languages, ArrowRight, Sparkles } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export default function Home() {
@@ -103,13 +103,26 @@ export default function Home() {
 
         <Link
           to="/translator"
-          className="group flex-1 md:flex-none flex items-center justify-between md:justify-start gap-4 px-8 py-3 bg-slate-50 border border-slate-100 rounded-full hover:bg-white hover:border-slate-200 hover:shadow-xl hover:shadow-slate-100 transition-all duration-500 min-w-[200px]"
+          className="group flex-1 md:flex-none flex items-center justify-between md:justify-start gap-4 px-8 py-3 bg-slate-50 border border-slate-100 rounded-full hover:bg-white hover:border-slate-200 hover:shadow-xl hover:shadow-slate-100 transition-all duration-500 min-w-[180px]"
         >
           <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center border border-slate-100 group-hover:bg-slate-900 group-hover:text-white transition-all">
             <Languages className="w-4 h-4" />
           </div>
           <span className="text-[10px] md:text-[11px] font-black tracking-[0.3em] uppercase text-slate-400 group-hover:text-slate-900 transition-colors">
             Dịch
+          </span>
+          <ArrowRight className="w-3.5 h-3.5 text-slate-300 group-hover:text-slate-900 group-hover:translate-x-1 transition-all" />
+        </Link>
+        
+        <Link
+          to="/tips"
+          className="group flex-1 md:flex-none flex items-center justify-between md:justify-start gap-4 px-8 py-3 bg-slate-50 border border-slate-100 rounded-full hover:bg-white hover:border-slate-200 hover:shadow-xl hover:shadow-slate-100 transition-all duration-500 min-w-[180px]"
+        >
+          <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center border border-slate-100 group-hover:bg-slate-900 group-hover:text-white transition-all">
+            <Sparkles className="w-4 h-4" />
+          </div>
+          <span className="text-[10px] md:text-[11px] font-black tracking-[0.3em] uppercase text-slate-400 group-hover:text-slate-900 transition-colors">
+            Bí kíp
           </span>
           <ArrowRight className="w-3.5 h-3.5 text-slate-300 group-hover:text-slate-900 group-hover:translate-x-1 transition-all" />
         </Link>
