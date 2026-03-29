@@ -106,7 +106,7 @@ export default function Soumatome() {
   };
 
   return (
-    <div className="min-h-screen bg-white flex flex-col items-center pt-52 md:pt-44 pb-20 px-4 md:px-6 font-sans relative overflow-hidden text-slate-900">
+    <div className="min-h-screen bg-white flex flex-col items-center pt-14 md:pt-16 pb-20 px-4 md:px-6 font-sans relative overflow-hidden text-slate-900">
 
       {/* Background Watermark */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[20vw] font-black text-slate-100 opacity-[0.03] pointer-events-none select-none leading-none z-0 whitespace-nowrap">

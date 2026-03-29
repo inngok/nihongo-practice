@@ -1,5 +1,5 @@
 import React, { Suspense, lazy } from "react";
-import { Routes, Route, Outlet } from "react-router-dom";
+import { Routes, Route, Outlet, useLocation } from "react-router-dom";
 import ScrollToTop from "../components/layout/ScrollToTop";
 import Header from "../components/layout/Header";
 import Footer from "../components/layout/Footer";
@@ -25,28 +25,50 @@ const PageLoader = () => (
   </div>
 );
 
-const Layout = () => (
-  <div className="flex flex-col min-h-screen bg-white relative">
-    <ScrollToTop />
-    <Header />
+const Layout = () => {
+  const location = useLocation();
+  
+  // Define paths where the global header and slogan should be hidden
+  // These are usually study-intensive pages that have their own custom navigation or "Zen mode"
+  const isStudyPage = 
+    location.pathname === '/grammar/mimikara' ||
+    location.pathname === '/vocabulary/soumatome' ||
+    location.pathname === '/vocabulary/try-n3' ||
+    location.pathname === '/vocabulary/mimikara' ||
+    location.pathname === '/kanji/set-4' ||
+    location.pathname.startsWith('/exam-') ||
+    location.pathname === '/translator' ||
+    location.pathname === '/tips';
 
-    {/* Slogan - Top Right Corner Badge */}
-    <div className="fixed right-6 top-6 z-[100] hidden lg:block pointer-events-none select-none">
-      <div className="bg-white/80 backdrop-blur-md border border-slate-100 px-4 py-2 rounded-xl shadow-sm flex items-center gap-3">
-        <p className="text-[9px] font-bold uppercase tracking-[0.1em] text-slate-400 italic whitespace-nowrap">
-          "If you can dream it, you can do it"
-        </p>
-      </div>
+  return (
+    <div className="flex flex-col min-h-screen bg-white relative">
+      <ScrollToTop />
+      
+      {/* Conditionally render Header */}
+      {!isStudyPage && <Header />}
+
+      {/* Conditionally render Slogan */}
+      {!isStudyPage && (
+        <div className="fixed right-6 top-6 z-[100] hidden lg:block pointer-events-none select-none">
+          <div className="bg-white/80 backdrop-blur-md border border-slate-100 px-4 py-2 rounded-xl shadow-sm flex items-center gap-3">
+            <p className="text-[9px] font-bold uppercase tracking-[0.1em] text-slate-400 italic whitespace-nowrap">
+              "If you can dream it, you can do it"
+            </p>
+          </div>
+        </div>
+      )}
+
+      <main className="flex-grow flex flex-col">
+        <Suspense fallback={<PageLoader />}>
+          <Outlet />
+        </Suspense>
+      </main>
+      
+      {/* Conditionally render Footer */}
+      {!isStudyPage && <Footer />}
     </div>
-
-    <main className="flex-grow flex flex-col">
-      <Suspense fallback={<PageLoader />}>
-        <Outlet />
-      </Suspense>
-    </main>
-    <Footer />
-  </div>
-);
+  );
+};
 
 const Fallback = () => (
   <div className="min-h-[calc(100vh-80px)] mt-20 flex-grow flex items-center justify-center bg-white text-slate-500 font-bold text-lg">

@@ -794,7 +794,7 @@ export default function Mimikara() {
   // --- RENDERING STUDY VIEW (MIMIKARA) ---
   return (
     <div
-      className="min-h-screen w-full bg-white font-sans text-black flex flex-col items-center pt-52 md:pt-48 px-4 md:px-12 selection:bg-black selection:text-white"
+      className="min-h-screen w-full bg-white font-sans text-black flex flex-col items-center pt-14 md:pt-16 px-4 md:px-12 selection:bg-black selection:text-white"
       onTouchStart={onTouchStart}
       onTouchEnd={onTouchEnd}
     >
