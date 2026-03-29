@@ -35,9 +35,12 @@ const grammarData = [
     quiz: { sentence: "噂によると、あの二人は結婚する________。", answer: "らしい", accepts: [], hint: "Nghe nói (tin đồn)", translation: "Theo lời đồn thì hai người đó nghe nói sắp kết hôn." }
   },
   {
-    id: 7, unit: 1, pattern: "つもり", meaning: "Dự định / Cứ ngỡ là", explanation: "Diễn tả dự định của bản thân hoặc niềm tin chủ quan về một trạng thái nào đó.",
-    examples: [{ jp: "来年、日本へ行くつもりです。", vn: "Năm sau tôi dự định sẽ đi Nhật Bản." }],
-    quiz: { sentence: "大学を卒業したら、日本で働く________です。", answer: "つもり", accepts: [], hint: "Dự định", translation: "Sau khi tốt nghiệp đại học, tôi dự định sẽ làm việc tại Nhật Bản." }
+    id: 7, unit: 1, pattern: "つもり", meaning: "Tưởng là / Cứ ngỡ là", explanation: "Diễn tả một ý định hoặc trạng thái mà bản thân tin là như vậy, nhưng thực tế lại không phải (hoặc chỉ là chủ quan).",
+    examples: [
+      { jp: "メールを送ったつもりだったが、届いていなかった。", vn: "Tôi cứ ngỡ là đã gửi mail rồi, nhưng hóa ra nó vẫn chưa tới." },
+      { jp: "バッグにさいふを入れたつもりだったが、なかった。", vn: "Tôi cứ ngõ là đã cho ví vào túi rồi, thế mà lúc tìm lại không thấy." }
+    ],
+    quiz: { sentence: "メールを________つもりだったが、届いていなかった。", answer: "送った", accepts: [], hint: "Cứ ngỡ là đã gửi (V-ta)", translation: "Tôi cứ nghĩ là đã gửi mail rồi, nhưng thực ra chưa tới." }
   },
   {
     id: 8, unit: 1, pattern: "てくる", meaning: "Bắt đầu / Trở nên / Tiến về phía mình", explanation: "Diễn tả hành động đang bắt đầu, thay đổi diễn ra hoặc hướng về phía người nói.",
@@ -513,12 +516,12 @@ const grammarData = [
     quiz: { sentence: "面接の結果が気になっ________。", answer: "てならない", accepts: [], hint: "Vô cùng (văn nói trang trọng)", translation: "Tôi vô cùng bận tâm về kết quả của buổi phỏng vấn." }
   },
   {
-    id: 99, unit: 10, pattern: "とか", meaning: "Ví dụ như là / Nghe nói là... nên", explanation: "Dùng để liệt kê ví dụ hoặc diễn tả một lý do nghe loáng thoáng, không chắc chắn (thường đi với とかで).",
+    id: 99, unit: 10, pattern: "とか", meaning: "Nghe nói là... / Hình như là...", explanation: "Dùng để truyền đạt thông tin nghe loáng thoáng hoặc đưa ra một lý do mà bản thân không chắc chắn lắm (cấu trúc phổ biến: 〜とかで).",
     examples: [
-      { jp: "休日は映画を見るとか、買い物に行くとかして過ごします。", vn: "Ngày nghỉ tôi thường xem phim hoặc đi mua sắm." },
-      { jp: "息子さんは塾だとかで、今日は不参加です。", vn: "Vì nghe nói con trai bận đi học thêm hay sao đó nên hôm nay không tham gia." }
+      { jp: "息子さんは塾だとかで、今日は不参加です。", vn: "Nghe đâu con trai bận đi học thêm hay sao đó nên hôm nay không tham gia." },
+      { jp: "昨日は、お祭りだとかで、街が賑やかだった。", vn: "Hôm qua hình như là có lễ hội hay sao đó mà phố xá náo nhiệt hẳn lên." }
     ],
-    quiz: { sentence: "彼は風邪を引いた________で、今日は欠席です。", answer: "とか", accepts: [], hint: "Cụm 'とかで' (Nghe nói là... nên)", translation: "Vì nghe nói là anh ấy bị cảm nên hôm nay vắng mặt." }
+    quiz: { sentence: "彼は風邪を引いた________で、今日は欠席です。", answer: "とか", accepts: [], hint: "Nghe nói là (Chỉ lý do chưa chắc chắn)", translation: "Vì nghe nói là anh ấy bị cảm (hay gì đó) nên hôm nay vắng mặt." }
   },
   {
     id: 100, unit: 10, pattern: "だけ", meaning: "Chỉ / Mức tối đa có thể", explanation: "Biểu thị sự giới hạn hoặc làm đến mức cao nhất (好きなだけ).",
@@ -561,9 +564,13 @@ const grammarData = [
     quiz: { sentence: "日本のアニメ________、日本語を勉強し始めた。", answer: "をきっかけに", accepts: ["をきっかけにして", "をきっかけとして"], hint: "Nhân cơ hội", translation: "Nhờ anime Nhật mà tôi bắt đầu học tiếng Nhật." }
   },
   {
-    id: 108, unit: 10, pattern: "とする / としたら", meaning: "Giả sử (rằng)... / Nếu như", explanation: "Đưa ra một giả định không có thật hoặc khả năng xảy ra thấp.",
-    examples: [{ jp: "もし宝くじが当たったとしたら、家を買いたい。", vn: "Giả sử mà trúng vé số thì tôi muốn mua nhà." }],
-    quiz: { sentence: "もし生まれ変われると________、鳥になりたい。", answer: "したら", accepts: ["すれば", "すると"], hint: "Nếu như / Giả sử", translation: "Nếu như được sinh ra một lần nữa, tôi muốn trở thành chú chim." }
+    id: 108, unit: 10, pattern: "とする / としたら / とすれば / とすると", meaning: "Giả sử là... / Nếu cho rằng...", explanation: "1. としたら/とすれば: Giả định tình huống không có thật hoặc khó xảy ra. 2. とすると/とすれば: Đưa ra suy luận dựa trên một giả thiết có căn cứ.",
+    examples: [
+      { jp: "もし宝くじが当たったとしたら、家を買いたい。", vn: "Giả sử mà trúng vé số thì tôi muốn mua nhà. (Giả định không có thật)" },
+      { jp: "その話が本当だとすると、大変なことだ。", vn: "Nếu câu chuyện đó là thật thì quả là vấn đề lớn. (Suy luận logic)" },
+      { jp: "飛行機で行くとすれば、いくらぐらいかかりますか。", vn: "Nếu giả sử đi bằng máy bay thì tốn khoảng bao nhiêu? (Trường hợp giả định)" }
+    ],
+    quiz: { sentence: "もし生まれ変われると________、鳥になりたい。", answer: "したら", accepts: ["すれば", "すると"], hint: "Giả sử (V-plain + と...)", translation: "Nếu như được sinh ra một lần nữa, tôi muốn trở thành chú chim." }
   },
   {
     id: 109, unit: 10, pattern: "際に / 際(に)は", meaning: "Khi / Lúc (trang trọng)", explanation: "Giống với 時, nhưng lịch sự, dùng trong văn bản, thông báo.",
