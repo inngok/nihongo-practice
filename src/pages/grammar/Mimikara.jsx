@@ -1101,62 +1101,70 @@ export default function Mimikara() {
           </div>
         )}
 
-        {/* Results Screen */}
+        {/* Results Screen - Now a clean, centered modal popup */}
         {showResults && (
-          <div className="fixed inset-0 z-[200] bg-white flex flex-col items-center justify-center p-6 animate-in fade-in duration-500">
-            <div className="absolute inset-0 bg-slate-50/50 -z-10" />
-            <div className="w-full max-w-md space-y-12 text-center">
-              <div className="space-y-4">
-                <div className="w-24 h-24 bg-black rounded-[2.5rem] flex items-center justify-center mx-auto shadow-2xl rotate-3">
-                  <Brain className="w-12 h-12 text-white" />
+           <div className="fixed inset-0 z-[500] flex items-center justify-center p-6 sm:p-4">
+             {/* Simple, deep backdrop */}
+             <div 
+               className="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity animate-in fade-in duration-300"
+               onClick={() => setShowResults(false)}
+             />
+             
+             {/* Compact, focused Result Modal */}
+             <div className="relative w-full max-w-sm bg-white rounded-[2.5rem] shadow-[0_30px_100px_-10px_rgba(0,0,0,0.3)] p-8 md:p-10 text-center animate-in zoom-in duration-300 fill-mode-forwards">
+                
+                {/* Floating Icon - Now smaller and centered */}
+                <div className="w-16 h-16 bg-black rounded-2xl flex items-center justify-center mx-auto shadow-2xl absolute -top-8 left-1/2 -translate-x-1/2 rotate-3 border-4 border-white">
+                  <Brain className="w-8 h-8 text-white" />
                 </div>
-                <h2 className="text-4xl md:text-5xl font-black italic uppercase tracking-tighter text-slate-900">Kết quả</h2>
-                <p className="text-slate-400 font-bold uppercase tracking-widest text-[10px]">Hoàn thành bài luyện tập</p>
-              </div>
 
-              <div className="relative py-12">
-                 <div className="absolute inset-0 flex items-center justify-center opacity-[0.03] select-none pointer-events-none text-9xl font-black">Score</div>
-                 <div className="relative">
-                   <span className="text-8xl md:text-9xl font-black text-slate-950 tracking-tighter italic">
-                     {score}
-                   </span>
-                   <span className="text-3xl md:text-4xl font-black text-slate-300 italic align-top ml-2">
-                     / {studyData.length}
-                   </span>
-                 </div>
-              </div>
+                <div className="mt-8 space-y-6">
+                  {/* Status header */}
+                  <div className="space-y-1">
+                    <h2 className="text-3xl font-black italic uppercase tracking-tighter text-slate-900 leading-none">Hoàn thành!</h2>
+                    <p className="text-slate-400 font-bold uppercase tracking-widest text-[9px]">Kết quả luyện tập của bạn</p>
+                  </div>
 
-              <div className="space-y-4 px-4">
-                 <div className="p-6 bg-slate-50 border border-slate-100 rounded-[2rem] mb-8">
-                    <p className="text-slate-500 font-medium italic leading-relaxed">
-                      {score === studyData.length ? 'Tuyệt đỉnh! Bạn đã chinh phục hoàn toàn bài học này.' : 
-                       score > studyData.length / 2 ? 'Rất tốt! Bạn đang tiến bộ rõ rệt qua từng bài tập.' : 
-                       'Đừng nản lòng! Hãy ôn lại bài và thử sức một lần nữa nhé.'}
+                  {/* Score view - Concentrated */}
+                  <div className="py-6 border-y border-slate-50">
+                    <div className="text-7xl font-black text-slate-950 tracking-tighter italic">
+                      {score}
+                      <span className="text-2xl font-black text-slate-200 italic align-top ml-1">/ {studyData.length}</span>
+                    </div>
+                  </div>
+
+                  {/* Message */}
+                  <div className="px-2">
+                    <p className="text-slate-500 text-[13px] font-medium italic leading-relaxed">
+                      {score === studyData.length ? 'Tuyệt đỉnh! Tiếp tục phát huy nhé.' : 
+                       score > studyData.length / 2 ? 'Rất tốt! Bạn đang tiến bộ rõ rệt.' : 
+                       'Đừng nản lòng! Thử lại một lần nữa bạn nhé.'}
                     </p>
-                 </div>
+                  </div>
 
-                 <div className="grid grid-cols-1 gap-3">
+                  {/* Actions - Modern, stack design */}
+                  <div className="grid grid-cols-1 gap-3 pt-2">
                     <button 
                       onClick={() => {
                           setShowResults(false);
                           switchMode('quiz');
                       }}
-                      className="w-full py-5 bg-black text-white rounded-2xl text-[11px] font-black uppercase tracking-[0.3em] hover:scale-[1.02] active:scale-95 transition-all shadow-xl shadow-black/10 flex items-center justify-center gap-3"
+                      className="w-full py-4.5 bg-black text-white rounded-2xl text-[11px] font-black uppercase tracking-[0.3em] hover:scale-[1.02] active:scale-95 transition-all shadow-xl shadow-black/10 flex items-center justify-center gap-3"
                     >
                       <RotateCcw className="w-4 h-4" />
                       Luyện tập lại
                     </button>
                     <button 
                       onClick={() => switchMode('menu')}
-                      className="w-full py-5 bg-white border-2 border-slate-900 text-slate-900 rounded-2xl text-[11px] font-black uppercase tracking-[0.3em] hover:bg-slate-50 active:scale-95 transition-all flex items-center justify-center gap-3"
+                      className="w-full py-4.5 bg-slate-50 text-slate-400 rounded-2xl text-[11px] font-black uppercase tracking-[0.3em] hover:text-black transition-all flex items-center justify-center gap-3"
                     >
                       <List className="w-4 h-4" />
-                      Bảng điều khiển
+                      Quay lại Menu
                     </button>
-                 </div>
-              </div>
-            </div>
-          </div>
+                  </div>
+                </div>
+             </div>
+           </div>
         )}
 
       </div>
