@@ -781,8 +781,12 @@ export default function Mimikara() {
           onClick={() => {
             if (activeMode === 'menu') {
               navigate('/grammar');
+            } else if (activeMode === 'list') {
+              setActiveMode('menu');
+              setOriginMode('menu');
+              setCurrentIndex(0);
             } else {
-              // Return to selection source (menu or list)
+              // Quay lại menu hoặc danh sách tìm kiếm (tùy xuất thân)
               setActiveMode(originMode);
               setCurrentIndex(0);
               setIsFlipped(false);
