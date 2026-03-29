@@ -124,7 +124,7 @@ export default function TryN3() {
                 navigate('/vocabulary');
               }
             }}
-            className="text-[10px] font-bold uppercase tracking-[0.4em] text-slate-400 hover:text-black transition-colors mb-8 decoration-slate-100"
+            className="text-[10px] font-bold uppercase tracking-[0.4em] text-slate-400 hover:text-black transition-colors mb-8 decoration-slate-100 relative z-50 cursor-pointer"
           >
             {viewMode === 'list' ? 'Danh sách từ vựng' : 'Quay lại'}
           </button>

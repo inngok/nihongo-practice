@@ -163,7 +163,7 @@ export default function KanjiSet4() {
                   setViewMode('list');
                 }
               }}
-              className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.4em] text-slate-400 hover:text-black transition-colors underline-offset-8"
+              className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.4em] text-slate-400 hover:text-black transition-colors underline-offset-8 relative z-50 cursor-pointer"
             >
               {viewMode === 'list' ? 'Danh sách hán tự' : 'Quay lại'}
             </button>

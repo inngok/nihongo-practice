@@ -16,6 +16,7 @@ const ExamPC7 = lazy(() => import("../pages/exam/ExamPC7"));
 const ExamVocab = lazy(() => import("../pages/exam/ExamVocab"));
 const TryN3 = lazy(() => import("../pages/vocabulary/TryN3/TryN3"));
 const MimikaraVocab = lazy(() => import("../pages/vocabulary/MimikaraVocab/MimikaraVocab"));
+const Translator = lazy(() => import("../pages/translator/Translator"));
 
 const PageLoader = () => (
   <div className="min-h-[calc(100vh-80px)] mt-20 flex items-center justify-center bg-white">
@@ -69,6 +70,7 @@ export default function RouteMap() {
         <Route path="/kanji/set-4" element={<KanjiSet4 />} />
         <Route path="/exam-pc7" element={<ExamPC7 />} />
         <Route path="/exam-pc7/vocab-comprehensive" element={<ExamVocab type="comprehensive" />} />
+        <Route path="/translator" element={<Translator />} />
         <Route path="*" element={<Fallback />} />
       </Route>
     </Routes>

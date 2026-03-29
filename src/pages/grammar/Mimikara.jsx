@@ -797,15 +797,15 @@ export default function Mimikara() {
                 navigate('/grammar');
               } else if (activeMode === 'list') {
                 setActiveMode('menu');
-                setOriginMode('menu');
                 setCurrentIndex(0);
               } else {
-                setActiveMode(originMode);
+                // If in study mode, return to previous origin (menu or list)
+                setActiveMode(originMode || 'menu');
                 setCurrentIndex(0);
                 setIsFlipped(false);
               }
             }}
-            className="px-6 py-2 border border-black text-xs font-bold uppercase tracking-widest hover:bg-black hover:text-white transition-all font-sans"
+            className="px-6 py-2 border border-black text-xs font-bold uppercase tracking-widest hover:bg-black hover:text-white transition-all font-sans relative z-50 cursor-pointer"
           >
             {activeMode === 'menu' ? 'Thoát' : 'Quay lại'}
           </button>
