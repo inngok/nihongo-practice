@@ -7,7 +7,7 @@ export default function Footer() {
         © 2026 NIHONGO
       </div>
       <div className="text-[10px] font-bold uppercase tracking-[0.3em] text-slate-300">
-        ngoccng
+        ngocng
       </div>
     </footer>
   );

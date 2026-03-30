@@ -1,26 +1,26 @@
-# Nihongo Study Hub (N3)
+# Nihongo Practice
 
-Ứng dụng học Tiếng Nhật N3 (Ngữ pháp, Hán tự, Từ vựng) với trải nghiệm Flashcard 3D và bài tập tương tác.
+Ứng dụng ôn luyện JLPT N3 (Ngữ pháp, Hán tự, Từ vựng) với giao diện tối giản và tương tác thẻ ghi nhớ 3D.
 
-## Tính năng
-*   **Ngữ pháp**: Flashcard & Quiz cho trọn bộ Mimikara Oboeru N3.
-*   **Hán tự**: Học theo trang giáo trình (Page 2, 12,...) + Flashcard lật 3D.
-*   **Phím tắt**: `Left/Right Arrow` để đổi thẻ, `Space` để lật (Flashcard Mode).
-*   **Giao diện**: Tối giản, responsive, hiệu ứng mượt mà.
+##  Tính năng
+- Học Ngữ pháp (Mimikara), Từ vựng (Soumatome, TryN3), Hán tự.
+- Chế độ List, Flashcard 3D và Quiz.
+- Giao diện Mobile-first, tối ưu hóa cho việc học nhanh.
 
-##  Phát triển & Deploy
-1. **Cài đặt & Chạy**:
-   ```bash
-   npm install
-   npm run dev
-   ```
-2. **Commit & Deploy tự động**:
-   ```bash
-   git add -A
-   git commit -m "feat: <thay đổi>"
-   git push
-   ```
-   *Deploy tự động qua GitHub Actions sau vài phút.*
+##  Cài đặt & Chạy
+```bash
+npm install
+npm run dev
+```
+
+##  Deploy
+Ứng dụng được deploy tự động lên **Vercel** mỗi khi push vào nhánh `frontend`.
+
+```bash
+git add .
+git commit -m "update"
+git push origin frontend
+```
 
 ---
-*Chúc bạn học tốt! 頑張ってください！*
+*頑張ってください！*

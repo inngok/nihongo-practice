@@ -17,14 +17,14 @@ export default function Kanji() {
   ];
 
   return (
-    <div className="min-h-screen bg-white flex flex-col items-center pt-44 md:pt-40 pb-20 px-4 md:px-6 font-sans relative overflow-hidden">
+    <div className="w-full h-full flex-grow bg-white flex flex-col items-center pt-44 md:pt-40 pb-20 px-4 md:px-6 font-sans relative overflow-hidden">
 
       {/* Background Watermark */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[35vw] font-black text-slate-100 opacity-[0.03] pointer-events-none select-none leading-none z-0 whitespace-nowrap">
         漢字
       </div>
 
-      <div className="w-full max-w-5xl relative z-10">
+      <div className="w-full max-w-4xl relative z-10">
 
         {/* Back Button */}
         <button
@@ -50,15 +50,12 @@ export default function Kanji() {
             <div
               key={set.id}
               onClick={() => set.path !== '#' && navigate(set.path)}
-              className={`group relative aspect-square bg-white border border-slate-100 rounded-[2.5rem] p-6 md:p-10 flex flex-col justify-between transition-all duration-500
+              className={`group relative aspect-square bg-white border border-slate-100 rounded-[2.5rem] p-8 md:p-10 flex flex-col justify-between transition-all duration-500
                           ${set.path !== '#' ? 'hover:border-slate-200 hover:shadow-[0_30px_70px_-20px_rgba(0,0,0,0.08)] cursor-pointer' : 'opacity-40 cursor-not-allowed'}`}
             >
               {/* Top Row */}
               <div className="flex justify-between items-start">
                 <span className="text-[10px] font-bold text-slate-300 tracking-widest uppercase">{set.num}</span>
-                <div className="w-12 h-12 rounded-2xl bg-slate-50 flex items-center justify-center text-[10px] font-black text-slate-400 border border-slate-100 group-hover:bg-slate-900 group-hover:text-white transition-all duration-500">
-                  KANJI
-                </div>
               </div>
 
               {/* Center Content */}
