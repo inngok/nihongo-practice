@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 export default function Home() {
   return (
-    <div className="min-h-[100dvh] bg-white flex flex-col items-center justify-center py-20 px-4 md:px-6 font-sans relative overflow-hidden">
+    <div className="w-full h-full flex-grow bg-white flex flex-col items-center justify-center py-16 md:py-24 px-4 md:px-6 font-sans relative overflow-hidden">
 
       {/* Background Watermark */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[35vw] font-black text-slate-100 opacity-[0.03] pointer-events-none select-none leading-none z-0 whitespace-nowrap">
@@ -11,7 +11,7 @@ export default function Home() {
       </div>
 
       {/* Hero Section */}
-      <div className="w-full max-w-4xl flex flex-col items-center text-center gap-4 mt-8 md:mt-0 mb-12 relative z-10">
+      <div className="w-full max-w-4xl flex flex-col items-center text-center gap-2 md:gap-3 mb-6 md:mb-8 relative z-10">
         <span className="text-[10px] tracking-[0.4em] font-bold text-slate-400 uppercase">
           Trình độ N3
         </span>
@@ -24,7 +24,8 @@ export default function Home() {
       </div>
 
       {/* Portal Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-10 w-full max-w-6xl relative z-10 px-4">
+      <div className="w-full max-w-5xl relative z-10 px-4 md:px-12">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
 
         {/* Grammar Card */}
         <Link
@@ -69,15 +70,16 @@ export default function Home() {
               Ghi nhớ và luyện tập cách viết, cách đọc các chữ Hán quan trọng trong kỳ thi N3.
             </p>
           </div>
-          <div className="mt-4 text-[10px] font-black tracking-[0.2em] text-slate-900 uppercase underline underline-offset-4 group-hover:text-slate-500 transition-colors">
+          <div className="mt-2 text-[10px] font-black tracking-[0.2em] text-slate-900 uppercase underline underline-offset-4 group-hover:text-slate-500 transition-colors">
             Bắt đầu học
           </div>
         </Link>
 
       </div>
+      </div>
 
       {/* Specialty Bottom Section */}
-      <div className="mt-12 md:mt-16 relative z-10 flex flex-wrap items-center justify-center gap-4">
+      <div className="mt-8 md:mt-10 relative z-10 flex flex-wrap items-center justify-center gap-4 w-full">
         <Link
           to="/exam-pc7"
           className="group px-8 py-4 bg-slate-50 border border-slate-100 rounded-[2rem] hover:bg-black hover:border-black hover:-translate-y-1 hover:shadow-2xl transition-all duration-300"

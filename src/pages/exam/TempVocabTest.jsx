@@ -39,9 +39,7 @@ export default function TempVocabTest() {
                   onClick={() => setActiveTestId(test.id)}
                   className="bg-white p-8 rounded-[2rem] border-2 border-slate-100 hover:border-black hover:shadow-2xl hover:-translate-y-1 transition-all text-left flex flex-col gap-4 group"
                 >
-                   <div className="w-12 h-12 bg-slate-50 rounded-full flex items-center justify-center group-hover:bg-black group-hover:text-white transition-colors">
-                     <LayoutGrid className="w-5 h-5" />
-                   </div>
+                   {/* Đã gỡ Icon Grid */}
                    <div>
                      <h3 className="text-2xl font-black italic mb-2">{test.title}</h3>
                      <p className="text-slate-400 font-bold text-sm">{test.data.length} câu hỏi</p>
@@ -298,13 +296,13 @@ export default function TempVocabTest() {
 
       {/* Floating Footer Cho Phép Bấm Tiếp Theo Bất Cứ Đâu (Tối ưu Mobile) */}
       {hasAnsweredCurrent && (
-        <div className="fixed bottom-0 left-0 right-0 p-4 md:p-6 bg-white/95 backdrop-blur-xl border-t border-slate-100 z-50 flex justify-center shadow-[0_-10px_30px_rgba(0,0,0,0.05)]">
+        <div className="fixed bottom-0 left-0 right-0 p-4 md:p-5 bg-white/95 backdrop-blur-xl border-t border-slate-100 z-50 flex justify-center shadow-[0_-10px_30px_rgba(0,0,0,0.05)]">
           <div className="w-full max-w-4xl mx-auto flex justify-end">
             <button
               onClick={handleNext}
-              className="w-full md:w-auto px-8 md:px-12 py-5 bg-black text-white rounded-[2rem] text-sm md:text-base font-black uppercase tracking-widest hover:bg-slate-900 transition-all active:scale-95 flex items-center justify-center gap-3 shadow-xl hover:-translate-y-1"
+              className="w-full md:w-auto px-6 md:px-8 py-3.5 bg-black text-white rounded-full text-[11px] md:text-xs font-black uppercase tracking-[0.2em] hover:bg-slate-900 transition-all active:scale-95 flex items-center justify-center gap-2.5 shadow-xl hover:-translate-y-1"
             >
-              {currentIndex === tempVocabTest.length - 1 ? 'KẾT THÚC ' + activeTest.title : 'CÂU TIẾP THEO'} <ArrowRight className="w-5 h-5" />
+              {currentIndex === tempVocabTest.length - 1 ? 'KẾT THÚC ' + activeTest.title : 'CÂU TIẾP THEO'} <ArrowRight className="w-4 h-4" />
             </button>
           </div>
         </div>

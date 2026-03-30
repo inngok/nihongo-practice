@@ -73,18 +73,13 @@ export default function ExamPC7() {
             <Link
               key={module.id}
               to={module.path}
-              className={`group p-8 md:p-10 rounded-[2.5rem] md:rounded-[3rem] border transition-all duration-500 flex flex-col items-start gap-8 ${module.status === 'ready'
+              className={`group p-8 md:p-10 rounded-[2.5rem] md:rounded-[3rem] border transition-all duration-500 flex flex-col items-start justify-center gap-4 md:gap-6 ${module.status === 'ready'
                 ? 'bg-white border-slate-100 shadow-[0_10px_40px_-15px_rgba(0,0,0,0.05)] hover:shadow-[0_30px_70px_-20px_rgba(0,0,0,0.08)] hover:border-slate-200'
                 : 'bg-slate-50/50 border-transparent opacity-60 cursor-not-allowed'
                 }`}
               onClick={(e) => module.status === 'soon' && e.preventDefault()}
             >
-              <div className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-all duration-500 ${module.status === 'ready'
-                ? 'bg-slate-50 text-slate-800 border border-slate-100 group-hover:bg-slate-900 group-hover:text-white'
-                : 'bg-white text-slate-200'
-                }`}>
-                {module.icon}
-              </div>
+              {/* Icon đã bị tháo */}
 
               <div className="space-y-3 flex-grow">
                 <div className="flex items-center gap-3">
@@ -99,8 +94,8 @@ export default function ExamPC7() {
               </div>
 
               {module.status === 'ready' && (
-                <div className="flex items-center gap-2 text-[10px] font-black tracking-[0.2em] text-slate-900 uppercase">
-                  Bắt đầu ôn tập <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                <div className="mt-4 text-[10px] font-black tracking-[0.2em] text-slate-900 uppercase underline underline-offset-4 group-hover:text-slate-500 transition-colors">
+                  Bắt đầu ôn tập
                 </div>
               )}
             </Link>
