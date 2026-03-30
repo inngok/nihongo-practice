@@ -42,7 +42,7 @@ export default function KanjiSet4() {
   // Page selection logic (automatically sorted numerically)
   const availablePages = useMemo(() => 
     Object.keys(kanjiData).map(Number).sort((a, b) => a - b),
-    []
+    [kanjiData]
   );
 
   // Initialize Quiz/Flashcard with Shuffle

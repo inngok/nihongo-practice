@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Headset, CheckCircle, ArrowRight, Clock, AlertCircle, Target, Zap, Lightbulb, Search, Lock, BookOpen } from 'lucide-react';
+import { Headset, CheckCircle, ArrowRight, Clock, AlertCircle, Target, Zap, Lightbulb, Search, Lock, BookOpen, Eye, EyeOff } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import ReadingTipsData from './ReadingTipsData';
 
@@ -7,6 +7,7 @@ export default function Tips() {
   const navigate = useNavigate();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [activeTab, setActiveTab] = useState('listening');
 
@@ -33,14 +34,28 @@ export default function Tips() {
           </div>
 
           <form onSubmit={handleLogin} className="space-y-4">
-            <input
-              type="password"
-              placeholder="NHẬP MẬT KHẨU..."
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-6 py-4 bg-slate-50 border-2 border-slate-100 rounded-[1.5rem] text-center font-bold tracking-[0.1em] text-sm text-slate-900 focus:outline-none focus:border-black focus:bg-white transition-all"
-              autoFocus
-            />
+            <div className="relative group">
+              <input
+                type={showPassword ? "text" : "password"}
+                placeholder="NHẬP MẬT KHẨU..."
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full px-6 py-4 bg-slate-50 border-2 border-slate-100 rounded-[1.5rem] text-center font-bold tracking-[0.1em] text-sm text-slate-900 focus:outline-none focus:border-black focus:bg-white transition-all"
+                autoFocus
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-6 top-1/2 -translate-y-1/2 p-2 text-slate-400 hover:text-slate-900 transition-colors"
+                tabIndex="-1"
+              >
+                {showPassword ? (
+                  <EyeOff className="w-4 h-4" />
+                ) : (
+                  <Eye className="w-4 h-4" />
+                )}
+              </button>
+            </div>
             {error && <p className="text-rose-500 text-xs font-bold text-center tracking-wide">{error}</p>}
 
             <button

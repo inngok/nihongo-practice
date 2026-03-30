@@ -5,6 +5,9 @@ import { page4Data } from './page4';
 import { page5Data } from './page5';
 import { page6Data } from './page6';
 import { page12Data } from './page12';
+import { page15Data } from './page15';
+import { page16Data } from './page16';
+import { page17Data } from './page17';
 import { page18Data } from './page18';
 import { page19Data } from './page19';
 import { page20Data } from './page20';
@@ -18,6 +21,9 @@ export const kanjiData = {
   5: page5Data,
   6: page6Data,
   12: page12Data,
+  15: page15Data,
+  16: page16Data,
+  17: page17Data,
   18: page18Data,
   19: page19Data,
   20: page20Data,

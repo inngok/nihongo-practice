@@ -28,11 +28,11 @@ const examModules = [
     status: "soon"
   },
   {
-    id: 'kanji-special',
-    title: "Hán tự nâng cao",
-    description: "Tập trung vào các chữ Hán khó và các bộ thủ thường gặp.",
+    id: 'kanji-comprehensive',
+    title: "Hán tự tổng hợp",
+    description: "Tổng hợp toàn bộ Hán tự quan trọng và các bộ thủ thường gặp trong kỳ thi PC7.",
     icon: <ShieldCheck className="w-6 h-6" />,
-    path: "/kanji/set-4",
+    path: "/exam-pc7/kanji-comprehensive",
     status: "soon"
   }
 ];
