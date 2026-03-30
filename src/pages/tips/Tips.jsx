@@ -5,8 +5,82 @@ import ReadingTipsData from './ReadingTipsData';
 
 export default function Tips() {
   const navigate = useNavigate();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState('');
   const [activeTab, setActiveTab] = useState('listening');
 
+  const handleLogin = (e) => {
+    e.preventDefault();
+    if (password === import.meta.env.VITE_TIPS_PASSWORD) {
+      setIsAuthenticated(true);
+      setError('');
+    } else {
+      setError('Mật khẩu không chính xác!');
+    }
+  };
+
+  if (!isAuthenticated) {
+    return (
+      <div className="w-full h-full flex-grow bg-white flex flex-col items-center justify-center p-4 py-20 selection:bg-black selection:text-white">
+        <div className="w-full max-w-sm flex flex-col gap-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+          <div className="text-center space-y-2 mb-4">
+            <div className="w-14 h-14 bg-slate-50 border border-slate-100 rounded-3xl flex items-center justify-center mx-auto mb-6">
+              <Lock className="w-5 h-5 text-slate-400" />
+            </div>
+            <h1 className="text-3xl font-black italic tracking-tighter uppercase text-slate-900">Bí Kíp Nội Bộ</h1>
+            <p className="text-[10px] font-bold tracking-[0.2em] uppercase text-slate-400">Khu vực bảo mật</p>
+          </div>
+
+          <form onSubmit={handleLogin} className="space-y-4">
+            <div className="relative group">
+              <input
+                type={showPassword ? "text" : "password"}
+                placeholder="NHẬP MẬT KHẨU..."
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full px-6 py-4 bg-slate-50 border-2 border-slate-100 rounded-[1.5rem] text-center font-bold tracking-[0.1em] text-sm text-slate-900 focus:outline-none focus:border-black focus:bg-white transition-all"
+                autoFocus
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-6 top-1/2 -translate-y-1/2 p-2 text-slate-400 hover:text-slate-900 transition-colors"
+                tabIndex="-1"
+              >
+                {showPassword ? (
+                  <EyeOff className="w-4 h-4" />
+                ) : (
+                  <Eye className="w-4 h-4" />
+                )}
+              </button>
+            </div>
+            {error && <p className="text-rose-500 text-xs font-bold text-center tracking-wide">{error}</p>}
+
+            <button
+              type="submit"
+              className="w-full py-4 bg-black text-white rounded-[1.5rem] font-black text-[11px] uppercase tracking-[0.3em] hover:-translate-y-1 hover:shadow-xl hover:bg-slate-900 transition-all active:scale-95"
+            >
+              Mở Khóa
+            </button>
+          </form>
+
+          <button
+            onClick={() => navigate('/')}
+            className="mt-4 text-[10px] font-bold tracking-[0.2em] text-slate-400 uppercase hover:text-slate-900 text-center transition-colors underline underline-offset-4"
+          >
+            Quay lại trang chủ
+          </button>
+        </div>
+        <style dangerouslySetInnerHTML={{
+          __html: `
+          @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+          .animate-in { animation: fade-in 0.5s ease-out forwards; }
+          `}} />
+      </div>
+    );
+  }
 
   const listeningTips = [
     {
@@ -117,8 +191,8 @@ export default function Tips() {
           <button
             onClick={() => setActiveTab('listening')}
             className={`flex-1 py-3.5 rounded-xl text-sm font-bold transition-all flex items-center justify-center gap-2 ${activeTab === 'listening'
-                ? 'bg-white text-slate-900 shadow-[0_2px_10px_rgba(0,0,0,0.05)]'
-                : 'text-slate-400 hover:text-slate-600 hover:bg-slate-100'
+              ? 'bg-white text-slate-900 shadow-[0_2px_10px_rgba(0,0,0,0.05)]'
+              : 'text-slate-400 hover:text-slate-600 hover:bg-slate-100'
               }`}
           >
             Nghe Hiểu
@@ -126,8 +200,8 @@ export default function Tips() {
           <button
             onClick={() => setActiveTab('reading')}
             className={`flex-1 py-3.5 rounded-xl text-sm font-bold transition-all flex items-center justify-center gap-2 ${activeTab === 'reading'
-                ? 'bg-white text-slate-900 shadow-[0_2px_10px_rgba(0,0,0,0.05)]'
-                : 'text-slate-400 hover:text-slate-600 hover:bg-slate-100'
+              ? 'bg-white text-slate-900 shadow-[0_2px_10px_rgba(0,0,0,0.05)]'
+              : 'text-slate-400 hover:text-slate-600 hover:bg-slate-100'
               }`}
           >
             Đọc Hiểu
