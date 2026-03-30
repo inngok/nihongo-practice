@@ -8,7 +8,7 @@ export default function Grammar() {
     {
       id: 'mimikara',
       num: '01',
-      title: 'Mimikara',
+      title: 'Mimikara N3',
       japanese: '耳から覚える文法',
       label: 'TRÌNH ĐỘ N3 - N1',
       path: '/grammar/mimikara'
@@ -31,7 +31,7 @@ export default function Grammar() {
         文法
       </div>
 
-      <div className="w-full max-w-5xl relative z-10">
+      <div className="w-full max-w-4xl relative z-10">
 
         {/* Back Button */}
         <button
@@ -57,15 +57,12 @@ export default function Grammar() {
             <div
               key={book.id}
               onClick={() => book.path !== '#' && navigate(book.path)}
-              className={`group relative aspect-square bg-white border border-slate-100 rounded-[2.5rem] p-10 flex flex-col justify-between transition-all duration-500
+              className={`group relative aspect-square bg-white border border-slate-100 rounded-[2.5rem] p-8 md:p-10 flex flex-col justify-between transition-all duration-500
                           ${book.path !== '#' ? 'hover:border-slate-200 hover:shadow-[0_30px_70px_-20px_rgba(0,0,0,0.08)] cursor-pointer' : 'opacity-40 cursor-not-allowed'}`}
             >
               {/* Top Row */}
               <div className="flex justify-between items-start">
                 <span className="text-[10px] font-bold text-slate-300 tracking-widest uppercase">{book.num}</span>
-                <div className="w-12 h-12 rounded-2xl bg-slate-50 flex items-center justify-center text-[10px] font-black text-slate-400 border border-slate-100 group-hover:bg-slate-900 group-hover:text-white transition-all duration-500">
-                  BOOK
-                </div>
               </div>
 
               {/* Center Content */}
