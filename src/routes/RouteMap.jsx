@@ -13,6 +13,8 @@ const Kanji = lazy(() => import("../pages/kanji/Kanji"));
 const KanjiSet4 = lazy(() => import("../pages/kanji/KanjiSet4/KanjiSet4"));
 const Soumatome = lazy(() => import("../pages/vocabulary/Soumatome/Soumatome"));
 const ExamPC7 = lazy(() => import("../pages/exam/ExamPC7"));
+const ExamJLPT = lazy(() => import("../pages/exam/ExamJLPT"));
+const SentenceSort = lazy(() => import("../pages/exam/SentenceSort"));
 const ExamVocab = lazy(() => import("../pages/exam/ExamVocab"));
 const TempVocabTest = lazy(() => import("../pages/exam/TempVocabTest"));
 const TryN3 = lazy(() => import("../pages/vocabulary/TryN3/TryN3"));
@@ -89,6 +91,8 @@ export default function RouteMap() {
         <Route path="/exam-pc7" element={<ExamPC7 />} />
         <Route path="/exam-pc7/vocab-comprehensive" element={<ExamVocab type="comprehensive" />} />
         <Route path="/exam-pc7/goi-test" element={<TempVocabTest />} />
+        <Route path="/exam-jlpt" element={<ExamJLPT />} />
+        <Route path="/exam-jlpt/sentence-sort" element={<SentenceSort />} />
         <Route path="/translator" element={<Translator />} />
         <Route path="/tips" element={<Tips />} />
         <Route path="*" element={<Fallback />} />
