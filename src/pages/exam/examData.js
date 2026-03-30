@@ -1,3 +1,5 @@
+import { kanjiComprehensiveData } from './data/kanjiComprehensiveData';
+
 export const examVocabData = {
   "comprehensive": {
     title: "Từ vựng tổng hợp PC7",
@@ -28,5 +30,10 @@ export const examVocabData = {
       { kanji: "合計", kana: "ごうけい", meaning: "tổng cộng" },
       { kanji: "履歴書", kana: "りれきしょう", meaning: "sơ yếu lý lịch, CV" }
     ]
+  },
+  "kanji-comprehensive": {
+    title: "Hán tự tổng hợp PC7",
+    japanese: "漢字総合 - PC7対策",
+    words: kanjiComprehensiveData
   }
 };

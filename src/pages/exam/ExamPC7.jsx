@@ -33,7 +33,7 @@ const examModules = [
     description: "Tổng hợp toàn bộ Hán tự quan trọng và các bộ thủ thường gặp trong kỳ thi PC7.",
     icon: <ShieldCheck className="w-6 h-6" />,
     path: "/exam-pc7/kanji-comprehensive",
-    status: "soon"
+    status: "ready"
   }
 ];
 

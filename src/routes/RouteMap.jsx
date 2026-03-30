@@ -90,6 +90,7 @@ export default function RouteMap() {
         <Route path="/kanji/set-4" element={<KanjiSet4 />} />
         <Route path="/exam-pc7" element={<ExamPC7 />} />
         <Route path="/exam-pc7/vocab-comprehensive" element={<ExamVocab type="comprehensive" />} />
+        <Route path="/exam-pc7/kanji-comprehensive" element={<ExamVocab type="kanji-comprehensive" />} />
         <Route path="/exam-pc7/goi-test" element={<TempVocabTest />} />
         <Route path="/exam-jlpt" element={<ExamJLPT />} />
         <Route path="/exam-jlpt/sentence-sort" element={<SentenceSort />} />
