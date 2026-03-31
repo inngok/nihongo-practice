@@ -22,6 +22,7 @@ const MimikaraVocab = lazy(() => import("../pages/vocabulary/MimikaraVocab/Mimik
 const DekiruVocab = lazy(() => import("../pages/vocabulary/DekiruVocab/DekiruVocab"));
 const Translator = lazy(() => import("../pages/translator/Translator"));
 const Tips = lazy(() => import("../pages/tips/Tips"));
+const ConfusingGrammar = lazy(() => import("../pages/grammar/ConfusingGrammar"));
 
 const PageLoader = () => (
   <div className="min-h-[calc(100vh-80px)] mt-20 flex items-center justify-center bg-white">
@@ -43,6 +44,7 @@ const Layout = () => {
     location.pathname === '/kanji/set-4' ||
     location.pathname.startsWith('/exam-') ||
     location.pathname === '/translator' ||
+    location.pathname === '/grammar/confusing' ||
     location.pathname === '/tips';
 
   return (
@@ -98,6 +100,7 @@ export default function RouteMap() {
         <Route path="/exam-jlpt" element={<ExamJLPT />} />
         <Route path="/exam-jlpt/sentence-sort" element={<SentenceSort />} />
         <Route path="/translator" element={<Translator />} />
+        <Route path="/grammar/confusing" element={<ConfusingGrammar />} />
         <Route path="/tips" element={<Tips />} />
         <Route path="*" element={<Fallback />} />
       </Route>

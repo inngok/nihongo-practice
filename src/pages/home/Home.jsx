@@ -108,6 +108,15 @@ export default function Home() {
         </Link>
         
         <Link
+          to="/grammar/confusing"
+          className="group px-8 py-4 bg-slate-50 border border-slate-100 rounded-[2rem] hover:bg-black hover:border-black hover:-translate-y-1 hover:shadow-2xl transition-all duration-300"
+        >
+          <span className="text-[10px] md:text-[11px] font-black tracking-[0.3em] uppercase text-slate-500 group-hover:text-white transition-colors">
+            Hay nhầm
+          </span>
+        </Link>
+
+        <Link
           to="/tips"
           className="group px-8 py-4 bg-slate-50 border border-slate-100 rounded-[2rem] hover:bg-black hover:border-black hover:-translate-y-1 hover:shadow-2xl transition-all duration-300"
         >
