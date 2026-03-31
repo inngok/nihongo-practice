@@ -23,44 +23,51 @@ export default function Tips() {
 
   if (!isAuthenticated) {
     return (
-      <div className="w-full h-full flex-grow bg-white flex flex-col items-center justify-center p-4 py-20 selection:bg-black selection:text-white">
-        <div className="w-full max-w-sm flex flex-col gap-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-          <div className="text-center space-y-2 mb-4">
-            <div className="w-14 h-14 bg-slate-50 border border-slate-100 rounded-3xl flex items-center justify-center mx-auto mb-6">
-              <Lock className="w-5 h-5 text-slate-400" />
+      <div className="w-full h-full min-h-screen bg-white flex flex-col items-center pt-24 md:pt-0 md:justify-center p-6 selection:bg-black selection:text-white">
+        <div className="w-full max-w-sm flex flex-col gap-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+          <div className="text-center space-y-4">
+            <div className="w-20 h-20 bg-slate-50 border border-slate-100 rounded-[2rem] flex items-center justify-center mx-auto shadow-sm">
+              <Lock className="w-8 h-8 text-black" />
             </div>
-            <h1 className="text-3xl font-black italic tracking-tighter uppercase text-slate-900">Bí Kíp Nội Bộ</h1>
-            <p className="text-[10px] font-bold tracking-[0.2em] uppercase text-slate-400">Khu vực bảo mật</p>
+            <div className="space-y-2">
+              <h1 className="text-3xl md:text-4xl font-black italic tracking-tighter uppercase text-slate-900">Bí Kíp Nội Bộ</h1>
+              <p className="text-[10px] font-bold tracking-[0.3em] uppercase text-slate-400">Vui lòng nhập mật khẩu để tiếp tục</p>
+            </div>
           </div>
 
           <form onSubmit={handleLogin} className="space-y-4">
             <div className="relative group">
               <input
                 type={showPassword ? "text" : "password"}
-                placeholder="NHẬP MẬT KHẨU..."
+                placeholder="Mật khẩu của bạn..."
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-6 py-4 bg-slate-50 border-2 border-slate-100 rounded-[1.5rem] text-center font-bold tracking-[0.1em] text-sm text-slate-900 focus:outline-none focus:border-black focus:bg-white transition-all"
+                className="w-full pl-6 pr-14 py-5 bg-slate-50 border-2 border-slate-100 rounded-2xl font-bold text-base text-slate-900 focus:outline-none focus:border-black focus:bg-white transition-all placeholder:text-slate-300 placeholder:font-medium tracking-wide"
                 autoFocus
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-6 top-1/2 -translate-y-1/2 p-2 text-slate-400 hover:text-slate-900 transition-colors"
+                className="absolute right-4 top-1/2 -translate-y-1/2 p-2.5 text-slate-400 hover:text-slate-900 transition-colors"
                 tabIndex="-1"
               >
                 {showPassword ? (
-                  <EyeOff className="w-4 h-4" />
+                  <EyeOff className="w-5 h-5" />
                 ) : (
-                  <Eye className="w-4 h-4" />
+                  <Eye className="w-5 h-5" />
                 )}
               </button>
             </div>
-            {error && <p className="text-rose-500 text-xs font-bold text-center tracking-wide">{error}</p>}
+            {error && (
+              <div className="flex items-center justify-center gap-2 text-rose-500 py-2 animate-in fade-in zoom-in-95 duration-300">
+                <AlertCircle className="w-3.5 h-3.5" />
+                <p className="text-[11px] font-black uppercase tracking-wider">{error}</p>
+              </div>
+            )}
 
             <button
               type="submit"
-              className="w-full py-4 bg-black text-white rounded-[1.5rem] font-black text-[11px] uppercase tracking-[0.3em] hover:-translate-y-1 hover:shadow-xl hover:bg-slate-900 transition-all active:scale-95"
+              className="w-full py-5 bg-black text-white rounded-2xl font-black text-xs uppercase tracking-[0.3em] hover:shadow-2xl hover:shadow-black/20 hover:-translate-y-1 transition-all active:scale-[0.98] outline-none"
             >
               Mở Khóa
             </button>
