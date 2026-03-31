@@ -12,6 +12,7 @@ import { grammarData } from './data/mimikaraData';
 export default function Mimikara() {
   const navigate = useNavigate();
   const [activeMode, setActiveMode] = useState('menu');
+  const [prevMode, setPrevMode] = useState(null);
   const [selectedUnit, setSelectedUnit] = useState('all');
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
@@ -60,6 +61,7 @@ export default function Mimikara() {
     const data = [...activeData];
     if (mode === 'quiz' && isShuffle) data.sort(() => Math.random() - 0.5);
 
+    setPrevMode(activeMode);
     setStudyData(data);
     setActiveMode(mode);
     setCurrentIndex(0);
@@ -68,7 +70,7 @@ export default function Mimikara() {
     setScore(0);
     setShowResults(false);
     requestAnimationFrame(() => window.scrollTo({ top: 0, behavior: 'smooth' }));
-  }, [activeData, isShuffle]);
+  }, [activeData, isShuffle, activeMode]);
 
   const handleNext = useCallback(() => {
     const isLastItem = currentIndex >= studyData.length - 1;
@@ -168,11 +170,27 @@ export default function Mimikara() {
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {activeData
-          .filter(i => i.pattern.includes(searchTerm) || i.meaning.includes(searchTerm))
+          .filter(i => {
+            const term = searchTerm.toLowerCase().trim();
+            if (!term) return true;
+
+            const normalize = (str) => str.toLowerCase().replace(/[\s~〜、。]/g, '');
+            const normalizedTerm = normalize(term);
+
+            return (
+              i.pattern.toLowerCase().includes(term) ||
+              normalize(i.pattern).includes(normalizedTerm) ||
+              i.meaning.toLowerCase().includes(term) ||
+              (i.romaji && (
+                i.romaji.toLowerCase().includes(term) ||
+                normalize(i.romaji).includes(normalizedTerm)
+              ))
+            );
+          })
           .map(item => (
             <div
               key={item.id}
-              onClick={() => { setStudyData([item]); setActiveMode('flashcard'); setCurrentIndex(0); }}
+              onClick={() => { setPrevMode('list'); setStudyData([item]); setActiveMode('flashcard'); setCurrentIndex(0); }}
               className="p-8 border border-slate-100 rounded-[2rem] hover:border-black transition-all cursor-pointer group"
             >
               <div className="flex justify-between mb-4">
@@ -180,6 +198,7 @@ export default function Mimikara() {
                 {completedIds.includes(item.id) && <Check className="w-4 h-4 text-emerald-500" />}
               </div>
               <h3 className="text-2xl font-black italic mb-2">{item.pattern}</h3>
+              {item.romaji && <p className="text-[10px] font-bold text-slate-300 uppercase tracking-widest mb-2">{item.romaji}</p>}
               <p className="text-slate-500 font-bold text-sm italic">{item.meaning}</p>
             </div>
           ))}
@@ -293,7 +312,16 @@ export default function Mimikara() {
           <h1 className="text-5xl font-black tracking-tighter italic">Mimikara</h1>
         </div>
         <button
-          onClick={() => ({ menu: () => navigate('/grammar'), default: () => switchMode('menu') }[activeMode] || (() => switchMode('menu')))()}
+          onClick={() => {
+            if (activeMode === 'menu') {
+              navigate('/grammar');
+            } else if (prevMode) {
+              setActiveMode(prevMode);
+              setPrevMode(null);
+            } else {
+              switchMode('menu');
+            }
+          }}
           className="px-8 py-3 border-2 border-black text-xs font-black uppercase hover:bg-black hover:text-white transition-all"
         >
           {activeMode === 'menu' ? 'Thoát' : 'Quay lại'}
