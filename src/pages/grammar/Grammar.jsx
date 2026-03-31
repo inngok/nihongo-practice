@@ -24,56 +24,67 @@ export default function Grammar() {
   ];
 
   return (
-    <div className="w-full h-full flex-grow bg-white flex flex-col items-center pt-44 md:pt-40 pb-20 px-6 font-sans relative overflow-hidden">
+    <div className="min-h-screen w-full bg-slate-50 flex flex-col items-center pt-24 md:pt-28 pb-16 px-6 font-sans relative overflow-hidden selection:bg-slate-200">
 
-      {/* Background Watermark */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[35vw] font-black text-slate-100 opacity-[0.03] pointer-events-none select-none leading-none z-0 whitespace-nowrap">
+      {/* Background Watermark (Giảm opacity để không gây rối mắt) */}
+      <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[30vw] font-black text-slate-900 opacity-[0.02] pointer-events-none select-none leading-none z-0 whitespace-nowrap">
         文法
       </div>
 
-      <div className="w-full max-w-4xl relative z-10">
+      <div className="w-full max-w-5xl relative z-10">
 
         {/* Back Button */}
         <button
           onClick={() => navigate('/')}
-          className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.4em] text-slate-400 hover:text-black transition-colors mb-12"
+          className="group flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest text-slate-400 hover:text-slate-900 transition-colors mb-6 md:mb-8"
         >
+          <span className="transition-transform group-hover:-translate-x-1">←</span>
           Quay lại
         </button>
 
         {/* Title Section */}
-        <div className="mb-20">
-          <h1 className="text-4xl md:text-7xl font-black text-slate-900 tracking-tighter mb-4 leading-none italic">
+        <div className="mb-10 md:mb-12">
+          <h1 className="text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight mb-4">
             Ngữ pháp
           </h1>
-          <p className="text-sm md:text-lg text-slate-500 max-w-2xl leading-relaxed font-medium">
+          <p className="text-sm md:text-base text-slate-500 max-w-xl leading-relaxed">
             Chọn giáo trình để bắt đầu lộ trình rèn luyện cấu trúc ngữ pháp Tiếng Nhật từ cơ bản đến nâng cao.
           </p>
         </div>
 
-        {/* Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+        {/* Cards Grid (Chia cột gọn hơn) */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {books.map((book) => (
             <div
               key={book.id}
               onClick={() => book.path !== '#' && navigate(book.path)}
-              className={`group relative aspect-square bg-white border border-slate-100 rounded-[2.5rem] p-8 md:p-10 flex flex-col justify-between transition-all duration-500
-                          ${book.path !== '#' ? 'hover:border-slate-200 hover:shadow-[0_30px_70px_-20px_rgba(0,0,0,0.08)] cursor-pointer' : 'opacity-40 cursor-not-allowed'}`}
+              className={`group relative bg-white border border-slate-200 rounded-2xl p-7 flex flex-col justify-between transition-all duration-300
+                          ${book.path !== '#'
+                  ? 'hover:border-slate-400 hover:shadow-md hover:-translate-y-1 cursor-pointer'
+                  : 'opacity-50 cursor-not-allowed bg-slate-50/50'}`}
             >
               {/* Top Row */}
-              <div className="flex justify-between items-start">
-                <span className="text-[10px] font-bold text-slate-300 tracking-widest uppercase">{book.num}</span>
+              <div className="flex justify-between items-center mb-10">
+                <span className="text-sm font-bold text-slate-300">{book.num}</span>
+                {/* Arrow Icon xuất hiện khi hover */}
+                {book.path !== '#' && (
+                  <span className="text-slate-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300 -translate-x-2 group-hover:translate-x-0">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                    </svg>
+                  </span>
+                )}
               </div>
 
               {/* Center Content */}
-              <div>
-                <h3 className="text-3xl font-black text-slate-900 mb-1">{book.title}</h3>
-                <p className="text-slate-400 text-xs font-medium uppercase tracking-widest">{book.japanese}</p>
+              <div className="mb-8">
+                <h3 className="text-2xl font-bold text-slate-900 mb-1">{book.title}</h3>
+                <p className="text-slate-500 text-sm font-medium">{book.japanese}</p>
               </div>
 
-              {/* Bottom Label */}
-              <div className="pt-4">
-                <span className="text-[10px] font-black tracking-[0.2em] text-slate-900 uppercase">
+              {/* Bottom Label (Có đường line mờ ngăn cách) */}
+              <div className="pt-5 border-t border-slate-100 mt-auto">
+                <span className="text-[10px] font-bold tracking-[0.15em] text-slate-500 uppercase">
                   {book.label}
                 </span>
               </div>

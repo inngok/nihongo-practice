@@ -86,6 +86,20 @@ export const onomatopoeiaData = {
       meaning: "Lề mề, uể oải, dài dòng",
       example: "だらだらと仕事をしないでください。",
       accepts: ["le me", "ue oai", "dai dong", "chay rong rong"]
+    },
+    {
+      kanji: "ふらふら",
+      kana: "ふらふら",
+      meaning: "Choáng váng, chóng mặt, lảo đảo",
+      example: "頭がふらふらする。",
+      accepts: ["choang vang", "chong mat", "lao dao"]
+    },
+    {
+      kanji: "ずきずき",
+      kana: "ずきずき",
+      meaning: "Đau nhói, đau giật, đau thình thịch, nhức buốt",
+      example: "歯がずきずき痛む。",
+      accepts: ["dau nhoi", "dau giat", "dau thinh thich", "nhuc buot"]
     }
   ]
 };
