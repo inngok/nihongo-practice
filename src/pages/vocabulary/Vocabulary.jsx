@@ -31,6 +31,15 @@ export default function Vocabulary() {
       label: 'CƠ BẢN',
       badge: 'LISTEN',
       path: '/vocabulary/mimikara'
+    },
+    {
+      id: 'dekiru',
+      num: '04',
+      title: 'Dekiru',
+      japanese: 'Dekiru Nihongo N3',
+      label: 'GIAO TIẾP',
+      badge: 'STORY',
+      path: '/vocabulary/dekiru'
     }
   ];
 
