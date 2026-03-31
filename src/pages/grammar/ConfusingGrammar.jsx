@@ -73,7 +73,7 @@ export default function ConfusingGrammar() {
             </div>
             <p className="text-[10px] font-black text-slate-300 uppercase tracking-widest">Grammar Guide • Tips</p>
           </div>
-          <h1 className="text-5xl md:text-7xl font-black tracking-tighter italic">Hay Nhầm</h1>
+          <h1 className="text-5xl md:text-7xl font-black tracking-tighter italic">Phân Biệt</h1>
           <p className="text-slate-500 font-bold max-w-xl leading-relaxed italic">
             Tổng hợp các mẫu ngữ pháp dễ gây nhầm lẫn về mức độ và ý nghĩa sử dụng. 
             Ghi nhớ sự khác biệt để sử dụng chính xác trong hoàn cảnh thực tế.
