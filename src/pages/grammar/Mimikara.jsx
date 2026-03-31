@@ -77,7 +77,16 @@ export default function Mimikara() {
 
     const actions = {
       quiz: () => isLastItem ? setShowResults(true) : null,
-      default: () => isLastItem ? switchMode('menu') : null
+      default: () => {
+        if (isLastItem) {
+          if (prevMode) {
+            setActiveMode(prevMode);
+            setPrevMode(null);
+          } else {
+            switchMode('menu');
+          }
+        }
+      }
     };
 
     (actions[activeMode] || actions.default)();
@@ -96,7 +105,7 @@ export default function Mimikara() {
     setUserInput('');
     setIsFlipped(false);
     setShowHint(false);
-  }, [currentIndex, studyData, activeMode, completedIds, switchMode]);
+  }, [currentIndex, studyData, activeMode, completedIds, switchMode, prevMode, setActiveMode, setPrevMode]);
 
   const handleKeyDown = (e) => {
     if (e.key !== 'Enter') return;
