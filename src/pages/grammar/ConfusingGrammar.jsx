@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, AlertCircle, Info, CheckCircle2, XCircle, Gauge } from 'lucide-react';
+import { ArrowLeft, AlertCircle, Info, CheckCircle2, Gauge, BookOpen, Star, Crown, HelpCircle } from 'lucide-react';
+import { keigoMasterGuide } from './data/keigoData';
 
 const confusionData = [
   {
@@ -8,7 +9,7 @@ const confusionData = [
     literal: '...cũng được',
     usage: 'Được phép',
     intensity: 'Cho phép',
-    color: 'emerald',
+    color: 'slate',
     description: 'Dùng khi muốn cho phép ai đó làm việc gì hoặc xin phép làm việc gì.',
     intensityValue: 40
   },
@@ -17,7 +18,7 @@ const confusionData = [
     literal: '...thì không được',
     usage: 'Cấm',
     intensity: 'Cấm đoán tuyệt đối',
-    color: 'rose',
+    color: 'slate',
     description: 'Dùng để đưa ra mệnh lệnh cấm đoán mạnh mẽ, thường dựa trên quy tắc hoặc đạo đức.',
     intensityValue: 100
   },
@@ -35,7 +36,7 @@ const confusionData = [
     literal: 'dù không... cũng được',
     usage: 'Không cần thiết',
     intensity: 'Tự do lựa chọn',
-    color: 'sky',
+    color: 'slate',
     description: 'Diễn tả việc không cần thiết phải làm gì, cho phép người nghe tự do lựa chọn.',
     intensityValue: 20
   },
@@ -44,7 +45,7 @@ const confusionData = [
     literal: 'phía đã... thì tốt',
     usage: 'Nên',
     intensity: 'Khuyên bảo mạnh',
-    color: 'amber',
+    color: 'slate',
     description: 'Dùng để đưa ra lời khuyên mạnh mẽ hoặc cảnh báo điều gì đó nên làm.',
     intensityValue: 80
   },
@@ -53,7 +54,7 @@ const confusionData = [
     literal: 'phía không... thì tốt',
     usage: 'Không nên',
     intensity: 'Khuyên bảo mạnh',
-    color: 'orange',
+    color: 'slate',
     description: 'Dùng để đưa ra lời khuyên mạnh mẽ về việc không nên thực hiện hành động nào đó.',
     intensityValue: 80
   }
@@ -61,125 +62,209 @@ const confusionData = [
 
 export default function ConfusingGrammar() {
   const navigate = useNavigate();
+  const [activeTab, setActiveTab] = useState('confusion');
 
   return (
-    <div className="min-h-screen w-full bg-white flex flex-col items-center pt-32 pb-20 px-4 md:px-12 selection:bg-black selection:text-white">
-      {/* Header */}
-      <div className="w-full max-w-6xl mb-16 flex flex-col md:flex-row justify-between items-start md:items-end gap-8">
-        <div className="space-y-4">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-black rounded-xl flex items-center justify-center rotate-3">
-              <AlertCircle className="w-6 h-6 text-white" />
-            </div>
-            <p className="text-[10px] font-black text-slate-300 uppercase tracking-widest">Grammar Guide • Tips</p>
-          </div>
-          <h1 className="text-5xl md:text-7xl font-black tracking-tighter italic">Phân Biệt</h1>
-          <p className="text-slate-500 font-bold max-w-xl leading-relaxed italic">
-            Tổng hợp các mẫu ngữ pháp dễ gây nhầm lẫn về mức độ và ý nghĩa sử dụng. 
-            Ghi nhớ sự khác biệt để sử dụng chính xác trong hoàn cảnh thực tế.
-          </p>
-        </div>
+    <div className="min-h-screen w-full bg-white flex flex-col items-center pt-20 md:pt-24 pb-16 px-4 md:px-6 font-sans relative selection:bg-slate-900 selection:text-white">
+      
+      <div className="w-full max-w-5xl relative z-10">
+        
+        {/* Back Button */}
         <button
           onClick={() => navigate('/')}
-          className="px-8 py-4 border-2 border-black text-xs font-black uppercase hover:bg-black hover:text-white transition-all flex items-center gap-2 group"
+          className="group flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest text-slate-400 hover:text-slate-900 transition-colors mb-8"
         >
-          <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" /> Quay lại
+          <span className="transition-transform group-hover:-translate-x-1">←</span>
+          Quay lại
         </button>
-      </div>
 
-      {/* Main Content - Modern Table Body */}
-      <div className="w-full max-w-6xl space-y-6">
-        <div className="hidden lg:grid grid-cols-12 gap-4 px-10 py-6 bg-slate-50 rounded-2xl mb-8">
-          <div className="col-span-3 text-[10px] font-black uppercase tracking-widest text-slate-400 flex items-center gap-2">
-             Ngữ pháp
+        {/* Header Section */}
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-12 border-b border-slate-100 pb-8">
+          <div className="space-y-2">
+            <h1 className="text-3xl md:text-4xl font-black tracking-tight text-slate-900 uppercase">Phân Biệt & Kính Ngữ</h1>
+            <p className="text-sm text-slate-500 max-w-xl font-medium leading-relaxed">
+              Tài liệu tổng hợp tinh hoa ngữ pháp N3. Phân biệt các mẫu dễ nhầm lẫn và làm chủ hệ thống Kính ngữ chuyên sâu.
+            </p>
           </div>
-          <div className="col-span-3 text-[10px] font-black uppercase tracking-widest text-slate-400 flex items-center gap-2">
-            <Info className="w-3 h-3" /> Dịch nghĩa đen
-          </div>
-          <div className="col-span-3 text-[10px] font-black uppercase tracking-widest text-slate-400 flex items-center gap-2">
-            <CheckCircle2 className="w-3 h-3" /> Nghĩa sử dụng
-          </div>
-          <div className="col-span-3 text-[10px] font-black uppercase tracking-widest text-slate-400 flex items-center gap-2">
-            <Gauge className="w-3 h-3" /> Mức độ
+
+          {/* Tab Switcher */}
+          <div className="flex p-1 bg-slate-100 rounded-xl w-full md:w-auto">
+            {['confusion', 'keigo'].map((tab) => (
+              <button
+                key={tab}
+                onClick={() => setActiveTab(tab)}
+                className={`flex-1 md:flex-none px-6 py-2 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all
+                  ${activeTab === tab ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+              >
+                {tab === 'confusion' ? 'Phân Biệt' : 'Kính Ngữ Master'}
+              </button>
+            ))}
           </div>
         </div>
 
-        {confusionData.map((item, index) => (
-          <div 
-            key={index}
-            className="group relative bg-white border border-slate-100 rounded-[2.5rem] p-8 lg:p-10 hover:border-black hover:shadow-[0_30px_60px_-15px_rgba(0,0,0,0.1)] transition-all duration-500 animate-in fade-in slide-in-from-bottom-4"
-            style={{ animationDelay: `${index * 100}ms` }}
-          >
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-              {/* Pattern */}
-              <div className="col-span-1 lg:col-span-3">
-                <span className={`text-[10px] font-black uppercase tracking-widest mb-3 block text-${item.color}-500`}>
-                  Pattern 0{index + 1}
-                </span>
-                <h3 className="text-3xl font-black tracking-tighter italic">{item.pattern}</h3>
-              </div>
-
-              {/* Literal */}
-              <div className="col-span-1 lg:col-span-3">
-                <div className="lg:hidden text-[10px] font-black uppercase tracking-widest text-slate-300 mb-2">Dịch nghĩa đen</div>
-                <p className="text-slate-400 font-bold italic translate-y-0.5">{item.literal}</p>
-              </div>
-
-              {/* Usage */}
-              <div className="col-span-1 lg:col-span-3">
-                <div className="lg:hidden text-[10px] font-black uppercase tracking-widest text-slate-300 mb-2">Nghĩa sử dụng</div>
-                <div className="flex items-center gap-3">
-                  <div className={`w-2 h-2 rounded-full bg-${item.color}-400 active-pulse`} />
-                  <p className="text-lg font-black italic">{item.usage}</p>
-                </div>
-              </div>
-
-              {/* Intensity */}
-              <div className="col-span-1 lg:col-span-3">
-                <div className="lg:hidden text-[10px] font-black uppercase tracking-widest text-slate-300 mb-2">Mức độ</div>
-                <div className="space-y-3">
-                  <div className="flex justify-between items-center mb-1">
-                    <span className="text-[10px] font-black uppercase text-slate-400 tracking-wider">{item.intensity}</span>
-                    <span className="text-[10px] font-black text-slate-900">{item.intensityValue}%</span>
-                  </div>
-                  <div className="h-1.5 w-full bg-slate-50 rounded-full overflow-hidden">
-                    <div 
-                      className={`h-full bg-black transition-all duration-1000 ease-out`}
-                      style={{ width: `${item.intensityValue}%` }}
-                    />
-                  </div>
-                </div>
-              </div>
-
-              {/* Description reveal on hover for desktop */}
-              <div className="col-span-12 mt-4 pt-6 border-t border-slate-50 hidden md:block">
-                <p className="text-sm text-slate-500 font-medium leading-relaxed italic">{item.description}</p>
-              </div>
+        {/* Main Content Area */}
+        {activeTab === 'confusion' ? (
+          <div className="space-y-3 animate-in fade-in duration-500">
+            {/* Minimal Header */}
+            <div className="grid grid-cols-12 gap-4 px-6 mb-2 hidden md:grid">
+              <div className="col-span-4 text-[9px] font-bold uppercase tracking-widest text-slate-400 italic">Ngữ pháp / Ý nghĩa</div>
+              <div className="col-span-4 text-[9px] font-bold uppercase tracking-widest text-slate-400">Cách sử dụng</div>
+              <div className="col-span-4 text-[9px] font-bold uppercase tracking-widest text-slate-400 text-right">Mức độ</div>
             </div>
-          </div>
-        ))}
-      </div>
 
-      {/* Footer Note */}
-      <div className="w-full max-w-4xl mt-20 p-10 bg-black text-white rounded-[3rem] text-center relative overflow-hidden">
-        <div className="absolute top-0 right-0 p-8 opacity-10">
-          <AlertCircle className="w-32 h-32" />
-        </div>
-        <div className="relative z-10 space-y-4">
-          <h4 className="text-2xl font-black italic">Lời khuyên nhỏ</h4>
-          <p className="text-white/60 text-sm max-w-2xl mx-auto italic font-medium leading-relaxed">
-            Việc nhầm lẫn các mẫu ngữ pháp tương tự nhau là hoàn toàn bình thường khi học N3. 
-            Hãy cố gắng đặt câu cho từng mẫu trong bối cảnh thực tế để cảm nhận "độ mạnh" của lời khuyên hay lệnh cấm.
-          </p>
-        </div>
+            {confusionData.map((item, index) => (
+              <div 
+                key={index}
+                className="group relative bg-white border border-slate-100 rounded-2xl p-6 hover:border-slate-300 hover:bg-slate-50/30 transition-all duration-300"
+              >
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-center">
+                  <div className="col-span-4">
+                    <h3 className="text-lg font-bold text-slate-900 mb-0.5">{item.pattern}</h3>
+                    <p className="text-xs text-slate-400 italic font-medium">{item.literal}</p>
+                  </div>
+                  
+                  <div className="col-span-4">
+                    <span className="text-xs font-bold text-slate-600 uppercase tracking-wide">{item.usage}</span>
+                  </div>
+
+                  <div className="col-span-4 flex justify-end items-center gap-4">
+                    <div className="w-32 h-1 bg-slate-100 rounded-full overflow-hidden hidden md:block">
+                      <div className="h-full bg-slate-400 rounded-full" style={{ width: `${item.intensityValue}%` }} />
+                    </div>
+                    <span className="text-[10px] font-bold text-slate-400">{item.intensityValue}%</span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="space-y-6 animate-in fade-in duration-500">
+            {keigoMasterGuide.sections.map((section, idx) => (
+              <div key={section.id} className="bg-white border border-slate-100 rounded-2xl overflow-hidden shadow-sm hover:border-slate-200 transition-all">
+                <div className="p-6 border-b border-slate-50 flex justify-between items-start gap-4">
+                  <div className="space-y-1">
+                    <h2 className="text-lg font-bold text-slate-900">{section.title}</h2>
+                    <p className="text-xs text-slate-400 font-medium">{section.concept || section.note}</p>
+                  </div>
+                  <span className="text-[9px] font-bold text-slate-300 uppercase tracking-widest">#{idx + 1}</span>
+                </div>
+
+                <div className="p-6 space-y-8">
+                  {/* Subject Info */}
+                  {section.subject && (
+                    <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-slate-900 text-white rounded-lg">
+                      <span className="text-[9px] font-bold uppercase tracking-widest">Chủ ngữ: {section.subject}</span>
+                    </div>
+                  )}
+
+                  {/* Rendering logic - Simple Grid */}
+                  {section.categories && (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                      {section.categories.map((cat, i) => (
+                         <div key={i} className="space-y-4">
+                            <h4 className="text-[10px] font-black uppercase text-slate-400 tracking-widest flex items-center gap-2">
+                              {cat.type}
+                            </h4>
+                            {cat.rule && <div className="p-3 bg-slate-50 border-l-2 border-slate-200 text-[10px] font-bold text-slate-500 leading-relaxed rounded-r-lg">{cat.rule}</div>}
+                            <div className="space-y-3">
+                              {cat.structures.map((st, j) => (
+                                <div key={j} className="group border-b border-slate-50 pb-3 last:border-0">
+                                  <code className="text-sm font-bold text-slate-900 block mb-1">{st.pattern}</code>
+                                  <p className="text-[10px] text-slate-400 font-medium italic">{st.usage}</p>
+                                </div>
+                              ))}
+                            </div>
+                         </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {section.levels && (
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                      {section.levels.map((lv, i) => (
+                        <div key={i} className={`p-5 rounded-xl border border-slate-100 ${i === 2 ? 'bg-slate-900 text-white' : 'bg-slate-50'}`}>
+                          <span className="text-[9px] font-bold uppercase tracking-widest block mb-4 opacity-50">{lv.label}</span>
+                          <div className="space-y-2">
+                            {lv.patterns.map((p, j) => (
+                              <div key={j} className="text-sm font-bold tracking-tight opacity-90">{p}</div>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {section.rules && (
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      {section.rules.map((rule, i) => (
+                        <div key={i} className="space-y-3 p-5 bg-slate-50 rounded-xl border border-slate-100">
+                          <code className="text-sm font-bold text-slate-900 block bg-white p-2 rounded-lg border border-slate-100">{rule.formula}</code>
+                          <p className="text-xs font-bold text-slate-500 italic pl-3 border-l-2 border-slate-200">{rule.example}</p>
+                          <p className="text-[9px] text-slate-400 font-medium">{rule.note}</p>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {section.warning && (
+                    <div className="p-4 bg-slate-900 text-white rounded-xl flex gap-3 items-start">
+                      <AlertCircle className="w-4 h-4 text-white/50 flex-shrink-0 mt-0.5" />
+                      <div>
+                        <p className="text-xs font-bold leading-relaxed">{section.warning}</p>
+                      </div>
+                    </div>
+                  )}
+
+                  {section.verbs && (
+                    <div className="overflow-x-auto rounded-xl border border-slate-50">
+                      <table className="w-full text-left border-collapse min-w-[500px]">
+                        <thead>
+                          <tr className="bg-slate-50">
+                            <th className="p-4 text-[9px] font-black uppercase tracking-widest text-slate-400">Gốc</th>
+                            <th className="p-4 text-[9px] font-black uppercase tracking-widest text-slate-900 border-x border-slate-100">Tôn kính</th>
+                            <th className="p-4 text-[9px] font-black uppercase tracking-widest text-slate-400">Khiêm nhường</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-50">
+                          {section.verbs.map((v, i) => (
+                            <tr key={i} className="hover:bg-slate-50/50 transition-colors">
+                              <td className="p-4 text-xs font-bold text-slate-400">{v.basic}</td>
+                              <td className="p-4 text-xs font-bold text-slate-900 border-x border-slate-50">{v.sonkei}</td>
+                              <td className="p-4 text-xs font-medium text-slate-400 italic">{v.kenjou}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
+
+                  {section.errors && (
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      {section.errors.map((err, i) => (
+                        <div key={i} className="p-5 border border-slate-100 rounded-2xl space-y-3">
+                          <h4 className="text-[10px] font-bold uppercase text-slate-900 tracking-wider flex items-center gap-2">
+                             <span className="w-1.5 h-1.5 rounded-full bg-slate-900" />
+                             {err.title}
+                          </h4>
+                          <p className="text-[10px] text-slate-400 font-medium leading-relaxed">{err.desc}</p>
+                          <div className="space-y-2 pt-2 text-[10px] font-bold">
+                             <div className="p-2 bg-slate-50 rounded-lg text-slate-400 line-through">{err.wrong || err.cau_sai}</div>
+                             <div className="p-2 bg-slate-900 rounded-lg text-white">{err.correct || err.cau_dung}</div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       <style dangerouslySetInnerHTML={{ __html: `
         @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes slide-in { from { transform: translateY(20px); } to { transform: translateY(0); } }
-        .animate-in { animation: fade-in 0.6s ease-out forwards, slide-in 0.6s ease-out forwards; }
-        .active-pulse { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
-        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .4; } }
+        .animate-in { animation: fade-in 0.4s ease-out forwards; }
       `}} />
     </div>
   );
