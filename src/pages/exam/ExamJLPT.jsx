@@ -15,10 +15,7 @@ const examModules = [
 export default function ExamJLPT() {
   return (
     <div className="w-full h-full flex-grow bg-white flex flex-col items-center pt-24 pb-12 px-6 md:px-12 relative overflow-hidden font-sans">
-      {/* Background Watermark for Exam */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[15vw] font-black text-slate-100 opacity-[0.03] pointer-events-none select-none leading-none z-0 whitespace-nowrap uppercase">
-        JLPT EXAM
-      </div>
+
 
       <div className="w-full max-w-7xl relative z-10 border-b border-slate-50 pb-12">
         <Link
