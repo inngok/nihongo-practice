@@ -2,72 +2,90 @@ export const grammarData = [
   // --- UNIT 1 ---
   {
     id: 1, unit: 1, pattern: "ことにしている", romaji: "koto ni shite iru", meaning: "Quyết định (thói quen cá nhân)", explanation: "Diễn tả thói quen hoặc quy tắc mà bản thân tự đề ra và thực hiện.",
-    examples: [{ jp: "健康のために、毎日野菜を食べることにしている。", vn: "Để tốt cho sức khỏe, tôi quyết định (duy trì thói quen) ăn rau mỗi ngày." }, { jp: "寝る前に、必ず本を10ページ読むことにしている。", vn: "Trước khi ngủ, tôi luôn quyết định đọc 10 trang sách." }],
+    examples: [{ jp: "健康のために、毎日野菜を食べることにしている。", vn: "Để tốt cho sức khỏe, tôi quyết định (duy trì thói quen) ăn rau mỗi ngày." }, { jp: "寝る前に、必ず本を10ページ読むことにしている。", vn: "Trước khi ngủ, tôi luôn quyết định đọc 10 trang sách." }, { jp: "健康のため、毎朝牛乳をのむことにしている。", vn: "Để tốt cho sức khỏe, tôi quyết định uống sữa mỗi sáng.", isBook: true, blank: "ことにしている" }],
     quiz: { sentence: "私は毎日、30分ジョギング________。", answer: "ことにしている", accepts: [], hint: "Quyết định thói quen của bản thân", translation: "Tôi quyết định chạy bộ 30 phút mỗi ngày." }
   },
   {
     id: 2, unit: 1, pattern: "ことになっている", romaji: "koto ni natte iru", meaning: "Quy định / Dự định (khách quan)", explanation: "Diễn tả những việc đã được quyết định bởi tổ chức, quy định hoặc dự định mang tính khách quan.",
-    examples: [{ jp: "法律で、車を運転する時はシートベルトをすることになっている。", vn: "Theo luật pháp, khi lái xe ô tô thì quy định phải thắt dây an toàn." }, { jp: "教室では日本語だけで話すことになっています。", vn: "Trong lớp học có quy định chỉ được nói bằng tiếng Nhật." }],
+    examples: [{ jp: "法律で、車を運転する時はシートベルトをすることになっている。", vn: "Theo luật pháp, khi lái xe ô tô thì quy định phải thắt dây an toàn." }, { jp: "教室では日本語だけで話すことになっています。", vn: "Trong lớp học có quy định chỉ được nói bằng tiếng Nhật." }, { jp: "法律では、20歳未満はお酒を飲んではいけないことになっている。", vn: "Theo luật pháp, quy định người dưới 20 tuổi không được uống rượu.", isBook: true, blank: "ことになっている" }],
     quiz: { sentence: "この部屋では、タバコを吸ってはいけない________。", answer: "ことになっている", accepts: [], hint: "Quy định chung", translation: "Trong phòng này có quy định không được hút thuốc." }
   },
   {
     id: 3, unit: 1, pattern: "ようになっている", romaji: "you ni natte iru", meaning: "Được thiết kế để / Trở nên (tự động)", explanation: "Diễn tả chức năng của máy móc hoặc sự biến đổi trạng thái mang tính tự động.",
-    examples: [{ jp: "このドアは人が近づくと、自動で開くようになっている。", vn: "Cánh cửa này được thiết kế để tự động mở khi có người tiến lại gần." }, { jp: "このパソコンは、パスワードを入力しないと使えないようになっている。", vn: "Cái máy tính này được thiết kế để không thể sử dụng nếu không nhập mật khẩu." }],
+    examples: [{ jp: "このドアは人が近づくと、自動で開くようになっている。", vn: "Cánh cửa này được thiết kế để tự động mở khi có người tiến lại gần." }, { jp: "このパソコンは、パスワードを入力しないと使えないようになっている。", vn: "Cái máy tính này được thiết kế để không thể sử dụng nếu không nhập mật khẩu." }, { jp: "このストーブは大きく傾くと、自動的に火が消えるようになっている。", vn: "Cái lò sưởi này được thiết kế để tự động tắt lửa khi bị nghiêng mạnh.", isBook: true, blank: "ようになっている" }],
     quiz: { sentence: "この機械は、暗くなると電気がつく________。", answer: "ようになっている", accepts: [], hint: "Chức năng/Cấu tạo tự động", translation: "Cái máy này được thiết kế để khi trời tối thì đèn sẽ sáng." }
   },
   {
     id: 4, unit: 1, pattern: "ような / ように", romaji: "you na / you ni", meaning: "Giống như / Theo như", explanation: "Dùng để so sánh hoặc đưa ra ví dụ.",
-    examples: [{ jp: "太陽のような明るい人だ。", vn: "Đó là một người tươi sáng như mặt trời." }, { jp: "私もあなたのように、上手に日本語が話せるようになりたい。", vn: "Tôi cũng muốn có thể nói giỏi tiếng Nhật giống như bạn." }],
+    examples: [{ jp: "太陽のような明るい人だ。", vn: "Đó là một người tươi sáng như mặt trời." }, { jp: "私もあなたのように、上手に日本語が話せるようになりたい。", vn: "Tôi cũng muốn có thể nói giỏi tiếng Nhật giống như bạn." }, { jp: "私は赤やピンクのような、明るい色が好きだ。", vn: "Tôi thích những màu sáng như màu đỏ hay màu hồng.", isBook: true, blank: "のような" }],
     quiz: { sentence: "田中さんの________優しい人になりたい。", answer: "ような", accepts: ["ように"], hint: "Giống như (so sánh)", translation: "Tôi muốn trở thành một người hiền lành giống như anh Tanaka." }
   },
   {
     id: 5, unit: 1, pattern: "みたいだ", romaji: "mitai da", meaning: "Có vẻ như / Giống như (văn nói)", explanation: "Dùng để phỏng đoán dựa trên cảm nhận hoặc so sánh ví von trong văn nói.",
-    examples: [{ jp: "このケーキ、美味しそう。まるで本物みたいだ。", vn: "Cái bánh này trông ngon quá. Cứ như là đồ thật vậy." }, { jp: "彼はもう30歳なのに、子供みたいだ。", vn: "Anh ấy đã 30 tuổi rồi mà cứ như trẻ con vậy." }],
+    examples: [
+      { jp: "このケーキ、美味しそう。まるで本物みたいだ。", vn: "Cái bánh này trông ngon quá. Cứ như là đồ thật vậy." },
+      { jp: "彼はもう30歳なのに、子供みたいだ。", vn: "Anh ấy đã 30 tuổi rồi mà cứ như trẻ con vậy." },
+      { jp: "「あの店、人気がないみたいだね。いつ行ってもすいている」", vn: "Quán kia có vẻ như không nổi tiếng lắm nhỉ. Lúc nào đi cũng thấy vắng.", isBook: true, blank: "みたいだ" },
+      { jp: "宝くじで1,000万円当たった. 夢をみているみたいだ。", vn: "Trúng số 10 triệu yên. Cứ như là đang mơ vậy.", isBook: true, blank: "みたいだ" },
+      { jp: "私も早くリンさんみたいに、日本語が上手になりたいなあ。", vn: "Tôi cũng muốn nhanh chóng trở nên giỏi tiếng Nhật như chị Linh.", isBook: true, blank: "みたいに" }
+    ],
     quiz: { sentence: "彼はまるで子供________だ。", answer: "みたい", accepts: [], hint: "Giống như (văn nói)", translation: "Anh ấy cứ như là trẻ con vậy." }
   },
   {
     id: 6, unit: 1, pattern: "らしい", romaji: "rashii", meaning: "Nghe nói / Đúng chất", explanation: "Dùng để truyền đạt tin đồn hoặc diễn tả tính chất điển hình của sự vật/sự việc.",
-    examples: [{ jp: "明日は雨が降るらしい。", vn: "Nghe nói ngày mai trời sẽ mưa." }, { jp: "今日は春らしい、暖かい日ですね。", vn: "Hôm nay là một ngày ấm áp, đúng chất mùa xuân nhỉ." }],
+    examples: [{ jp: "明日は雨が降るらしい。", vn: "Nghe nói ngày mai trời sẽ mưa." }, { jp: "今日は春らしい、暖かい day nhé.", vn: "Hôm nay là một ngày ấm áp, đúng chất mùa xuân nhỉ." }, { jp: "大山さんは拾ってきたネコを育てているそうだ. いかにも動物好きなかれらしい。", vn: "Nghe nói anh Oyama đang nuôi con mèo nhặt được. Thật đúng chất là người yêu động vật như anh ấy.", isBook: true, blank: "らしい" }],
     quiz: { sentence: "噂によると、あの二人は結婚する________。", answer: "らしい", accepts: [], hint: "Nghe nói (tin đồn)", translation: "Theo lời đồn thì hai người đó nghe nói sắp kết hôn." }
   },
   {
     id: 7, unit: 1, pattern: "つもり", romaji: "tsumori", meaning: "Tưởng là / Cứ ngỡ là", explanation: "Diễn tả một ý định hoặc trạng thái mà bản thân tin là như vậy, nhưng thực tế lại không phải (hoặc chỉ là chủ quan).",
     examples: [
       { jp: "メールを送ったつもりだったが、届いていなかった。", vn: "Tôi cứ ngỡ là đã gửi mail rồi, nhưng hóa ra nó vẫn chưa tới." },
-      { jp: "バッグにさいふを入れたつもりだったが、なかった。", vn: "Tôi cứ ngõ là đã cho ví vào túi rồi, thế mà lúc tìm lại không thấy." }
+      { jp: "バッグにさいふを入れたつもりだったが、なかった。", vn: "Tôi cứ ngõ là đã cho ví vào túi rồi, thế mà lúc tìm lại không thấy." },
+      { jp: "メールをおくったつもりだったが、届いていなかった。", vn: "Tôi cứ ngỡ là đã gửi mail rồi, nhưng hóa ra nó vẫn chưa tới.", isBook: true, blank: "つもり" }
     ],
     quiz: { sentence: "メールを________つもりだったが、届いていなかった。", answer: "送った", accepts: [], hint: "Cứ ngỡ là đã gửi (V-ta)", translation: "Tôi cứ nghĩ là đã gửi mail rồi, nhưng thực ra chưa tới." }
   },
   {
     id: 8, unit: 1, pattern: "てくる", romaji: "te kuru", meaning: "Bắt đầu / Trở nên / Tiến về phía mình", explanation: "Diễn tả hành động đang bắt đầu, thay đổi diễn ra hoặc hướng về phía người nói.",
-    examples: [{ jp: "最近、少しずつ寒くなってきた。", vn: "Gần đây trời đã bắt đầu lạnh dần lên." }, { jp: "太ってきたので、ダイエットをすることにした。", vn: "Vì trở nên béo ra nên tôi đã quyết định ăn kiêng." }],
+    examples: [{ jp: "最近、少しずつ寒くなってきた。", vn: "Gần đây trời đã bắt đầu lạnh dần lên." }, { jp: "太ってきたので、ダイエットをすることにした。", vn: "Vì trở nên béo ra nên tôi đã quyết định ăn kiêng." }, { jp: "こう暑いと、じっとしていても汗が出てくる。", vn: "Trời nóng thế này thì dù có đứng yên mồ hôi cũng vã ra.", isBook: true, blank: "くる" }],
     quiz: { sentence: "だんだん日本語が上手になって________。", answer: "きた", accepts: ["くる"], hint: "Thay đổi trạng thái (quá khứ của てくる)", translation: "Tiếng Nhật của tôi đang dần dần trở nên giỏi lên." }
   },
 
   // --- UNIT 2 ---
   {
     id: 9, unit: 2, pattern: "てほしい / もらいたい", romaji: "te hoshii / moraitai", meaning: "Muốn (ai đó) làm gì", explanation: "Diễn tả mong muốn người khác thực hiện một hành động nào đó cho mình.",
-    examples: [{ jp: "親にはいつまでも元気でいてほしい。", vn: "Tôi muốn bố mẹ lúc nào cũng khỏe mạnh." }, { jp: "この漢字の読み方を教えてほしいんですが。", vn: "Tôi muốn bạn chỉ cho tôi cách đọc chữ Kanji này." }],
+    examples: [{ jp: "親にはいつまでも元気でいてほしい。", vn: "Tôi muốn bố mẹ lúc nào cũng khỏe mạnh." }, { jp: "この漢字の読み方を教えてほしいんですが。", vn: "Tôi muốn bạn chỉ cho tôi cách đọc chữ Kanji này." }, { jp: "「すみません、ちょっとみてもらいたいものがあるんですけど」", vn: "Xin lỗi, tôi có chút đồ muốn nhờ bạn xem giúp.", isBook: true, blank: "てもらいたい" }],
     quiz: { sentence: "先生に、もっとゆっくり話して________。", answer: "ほしい", accepts: ["もらいたい"], hint: "Mong muốn người khác làm gì", translation: "Tôi muốn thầy giáo nói chậm lại một chút." }
   },
   {
     id: 10, unit: 2, pattern: "ば / たら / と…よかった", romaji: "ba / tara / to yokatta", meaning: "Giá mà... / Ước gì...", explanation: "Thể hiện sự tiếc nuối về một việc đã xảy ra hoặc mong ước trái hiện tại.",
-    examples: [{ jp: "あの時、本当のことを言っておけばよかった。", vn: "Giá mà lúc đó tôi nói ra sự thật thì tốt biết mấy." }, { jp: "もっと早く家を出ればよかった。遅刻しそうだ。", vn: "Giá mà tôi rời nhà sớm hơn thì tốt rồi. Sắp muộn mất rồi." }],
+    examples: [
+      { jp: "あの時、本当のことを言っておけばよかった。", vn: "Giá mà lúc đó tôi nói ra sự thật thì tốt biết mấy." },
+      { jp: "もっと早く家を出ればよかった。遅刻しそうだ。", vn: "Giá mà tôi rời nhà sớm hơn thì tốt rồi. Sắp muộn mất rồi." },
+      { jp: "「買わないんですか」「ええ、もう少しやすければ買うんですけど」", vn: "\"Bạn không mua à?\" \"Vâng, nếu rẻ hơn chút nữa thì tôi sẽ mua đấy.\"", isBook: true, blank: "ければ" },
+      { jp: "もう少し時間があれば、全部できたのに。", vn: "Nếu có thêm chút thời gian nữa thì tôi đã có thể làm xong hết rồi.", isBook: true, blank: "あれば" }
+    ],
     quiz: { sentence: "テストの前に、もっと勉強しておけば________。", answer: "よかった", accepts: [], hint: "Thể hiện sự tiếc nuối ở quá khứ", translation: "Giá mà trước bài kiểm tra tôi học nhiều hơn." }
   },
   {
     id: 11, unit: 2, pattern: "使役形 (させて / させられる)", romaji: "shiekikei (sasete / saserareru)", meaning: "Cho phép làm / Bị bắt làm", explanation: "Thể sai khiến xin phép (させてください) hoặc bị ép buộc (させられる).",
-    examples: [{ jp: "今日は体調が悪いので、早く帰らせてください。", vn: "Hôm nay thấy không khỏe nên xin cho phép tôi về sớm." }, { jp: "子供のころ、母に毎日ピアノを練習させられた。", vn: "Hồi nhỏ, tôi bị mẹ bắt tập đàn piano mỗi ngày." }],
+    examples: [
+      { jp: "今日は体調が悪いので、早く帰らせてください。", vn: "Hôm nay thấy không khỏe nên xin cho phép tôi về sớm." },
+      { jp: "子供のころ、母に毎日ピアノを練習させられた。", vn: "Hồi nhỏ, tôi bị mẹ bắt tập đàn piano mỗi ngày." },
+      { jp: "子どもが習いたいというので、ピアノをならわせることにした。", vn: "Vì con muốn học nên tôi đã quyết định cho cháu học đàn piano.", isBook: true, blank: "ならわせる" },
+      { jp: "冷蔵庫に肉があるのを忘れていて、くさらせてしまった。", vn: "Tôi quên khuấy mất có thịt trong tủ lạnh nên đã để nó bị thiu mất.", isBook: true, blank: "くさらせて" },
+      { jp: "「きょうはすばらしいお話をきかせていただき、本当にありがとうございます」", vn: "Hôm nay tôi đã được nghe một câu chuyện tuyệt vời, thực sự cảm ơn bạn rất nhiều.", isBook: true, blank: "きかせて" }
+    ],
     quiz: { sentence: "すみません、明日一日休ま________ください。", answer: "せて", accepts: [], hint: "Xin phép người khác cho mình làm gì (từ 休む)", translation: "Xin lỗi, hãy cho phép tôi nghỉ ngày mai." }
   },
   {
     id: 12, unit: 2, pattern: "自動詞 (〜ている)", romaji: "jidoushi (~te iru)", meaning: "Trạng thái (Tự động từ)", explanation: "Tự động từ + ている diễn tả trạng thái của sự vật sau khi hành động xảy ra.",
-    examples: [{ jp: "窓が閉まっている。", vn: "Cửa sổ đang đóng (trạng thái hiện tại)." }, { jp: "あ、あそこに車が止まっているよ。", vn: "A, đằng kia có chiếc xe đang đỗ kìa." }],
+    examples: [{ jp: "窓が閉まっている。", vn: "Cửa sổ đang đóng (trạng thái hiện tại)." }, { jp: "あ、あそこに車が止まっているよ。", vn: "A, đằng kia có chiếc xe đang đỗ kìa." }, { jp: "このかばんは軽くてたくさんはいるので、旅行に便利だ。", vn: "Cái túi này nhẹ và chứa được nhiều đồ nên rất tiện cho việc đi du lịch.", isBook: true, blank: "はいる" }],
     quiz: { sentence: "シャツのボタンがとれ________よ。", answer: "ている", accepts: ["てる"], hint: "Trạng thái hiện tại (tự động từ)", translation: "Cái cúc áo sơ mi bị tuột ra kìa." }
   },
   {
     id: 13, unit: 2, pattern: "〜み", romaji: "~mi", meaning: "Sự... / Độ... (Danh từ hóa)", explanation: "Biến tính từ thành danh từ để chỉ trạng thái, tính chất mang tính cảm nhận.",
-    examples: [{ jp: "戦争の悲しみを忘れてはいけない。", vn: "Không được quên nỗi đau thương của chiến tranh." }, { jp: "このスープは、肉の旨みが出ている。", vn: "Món súp này có vị ngọt từ thịt (vị ngon)." }],
+    examples: [{ jp: "戦争の悲しみを忘れてはいけない。", vn: "Không được quên nỗi đau thương của chiến tranh." }, { jp: "このスープは、肉の旨みが出ている。", vn: "Món súp này có vị ngọt từ thịt (vị ngon)." }, { jp: "「お会いできる日をたのしみにしています」", vn: "Tôi đang rất mong đợi ngày được gặp lại bạn.", isBook: true, blank: "たのしみ" }],
     quiz: { sentence: "星空の美し________に感動した。", answer: "み", accepts: [], hint: "Hậu tố biến tính từ đuôi 'i' thành danh từ", translation: "Tôi đã xúc động trước vẻ đẹp của bầu trời sao." }
   },
   {
@@ -75,7 +93,9 @@ export const grammarData = [
     examples: [
       { jp: "道が込んでいる. これでは間に合わないのではないだろうか。", vn: "Đường đang tắc. Cứ thế này chẳng phải là sẽ không kịp hay sao?" },
       { jp: "AチームよりBチームのほうが強いのではないかと思う。", vn: "Tôi nghĩ chẳng phải là đội B mạnh hơn đội A hay sao." },
-      { jp: "山田さんは甘いものが好きだから、美味しいお菓子がいいんじゃない？", vn: "Vì anh Yamada thích đồ ngọt, nên chẳng phải là tặng bánh kẹo ngon thì tốt sao?" }
+      { jp: "山田さんは甘いものが好きだから、美味しいお菓子がいいんじゃない？", vn: "Vì anh Yamada thích đồ ngọt, nên chẳng phải là tặng bánh kẹo ngon thì tốt sao?" },
+      { jp: "道が込んでいる. これでは間に合わないかもしれない。", vn: "Đường đang tắc. Cứ thế này có lẽ sẽ không kịp mất.", isBook: true, blank: "かもしれない" },
+      { jp: "「木村さん、遅いね. もしかしたら、約束を忘れているのかもしれない？」", vn: "\"Anh Kimura muộn quá nhỉ. Có lẽ nào anh ấy quên hẹn rồi chăng?\"", isBook: true, blank: "のかもしれない" }
     ],
     quiz: { sentence: "この仕事、６時までに終わらせるのは無理________？", answer: "なのではないだろうか", accepts: ["のではないか", "んじゃないか", "んじゃない", "のではないだろうか"], hint: "Chẳng phải là... hay sao? (Dạng trang trọng/thân mật)", translation: "Công việc này, chẳng phải là không thể xong trước 6 giờ hay sao?" }
   },
@@ -84,7 +104,11 @@ export const grammarData = [
     examples: [
       { jp: "これからは遅刻しちゃいけませんよ。(しちゃ ＝ しては)", vn: "Từ giờ trở đi là không được đi muộn đâu đấy." },
       { jp: "そんなにお酒を飲んじゃだめだよ。(飲んじゃ ＝ 飲んでは)", vn: "Uống nhiều rượu như thế là không được đâu." },
-      { jp: "宿題、もうやっちゃった。(やっちゃった ＝ やってしまった)", vn: "Bài tập về nhà á, tôi làm xong hết tiêu rồi." }
+      { jp: "宿題、もうやっちゃった。(やっちゃった ＝ やってしまった)", vn: "Bài tập về nhà á, tôi làm xong hết tiêu rồi." },
+      { jp: "「すぐ行くから、先に行ってて」", vn: "\"Tôi sẽ đi ngay đây, bạn cứ đi trước đi nhé.\"", isBook: true, blank: "て" },
+      { jp: "「来週までにこの本、読んどいてください」", vn: "\"Hãy đọc xong cuốn sách này trước tuần sau nhé.\"", isBook: true, blank: "どいて" },
+      { jp: "そろそろおきなきゃ遅刻しちゃう。", vn: "Phải dậy thôi không thì muộn mất.", isBook: true, blank: "なきゃ" },
+      { jp: "「そろそろ帰らなくちゃ. 遅くなると母が心配するから」", vn: "\"Đến lúc phải về rồi. Nếu muộn mẹ tôi sẽ lo lắng lắm.\"", isBook: true, blank: "なくちゃ" }
     ],
     quiz: { sentence: "あー、宿題、家に忘れ________！", answer: "ちゃった", accepts: ["ちゃいました"], hint: "Dạng rút gọn của てしまった", translation: "A, bài tập về nhà tôi lỡ để quên ở nhà mất rồi!" }
   },
@@ -92,32 +116,32 @@ export const grammarData = [
   // --- UNIT 3 ---
   {
     id: 16, unit: 3, pattern: "から〜にかけて", romaji: "kara ~ ni kakete", meaning: "Từ... đến...", explanation: "Chỉ phạm vi đại khái từ điểm bắt đầu đến điểm kết thúc (thời gian/không gian).",
-    examples: [{ jp: "明日は関東から東北地方にかけて、雨が降るでしょう。", vn: "Ngày mai có lẽ sẽ mưa từ Kanto đến Tohoku." }, { jp: "昨晩から今朝にかけて、激しい雨が降った。", vn: "Từ đêm qua đến sáng nay trời đã mưa rất to." }],
+    examples: [{ jp: "明日は関東から東北地方にかけて、雨が降るでしょう。", vn: "Ngày mai có lẽ sẽ mưa từ Kanto đến Tohoku." }, { jp: "昨晩から今朝にかけて、激しい雨が降った。", vn: "Từ đêm qua đến sáng nay trời đã mưa rất to." }, { jp: "この植物は、九州から本州にかけて広く分布している。", vn: "Loài thực vật này phân bố rộng rãi từ Kyushu đến Honshu.", isBook: true, blank: "にかけて" }],
     quiz: { sentence: "明日は関東から東北地方に________、雨が降るでしょう。", answer: "かけて", accepts: [], hint: "Đi kèm với から để chỉ phạm vi", translation: "Ngày mai có lẽ sẽ mưa trải dài từ vùng Kanto đến vùng Tohoku." }
   },
   {
     id: 17, unit: 3, pattern: "だらけ", romaji: "darake", meaning: "Đầy / Toàn là...", explanation: "Chỉ trạng thái có đầy thứ gì đó, thường mang nghĩa tiêu cực (rác, bùn, lỗi sai).",
-    examples: [{ jp: "彼の部屋はゴミだらけだ。", vn: "Phòng của anh ta toàn là rác." }, { jp: "間違いだらけのレポートを書き直した。", vn: "Tôi đã viết lại bản báo cáo đầy rẫy lỗi sai." }],
+    examples: [{ jp: "彼の部屋はゴミだらけだ。", vn: "Phòng của anh ta toàn là rác." }, { jp: "間違いだらけのレポートを書き直した。", vn: "Tôi đã viết lại bản báo cáo đầy rẫy lỗi sai." }, { jp: "この手紙、字が汚くて間違いだらけだ。", vn: "Lá thư này chữ xấu quá và đầy lỗi sai.", isBook: true, blank: "だらけ" }],
     quiz: { sentence: "このテスト、間違い________じゃないか！", answer: "だらけ", accepts: [], hint: "Toàn là (nghĩa tiêu cực)", translation: "Bài kiểm tra này chẳng phải toàn là lỗi sai sao!" }
   },
   {
     id: 18, unit: 3, pattern: "おかげ", romaji: "okage", meaning: "Nhờ có... / Nhờ vào...", explanation: "Chỉ nguyên nhân dẫn đến kết quả tốt, mang hàm ý biết ơn.",
-    examples: [{ jp: "先生のおかげで、N3に合格できました。", vn: "Nhờ có thầy giáo mà em đã thi đỗ N3." }, { jp: "天気がいいおかげで、洗濯物がすぐ乾いた。", vn: "Nhờ trời đẹp mà quần áo đã khô ngay." }],
+    examples: [{ jp: "先生のおかげで、N3に合格できました。", vn: "Nhờ có thầy giáo mà em đã thi đỗ N3." }, { jp: "天気がいいおかげで、洗濯物がすぐ乾いた。", vn: "Nhờ trời đẹp mà quần áo đã khô ngay." }, { jp: "「お元気ですか」「ええ、おかげさまで」", vn: "\"Bạn khỏe không?\" \"Vâng, nhờ trời tôi vẫn khỏe.\"", isBook: true, blank: "おかげさまで" }],
     quiz: { sentence: "友達が手伝ってくれた________で、早く終わった。", answer: "おかげ", accepts: [], hint: "Nhờ có (kết quả tốt)", translation: "Nhờ bạn bè giúp đỡ mà tôi đã làm xong sớm." }
   },
   {
     id: 19, unit: 3, pattern: "せい / せいか", romaji: "sei / sei ka", meaning: "Tại vì... / Có lẽ tại...", explanation: "Chỉ nguyên nhân dẫn đến kết quả xấu, mang hàm ý đổ lỗi.",
-    examples: [{ jp: "バスが遅れたせいで、授業に遅刻してしまった。", vn: "Tại xe buýt đến muộn mà tôi bị trễ học." }, { jp: "年のせいで、最近疲れやすくなった。", vn: "Tại tuổi tác mà gần đây tôi dễ bị mệt." }],
+    examples: [{ jp: "バスが遅れたせいで、授業に遅刻してしまった。", vn: "Tại xe buýt đến muộn mà tôi bị trễ học." }, { jp: "年のせいで、最近疲れやすくなった。", vn: "Tại tuổi tác mà gần đây tôi dễ bị mệt." }, { jp: "年のせいか、最近忘れ物がひどい。", vn: "Có lẽ vì tuổi tác nên gần đây tôi hay quên đồ quá.", isBook: true, blank: "せいか" }],
     quiz: { sentence: "あの人の________で、みんなが迷惑している。", answer: "せい", accepts: ["せいか"], hint: "Tại vì (kết quả xấu, đổ lỗi)", translation: "Tại người đó mà mọi người đang gặp phiền phức." }
   },
   {
     id: 20, unit: 3, pattern: "とおり(に)", romaji: "toori (ni)", meaning: "Đúng như / Theo như...", explanation: "Làm một việc gì đó đúng theo như một khuôn mẫu, tiêu chuẩn hoặc dự đoán.",
-    examples: [{ jp: "私の説明したとおりに、機械を組み立ててください。", vn: "Hãy lắp ráp máy móc đúng theo như tôi đã giải thích." }, { jp: "天気予報のとおり、午後から雨が降り出した。", vn: "Đúng như dự báo thời tiết, từ chiều trời đã bắt đầu mưa." }],
+    examples: [{ jp: "私の説明したとおりに、機械を組み立ててください。", vn: "Hãy lắp ráp máy móc đúng theo như tôi đã giải thích." }, { jp: "天気予報のとおり、午後から雨が降り出した。", vn: "Đúng như dự báo thời tiết, từ chiều trời đã bắt đầu mưa." }, { jp: "「あしたは試験だから、早く寝るようにしなさい」", vn: "\"Ngày mai thi đấy nên hãy cố gắng ngủ sớm đi.\"", isBook: true, blank: "ようにしなさい" }],
     quiz: { sentence: "先生が言った________、試験は難しかった。", answer: "とおり", accepts: ["とおりに", "通り", "通りに"], hint: "Đúng như / Theo như", translation: "Đúng như lời thầy giáo nói, bài thi rất khó." }
   },
   {
     id: 21, unit: 3, pattern: "について / つき", romaji: "ni tsuite / tsuki", meaning: "Về vấn đề... / Về...", explanation: "Trình bày chủ đề của hành động (suy nghĩ, nói, viết, điều tra...).",
-    examples: [{ jp: "日本の文化についてレポートを書きます。", vn: "Tôi sẽ viết báo cáo về văn hóa Nhật Bản." }, { jp: "この問題について、あなたの意見を聞かせてください。", vn: "Hãy cho tôi biết ý kiến của bạn về vấn đề này." }],
+    examples: [{ jp: "日本の文化についてレポートを書きます。", vn: "Tôi sẽ viết báo cáo về văn hóa Nhật Bản." }, { jp: "この問題について、あなたの意見を聞かせてください。", vn: "Hãy cho tôi biết ý kiến của bạn về vấn đề này." }, { jp: "「あ、赤ちゃんが泣き出しちゃった」", vn: "\"Ôi, em bé bỗng nhiên khóc rồi.\"", isBook: true, blank: "出しちゃった" }],
     quiz: { sentence: "将来の夢________、スピーチをします。", answer: "について", accepts: ["につき"], hint: "Về (chủ đề bài phát biểu)", translation: "Tôi sẽ thuyết trình về ước mơ trong tương lai." }
   },
   {
@@ -127,7 +151,7 @@ export const grammarData = [
   },
   {
     id: 23, unit: 3, pattern: "に比べ(て)", romaji: "ni kurabe (te)", meaning: "So với...", explanation: "Dùng để so sánh hai sự vật, sự việc.",
-    examples: [{ jp: "今年は去年に比べて、雨の日が多い。", vn: "Năm nay nhiều ngày mưa hơn so với năm ngoái." }, { jp: "兄に比べて、弟は背が高い。", vn: "So với anh trai thì người em cao hơn." }],
+    examples: [{ jp: "今年は去年に比べて、雨の日が多い。", vn: "Năm nay nhiều ngày mưa hơn so với năm ngoái." }, { jp: "兄に比べて、弟は背が高い。", vn: "So với anh trai thì người em cao hơn." }, { jp: "「あしたはもっと早く来るように。分かりましたか」", vn: "\"Ngày mai hãy cố gắng đến sớm hơn nhé. Bạn hiểu rồi chứ?\"", isBook: true, blank: "ように" }],
     quiz: { sentence: "東京________、私の町は静かだ。", answer: "に比べて", accepts: ["に比べ"], hint: "So với", translation: "So với Tokyo thì thị trấn của tôi yên tĩnh hơn." }
   },
   {
@@ -159,7 +183,7 @@ export const grammarData = [
   // --- UNIT 4 ---
   {
     id: 29, unit: 4, pattern: "くらい / ぐらい", romaji: "kurai / gurai", meaning: "Đến mức / Khoảng chừng", explanation: "Chỉ mức độ của sự việc, thường là mức độ nhẹ, tối thiểu.",
-    examples: [{ jp: "泣きたいくらい痛い。", vn: "Đau đến mức muốn khóc." }, { jp: "一歩歩けないくらい、お腹がいっぱいだ。", vn: "No đến mức không thể bước đi nổi một bước." }],
+    examples: [{ jp: "泣きたいくらい痛い。", vn: "Đau đến mức muốn khóc." }, { jp: "一歩歩けないくらい、お腹がいっぱいだ。", vn: "No đến mức không thể bước đi nổi một bước." }, { jp: "「もう、歩けない（くらい）つかれた」", vn: "\"Trời ơi, tôi mệt đến mức không thể bước đi được nữa rồi.\"", isBook: true, blank: "くらい" }],
     quiz: { sentence: "パンが一つ買える________のお金しかない。", answer: "くらい", accepts: ["ぐらい"], hint: "Đến mức / Khoảng", translation: "Tôi chỉ có tiền đủ đến mức mua được một cái bánh mì." }
   },
   {
@@ -169,7 +193,7 @@ export const grammarData = [
   },
   {
     id: 31, unit: 4, pattern: "うちに", romaji: "uchi ni", meaning: "Trong lúc / Nhân lúc", explanation: "Tranh thủ làm việc gì đó khi trạng thái chưa thay đổi.",
-    examples: [{ jp: "スープが温かいうちに、飲んでください。", vn: "Hãy uống nhân lúc súp còn nóng." }, { jp: "明るいうちに、仕事を終わらせてしまおう。", vn: "Hãy kết thúc công việc trong khi trời còn sáng." }],
+    examples: [{ jp: "スープが温かいうちに、飲んでください。", vn: "Hãy uống nhân lúc súp còn nóng." }, { jp: "明るいうちに、仕事を終わらせてしまおう。", vn: "Hãy kết thúc công việc trong khi trời còn sáng." }, { jp: "「忘れないうちに、メモしておこう」", vn: "\"Hãy ghi chú lại nhân lúc chưa quên nhé.\"", isBook: true, blank: "うちに" }],
     quiz: { sentence: "忘れない________、メモしておこう。", answer: "うちに", accepts: [], hint: "Trong lúc (chưa quên)", translation: "Nhân lúc chưa quên, hãy ghi chú lại." }
   },
   {
@@ -221,7 +245,7 @@ export const grammarData = [
   },
   {
     id: 41, unit: 5, pattern: "たとたん(に)", romaji: "ta totan (ni)", meaning: "Vừa mới... thì ngay lập tức", explanation: "Hành động vế sau xảy ra gần như đồng thời ngay sau hành động vế trước.",
-    examples: [{ jp: "ドアを開けたとたん、猫が飛び出してきた。", vn: "Vừa mở cửa ra thì con mèo phóng ra ngoài." }, { jp: "外に出たとたん、雨が降り出した。", vn: "Vừa mới ra ngoài thì trời đã bắt đầu đổ mưa." }],
+    examples: [{ jp: "ドアを開けたとたん、猫が飛び出してきた。", vn: "Vừa mở cửa ra thì con mèo phóng ra ngoài." }, { jp: "外に出たとたん、雨가降り出した。", vn: "Vừa mới ra ngoài thì trời đã bắt đầu đổ mưa." }, { jp: "「立ち上がったとたん、めまいがした」", vn: "\"Vừa mới đứng dậy thì tôi bị chóng mặt.\"", isBook: true, blank: "たとたん" }],
     quiz: { sentence: "立ち上がっ________、めまいがした。", answer: "たとたん", accepts: ["たとたんに", "とたん", "とたんに"], hint: "Vừa mới... thì", translation: "Vừa mới đứng lên thì bị chóng mặt." }
   },
   {
@@ -231,12 +255,12 @@ export const grammarData = [
   },
   {
     id: 43, unit: 5, pattern: "にしたがって", romaji: "ni shitagatte", meaning: "Theo như / Càng... càng...", explanation: "Tuân theo quy tắc hoặc chỉ sự thay đổi đồng thời.",
-    examples: [{ jp: "先生の指示にしたがって、行動してください。", vn: "Hãy hành động theo như chỉ thị của giáo viên." }, { jp: "山の頂上に登るにしたがって、気温が下がってきた。", vn: "Càng lên cao phía đỉnh núi, nhiệt độ càng giảm xuống." }],
+    examples: [{ jp: "先生の指示にしたがって、行動してください。", vn: "Hãy hành động theo như chỉ thị của giáo viên." }, { jp: "山の頂上に登るにしたがって、気温が下がってきた。", vn: "Càng lên cao phía đỉnh núi, nhiệt độ càng giảm xuống." }, { jp: "「山をのぼるにしたがって、気温がさがってきた」", vn: "\"Càng lên cao phía đỉnh núi, nhiệt độ càng giảm xuống.\"", isBook: true, blank: "にしたがって" }],
     quiz: { sentence: "ルール________、ゲームをしてください。", answer: "にしたがって", accepts: ["に従って", "にしたがい"], hint: "Theo như (tuân theo quy tắc)", translation: "Hãy chơi game theo đúng luật." }
   },
   {
     id: 44, unit: 5, pattern: "最中(に)", romaji: "saichuu (ni)", meaning: "Đúng lúc đang", explanation: "Nhấn mạnh thời điểm hành động đang diễn ra cao trào thì có việc khác xen vào.",
-    examples: [{ jp: "会議の最中に、携帯電話が鳴った。", vn: "Giữa lúc đang họp thì điện thoại reo." }, { jp: "食事の最中に、友達が遊びに来た。", vn: "Đúng lúc đang ăn cơm thì bạn đến chơi." }],
+    examples: [{ jp: "会議の最中に、携帯電話が鳴った。", vn: "Giữa lúc đang họp thì điện thoại reo." }, { jp: "食事の最中に、友達が遊びに来た。", vn: "Đúng lúc đang ăn cơm thì bạn đến chơi." }, { jp: "「シャワーをびているさいちゅうに、客が来た」", vn: "\"Đúng lúc đang tắm thì có khách đến.\"", isBook: true, blank: "さいちゅうに" }],
     quiz: { sentence: "シャワーを浴びている________に、客が来た。", answer: "最中", accepts: ["さいちゅう"], hint: "Đúng lúc đang (Kanji: 最中)", translation: "Đúng lúc đang tắm vòi sen thì có khách đến." }
   },
   {
@@ -246,7 +270,7 @@ export const grammarData = [
   },
   {
     id: 46, unit: 5, pattern: "て以来", romaji: "te irai", meaning: "Kể từ khi... (cho đến nay)", explanation: "Nhấn mạnh một trạng thái duy trì liên tục suốt từ quá khứ đến bây giờ.",
-    examples: [{ jp: "日本に来て以来、毎日納豆を食べている。", vn: "Kể từ khi đến Nhật, ngày nào tôi cũng ăn natto." }, { jp: "3年前に日本へ行って以来、一度も帰国していない。", vn: "Kể từ khi sang Nhật 3 năm trước, tôi chưa một lần về nước." }],
+    examples: [{ jp: "日本に来て以来、毎日納豆を食べている。", vn: "Kể từ khi đến Nhật, ngày nào tôi cũng ăn natto." }, { jp: "3年前に日本へ行って以来、一度も帰国していない。", vn: "Kể từ khi sang Nhật 3 năm trước, tôi chưa một lần về nước." }, { jp: "「けっこんしてこのかた、ずっとこの町にすんでいる」", vn: "\"Kể từ khi kết hôn đến nay, tôi vẫn luôn sống ở thị trấn này.\"", isBook: true, blank: "してこのかた" }],
     quiz: { sentence: "結婚し________、ずっとこの町に住んでいる。", answer: "て以来", accepts: ["ていらい", "以来", "いらい"], hint: "Kể từ khi", translation: "Kể từ khi kết hôn, tôi vẫn luôn sống ở thị trấn này." }
   },
   {
@@ -266,7 +290,8 @@ export const grammarData = [
   },
   {
     id: 50, unit: 5, pattern: "ついでに", romaji: "tsuide ni", meaning: "Nhân tiện", explanation: "Nhân cơ hội đang làm việc A thì làm luôn việc B.",
-    examples: [{ jp: "散歩のついでに、パンを買ってきた。", vn: "Nhân tiện đi dạo, tôi đã mua bánh mì về." }, { jp: "銀行へ行くついでに、この手紙を出してきてくれませんか。", vn: "Nhân tiện đi ngân hàng, bạn có thể gửi hộ tôi lá thư này được không?" }],
+    examples: [{ jp: "散歩のついでに、パンを買ってきた。", vn: "Nhân tiện đi dạo, tôi đã mua bánh mì về." }, { jp: "銀行へ行くついでに、この手紙を出してきてくれませんか。", vn: "Nhân tiện đi ngân hàng, bạn có thể gửi hộ tôi lá thư này được không?" }, { jp: "「買いものにいくついでに、郵便局に寄って」", vn: "\"Nhân tiện đi mua sắm thì hãy ghé qua bưu điện giúp nhé.\"", isBook: true, blank: "ついでに" }
+    ],
     quiz: { sentence: "買い物に行く________、郵便局に寄って。", answer: "ついでに", accepts: ["ついで"], hint: "Nhân tiện", translation: "Nhân tiện đi mua sắm thì ghé vào bưu điện giúp nhé." }
   },
 

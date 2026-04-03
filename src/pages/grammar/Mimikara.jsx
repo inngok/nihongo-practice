@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import {
   Brain, CheckCircle, Layers, List, Search,
   ChevronRight, ChevronLeft, Check, RotateCcw,
-  HelpCircle, MoreHorizontal, ArrowLeft
+  HelpCircle, MoreHorizontal, ArrowLeft, Headphones, Volume2
 } from 'lucide-react';
 
 import { grammarData } from './data/mimikaraData';
@@ -39,9 +39,11 @@ export default function Mimikara() {
     if (activeMode === 'quiz' && !feedback) inputRef.current?.focus();
   }, [currentIndex, activeMode, feedback]);
 
-  const activeData = useMemo(() =>
-    selectedUnit === 'all' ? grammarData : grammarData.filter(i => i.unit === selectedUnit),
-    [selectedUnit]);
+  const activeData = useMemo(() => {
+    if (selectedUnit === 'all') return grammarData;
+    const unitNum = parseInt(selectedUnit);
+    return grammarData.filter(i => i.unit === unitNum);
+  }, [selectedUnit]);
 
   const currentItem = useMemo(() => studyData[currentIndex] || {}, [studyData, currentIndex]);
 
@@ -58,8 +60,45 @@ export default function Mimikara() {
   }, []);
 
   const switchMode = useCallback((mode) => {
-    const data = [...activeData];
-    if (mode === 'quiz' && isShuffle) data.sort(() => Math.random() - 0.5);
+    let data = [...activeData];
+    if (mode === 'quiz' || mode === 'listening') {
+      // Flatten all book examples into a single list
+      const bookData = [];
+      data.forEach(item => {
+        item.examples?.forEach(ex => {
+          if (ex.isBook && ex.blank) {
+            bookData.push({
+              ...item,
+              sentence: ex.jp,
+              translation: ex.vn,
+              answer: ex.blank,
+              accepts: (item.quiz?.answer === ex.blank ? item.quiz.accepts : []) || [],
+              originalPattern: item.pattern
+            });
+          }
+        });
+      });
+
+      // If it's a quiz, we can also add the main quiz patterns
+      if (mode === 'quiz') {
+        data.forEach(item => {
+          if (item.quiz) {
+            bookData.push({
+              ...item,
+              sentence: item.quiz.sentence,
+              translation: item.quiz.translation,
+              answer: item.quiz.answer,
+              accepts: item.quiz.accepts || [],
+              originalPattern: item.pattern,
+              isMainQuiz: true
+            });
+          }
+        });
+      }
+
+      data = bookData;
+    }
+    if ((mode === 'quiz' || mode === 'listening') && isShuffle) data.sort(() => Math.random() - 0.5);
 
     setPrevMode(activeMode);
     setStudyData(data);
@@ -107,22 +146,56 @@ export default function Mimikara() {
     setShowHint(false);
   }, [currentIndex, studyData, activeMode, completedIds, switchMode, prevMode, setActiveMode, setPrevMode]);
 
+  const playAudio = useCallback((text) => {
+    if (!text) return;
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'ja-JP';
+    utterance.rate = 0.8;
+    window.speechSynthesis.speak(utterance);
+  }, []);
+
+  // Auto-play audio and focus input
+  useEffect(() => {
+    if (activeMode === 'listening' && currentItem.sentence && !feedback) {
+      playAudio(currentItem.sentence);
+    }
+    if (['quiz', 'listening'].includes(activeMode) && !feedback) {
+      inputRef.current?.focus();
+    }
+  }, [currentIndex, activeMode, feedback, currentItem.sentence, playAudio]);
+
   const handleKeyDown = (e) => {
-    if (e.key !== 'Enter') return;
+    if (e.key === 'Enter') {
+      if (!feedback) {
+        if (!userInput.trim()) return;
+        const cleanInput = userInput.trim().toLowerCase().replace(/[〜~、。？?]/g, '');
+        const answer = currentItem.answer.toLowerCase().replace(/[〜~、。？?]/g, '');
+        const accepts = (currentItem.accepts || []).map(a => a.toLowerCase().replace(/[〜~、。？?]/g, ''));
 
-    if (!feedback) {
-      const cleanInput = userInput.trim().toLowerCase();
-      const isCorrect = cleanInput === currentItem.quiz?.answer.toLowerCase();
+        const isCorrect = cleanInput === answer || accepts.includes(cleanInput);
 
-      setFeedback(isCorrect ? 'correct' : 'incorrect');
-      if (isCorrect) {
-        setScore(s => s + 1);
-        if (!completedIds.includes(currentItem.id)) {
-          setCompletedIds(p => [...p, currentItem.id]);
+        setFeedback(isCorrect ? 'correct' : 'incorrect');
+        if (isCorrect) {
+          setScore(s => s + 1);
+          if (!completedIds.includes(currentItem.id)) {
+            setCompletedIds(p => [...p, currentItem.id]);
+          }
         }
+      } else {
+        handleNext();
       }
-    } else {
+    } else if (e.key === ' ') {
+      if (activeMode === 'listening' && !feedback) {
+        e.preventDefault();
+        playAudio(currentItem.sentence);
+      }
+    } else if (e.key === 'ArrowRight' && feedback) {
       handleNext();
+    } else if (e.key === 'ArrowLeft' && currentIndex > 0) {
+      setCurrentIndex(curr => curr - 1);
+      setFeedback(null);
+      setUserInput('');
     }
   };
 
@@ -151,6 +224,7 @@ export default function Mimikara() {
           { id: 'flashcard', label: 'Ghi nhớ', icon: Brain },
           { id: 'cards', label: 'Flashcard', icon: Layers },
           { id: 'quiz', label: 'Luyện tập', icon: CheckCircle },
+          { id: 'listening', label: 'Nghe điền', icon: Headphones },
           { id: 'list', label: 'Danh sách', icon: List }
         ].map(m => (
           <button
@@ -217,13 +291,19 @@ export default function Mimikara() {
 
   const StudyScreen = (
     <div className="flex flex-col flex-grow animate-in">
-      <div className="w-full flex justify-between items-center mb-10">
-        <span className="text-[10px] font-black text-slate-400">TIẾN TRÌNH: {currentIndex + 1} / {studyData.length}</span>
-        <div className="h-1 bg-slate-100 w-64 rounded-full overflow-hidden">
-          <div
-            className="h-full bg-black transition-all duration-500"
-            style={{ width: `${((currentIndex + 1) / studyData.length) * 100}%` }}
-          />
+      <div className="w-full flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-4">
+        <div className="flex items-center gap-3">
+          <span className="px-3 py-1 bg-black text-white text-[10px] font-black rounded-full">UNIT {currentItem.unit}</span>
+          <span className="text-[10px] font-black text-slate-400"># {currentItem.id}</span>
+        </div>
+        <div className="flex-grow flex justify-center md:justify-end items-center gap-6 w-full md:w-auto">
+          <span className="text-[10px] font-black text-slate-300">TIẾN TRÌNH: {currentIndex + 1} / {studyData.length}</span>
+          <div className="h-1 bg-slate-100 w-32 md:w-64 rounded-full overflow-hidden">
+            <div
+              className="h-full bg-black transition-all duration-500"
+              style={{ width: `${((currentIndex + 1) / studyData.length) * 100}%` }}
+            />
+          </div>
         </div>
       </div>
 
@@ -251,9 +331,10 @@ export default function Mimikara() {
               </div>
               <div className="space-y-4">
                 {currentItem.examples?.map((ex, idx) => (
-                  <div key={idx} className="bg-slate-50 p-6 rounded-[1.5rem] italic">
-                    <p className="font-bold text-slate-900 mb-1">{ex.jp}</p>
-                    <p className="text-xs text-slate-400 font-bold">{ex.vn}</p>
+                  <div key={idx} className={`relative p-6 rounded-[1.5rem] italic ${ex.isBook ? 'bg-slate-900 text-white' : 'bg-slate-50 text-slate-900'}`}>
+                    {ex.isBook && <span className="absolute -top-2 -right-2 bg-emerald-500 text-white text-[8px] font-black px-2 py-1 rounded-full uppercase">Mimikara Example</span>}
+                    <p className="font-bold mb-1">{ex.jp}</p>
+                    <p className={`text-xs font-bold ${ex.isBook ? 'text-white/60' : 'text-slate-400'}`}>{ex.vn}</p>
                   </div>
                 ))}
               </div>
@@ -261,27 +342,99 @@ export default function Mimikara() {
           ),
           quiz: (
             <div className="text-center space-y-12">
-              <p className="text-slate-400 italic">"{currentItem.quiz?.translation}"</p>
+              <p className="text-slate-400 italic">"{currentItem.translation}"</p>
               <h3 className="text-3xl font-bold italic leading-relaxed">
-                {currentItem.quiz?.sentence.split('________').map((p, i, a) => (
+                {(currentItem.sentence || '').split(/________|____/).map((p, i, a) => (
                   <React.Fragment key={i}>
                     {p}
                     {i < a.length - 1 && (
-                      <span className={`mx-3 border-b-2 transition-colors ${feedback === 'correct' ? 'border-emerald-500 text-emerald-600' : 'border-black'}`}>
-                        {feedback === 'correct' ? currentItem.quiz.answer : (userInput || '...')}
+                      <span className={`mx-3 border-b-2 transition-colors ${
+                        feedback === 'correct' ? 'border-emerald-500 text-emerald-600' : 
+                        feedback === 'incorrect' ? 'border-red-500 text-red-600' : 'border-black'
+                      }`}>
+                        {feedback ? currentItem.answer : (userInput || '...')}
                       </span>
                     )}
                   </React.Fragment>
                 ))}
               </h3>
-              <input
-                ref={inputRef}
-                value={userInput}
-                onChange={e => !feedback && setUserInput(e.target.value)}
-                onKeyDown={handleKeyDown}
-                placeholder="Nhập đáp án..."
-                className="w-full max-w-md py-6 px-10 rounded-full border-2 border-black/5 focus:border-black outline-none text-center text-xl font-bold transition-all shadow-xl"
-              />
+              <div className="space-y-4">
+                <input
+                  ref={inputRef}
+                  value={userInput}
+                  onChange={e => !feedback && setUserInput(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  placeholder="Nhập đáp án..."
+                  className={`w-full max-w-md py-6 px-10 rounded-full border-2 outline-none text-center text-xl font-bold transition-all shadow-xl ${
+                    feedback === 'correct' ? 'border-emerald-500' : 
+                    feedback === 'incorrect' ? 'border-red-500' : 'border-black/5 focus:border-black'
+                  }`}
+                />
+                {feedback === 'incorrect' && (
+                  <p className="text-red-500 font-black text-xs uppercase animate-bounce">Sai rồi! Đáp án là: {currentItem.answer}</p>
+                )}
+              </div>
+            </div>
+          ),
+          listening: (
+            <div className="text-center space-y-12">
+              {!currentItem.sentence ? (
+                <div className="py-20 italic text-slate-400">Không có dữ liệu ví dụ cho Unit này.</div>
+              ) : (
+                <>
+                  <div className="flex flex-col items-center gap-6">
+                    <button
+                      onClick={() => playAudio(currentItem.sentence)}
+                      className="w-24 h-24 bg-black text-white rounded-full flex items-center justify-center hover:scale-110 active:scale-95 transition-all shadow-2xl group"
+                    >
+                      <Volume2 className="w-10 h-10 group-hover:animate-pulse" />
+                    </button>
+                    <p className="text-[10px] font-black text-slate-300 uppercase tracking-widest">Phím Space để nghe lại</p>
+                  </div>
+
+                  <div className="space-y-4">
+                    <p className="text-slate-400 italic">"{currentItem.translation}"</p>
+                    <h3 className="text-2xl font-bold italic leading-relaxed">
+                      {(() => {
+                        const pattern = currentItem.answer;
+                        if (!pattern || !currentItem.sentence) return currentItem.sentence;
+                        // Escape pattern for regex to handle potential special chars like ~
+                        const escapedPattern = pattern.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                        const parts = currentItem.sentence.split(new RegExp(`(${escapedPattern})`, 'g'));
+                        return parts.map((p, i) => (
+                          <React.Fragment key={i}>
+                            {i > 0 && i % 2 !== 0 ? (
+                              <span className={`mx-1 border-b-2 transition-colors px-2 ${
+                                feedback === 'correct' ? 'border-emerald-500 text-emerald-600' : 
+                                feedback === 'incorrect' ? 'border-red-500 text-red-600' : 'border-black'
+                              }`}>
+                                {feedback ? pattern : (userInput || '...')}
+                              </span>
+                            ) : p}
+                          </React.Fragment>
+                        ));
+                      })()}
+                    </h3>
+                  </div>
+
+                  <div className="space-y-4">
+                    <input
+                      ref={inputRef}
+                      value={userInput}
+                      onChange={e => !feedback && setUserInput(e.target.value)}
+                      onKeyDown={handleKeyDown}
+                      placeholder="Nghe và điền ngữ pháp..."
+                      className={`w-full max-w-md py-6 px-10 rounded-full border-2 outline-none text-center text-xl font-bold transition-all shadow-xl ${
+                        feedback === 'correct' ? 'border-emerald-500' : 
+                        feedback === 'incorrect' ? 'border-red-500' : 'border-black/5 focus:border-black'
+                      }`}
+                    />
+                    {feedback === 'incorrect' && (
+                      <p className="text-red-500 font-black text-xs uppercase animate-bounce">Sai rồi! Đáp án là: {currentItem.answer}</p>
+                    )}
+                  </div>
+                </>
+              )}
             </div>
           )
         }[activeMode]}
@@ -310,7 +463,8 @@ export default function Mimikara() {
     list: ListScreen,
     flashcard: StudyScreen,
     cards: StudyScreen,
-    quiz: StudyScreen
+    quiz: StudyScreen,
+    listening: StudyScreen
   }[activeMode];
 
   return (
