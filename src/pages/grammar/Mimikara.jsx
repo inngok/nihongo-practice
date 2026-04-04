@@ -25,6 +25,8 @@ export default function Mimikara() {
   const [showResults, setShowResults] = useState(false);
   const [studyData, setStudyData] = useState([]);
   const inputRef = useRef(null);
+  const [touchStartPos, setTouchStartPos] = useState({ x: null, y: null });
+  const [touchEndPos, setTouchEndPos] = useState({ x: null, y: null });
   const [completedIds, setCompletedIds] = useState(() => {
     const saved = localStorage.getItem('mimikara_completed');
     try { return saved ? JSON.parse(saved) : []; } catch { return []; }
@@ -236,6 +238,45 @@ export default function Mimikara() {
         setCurrentIndex(curr => curr - 1);
         setFeedback(null);
         setUserInput('');
+        setIsFlipped(false);
+        setShowHint(false);
+      }
+    }
+  };
+
+  const handleTouchStart = (e) => {
+    setTouchEndPos({ x: null, y: null });
+    setTouchStartPos({ 
+      x: e.targetTouches[0].clientX, 
+      y: e.targetTouches[0].clientY 
+    });
+  };
+
+  const handleTouchMove = (e) => setTouchEndPos({ 
+    x: e.targetTouches[0].clientX, 
+    y: e.targetTouches[0].clientY 
+  });
+
+  const handleTouchEnd = () => {
+    if (!touchStartPos.x || !touchEndPos.x) return;
+    
+    const distanceX = touchStartPos.x - touchEndPos.x;
+    const distanceY = touchStartPos.y - touchEndPos.y;
+    
+    // Trigger swipe if horizontal movement is > 50px and larger than vertical movement
+    if (Math.abs(distanceX) > 50 && Math.abs(distanceX) > Math.abs(distanceY)) {
+      if (distanceX > 0) { // Swipe Left -> Next
+        if (['flashcard', 'cards'].includes(activeMode) || feedback) {
+          handleNext();
+        }
+      } else { // Swipe Right -> Prev
+        if (currentIndex > 0) {
+          setCurrentIndex(curr => curr - 1);
+          setFeedback(null);
+          setUserInput('');
+          setIsFlipped(false);
+          setShowHint(false);
+        }
       }
     }
   };
@@ -371,7 +412,12 @@ export default function Mimikara() {
   ), [activeData, searchTerm, completedIds]);
 
   const StudyScreen = (
-    <div className="flex flex-col flex-grow animate-in">
+    <div 
+      className="flex flex-col flex-grow animate-in"
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
+    >
       <div className="w-full flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-4">
         <div className="flex items-center gap-3">
           <span className="px-3 py-1 bg-black text-white text-[10px] font-black rounded-full">UNIT {currentItem.unit}</span>
@@ -392,6 +438,7 @@ export default function Mimikara() {
         {{
           cards: (
             <div 
+              key={`card-${currentIndex}-${currentItem.id}`}
               onClick={() => setIsFlipped(prev => !prev)} 
               className="w-full max-w-sm aspect-[3/4] mx-auto perspective cursor-pointer group"
             >
@@ -570,7 +617,15 @@ export default function Mimikara() {
 
       <div className="flex gap-4 py-10 w-full max-w-3xl mx-auto">
         <button
-          onClick={() => currentIndex > 0 && setCurrentIndex(currentIndex - 1)}
+          onClick={() => {
+            if (currentIndex > 0) {
+              setCurrentIndex(currentIndex - 1);
+              setFeedback(null);
+              setUserInput('');
+              setIsFlipped(false);
+              setShowHint(false);
+            }
+          }}
           disabled={currentIndex === 0}
           className="flex-1 py-4 border border-slate-200 rounded-2xl text-[10px] font-black uppercase text-slate-400 disabled:opacity-30 hover:border-black hover:text-black transition-all flex items-center justify-center gap-2"
         >
