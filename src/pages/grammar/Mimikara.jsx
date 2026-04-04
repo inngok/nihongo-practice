@@ -225,8 +225,7 @@ export default function Mimikara() {
       if (activeMode === 'listening' && !feedback) {
         playAudio(currentItem.sentence);
       } else if (activeMode === 'cards') {
-        if (!isFlipped) setIsFlipped(true);
-        else handleNext();
+        setIsFlipped(prev => !prev);
       }
     } else if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
       if (['flashcard', 'cards'].includes(activeMode) || feedback) {
@@ -393,7 +392,7 @@ export default function Mimikara() {
         {{
           cards: (
             <div 
-              onClick={() => isFlipped ? handleNext() : setIsFlipped(true)} 
+              onClick={() => setIsFlipped(prev => !prev)} 
               className="w-full max-w-sm aspect-[3/4] mx-auto perspective cursor-pointer group"
             >
               <div className={`relative w-full h-full transition-all duration-700 preserve-3d shadow-2xl rounded-[3rem] ${isFlipped ? 'rotate-y-180' : 'group-hover:scale-105'}`}>
@@ -404,7 +403,7 @@ export default function Mimikara() {
                 <div className="absolute inset-0 backface-hidden rotate-y-180 bg-black text-white rounded-[3rem] flex flex-col items-center justify-center p-12 text-center">
                   <h3 className="text-2xl font-bold mb-4 italic">{currentItem.meaning}</h3>
                   <p className="text-sm text-white/60 italic mb-8">{currentItem.explanation}</p>
-                  <p className="text-[10px] font-black uppercase tracking-widest text-emerald-400">NHẤN LẦN NỮA ĐỂ SANG CÂU TIẾP</p>
+                  <p className="text-[10px] font-black uppercase tracking-widest text-emerald-400">NHẤN ĐỂ LẬT LẠI</p>
                 </div>
               </div>
             </div>
