@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import {
   Brain, CheckCircle, Layers, List, Search,
   ChevronRight, ChevronLeft, Check, RotateCcw,
-  HelpCircle, MoreHorizontal, ArrowLeft, Headphones, Volume2
+  HelpCircle, MoreHorizontal, ArrowLeft, Headphones, Volume2, Target
 } from 'lucide-react';
 
 import { grammarData } from './data/mimikaraData';
@@ -54,6 +54,16 @@ export default function Mimikara() {
 
   const currentItem = useMemo(() => studyData[currentIndex] || {}, [studyData, currentIndex]);
 
+  const multipleChoiceOptions = useMemo(() => {
+    if (activeMode !== 'multiple_choice') return [];
+    const correct = currentItem.answer;
+    if (!correct) return [];
+    
+    const allAnswers = Array.from(new Set(studyData.map(i => i.answer).filter(a => a && a !== correct)));
+    const wrongAnswers = allAnswers.sort(() => Math.random() - 0.5).slice(0, 3);
+    return [correct, ...wrongAnswers].sort(() => Math.random() - 0.5);
+  }, [currentIndex, currentItem, activeMode, studyData]);
+
   // Score messages lookup
   const SCORE_MESSAGES = [
     { threshold: 1, message: 'Tuyệt đỉnh! Tiếp tục phát huy nhé.' },
@@ -68,7 +78,7 @@ export default function Mimikara() {
 
   const switchMode = useCallback((mode) => {
     let data = [...activeData];
-    if (mode === 'quiz' || mode === 'listening') {
+    if (mode === 'quiz' || mode === 'listening' || mode === 'multiple_choice') {
       // Flatten all book examples into a single list
       const bookData = [];
       data.forEach(item => {
@@ -86,8 +96,8 @@ export default function Mimikara() {
         });
       });
 
-      // If it's a quiz, we can also add the main quiz patterns
-      if (mode === 'quiz') {
+      // If it's a quiz or multiple_choice, we can also add the main quiz patterns
+      if (mode === 'quiz' || mode === 'multiple_choice') {
         data.forEach(item => {
           if (item.quiz) {
             bookData.push({
@@ -105,7 +115,7 @@ export default function Mimikara() {
 
       data = bookData;
     }
-    if ((mode === 'quiz' || mode === 'listening') && isShuffle) data.sort(() => Math.random() - 0.5);
+    if (['quiz', 'listening', 'multiple_choice'].includes(mode) && isShuffle) data.sort(() => Math.random() - 0.5);
 
     setPrevMode(activeMode);
     setStudyData(data);
@@ -123,6 +133,7 @@ export default function Mimikara() {
 
     const actions = {
       quiz: () => isLastItem ? setShowResults(true) : null,
+      multiple_choice: () => isLastItem ? setShowResults(true) : null,
       listening: () => isLastItem ? setShowResults(true) : null,
       default: () => {
         if (isLastItem) {
@@ -207,6 +218,7 @@ export default function Mimikara() {
 
     if (e.key === 'Enter') {
       e.preventDefault();
+      if (activeMode === 'multiple_choice' && !feedback) return; // Wait for answer
       handleSubmit();
     } else if (e.key === ' ') {
       e.preventDefault();
@@ -254,6 +266,7 @@ export default function Mimikara() {
           { id: 'flashcard', label: 'Ghi nhớ', icon: Brain },
           { id: 'cards', label: 'Flashcard', icon: Layers },
           { id: 'quiz', label: 'Luyện tập', icon: CheckCircle },
+          { id: 'multiple_choice', label: 'Trắc nghiệm', icon: Target },
           { id: 'listening', label: 'Nghe điền', icon: Headphones },
           { id: 'list', label: 'Danh sách', icon: List }
         ].map(m => (
@@ -381,8 +394,13 @@ export default function Mimikara() {
           ),
           quiz: (
             <div className="text-center space-y-12">
-              <p className="text-slate-400 italic">"{currentItem.translation}"</p>
-              <h3 className="text-3xl font-bold italic leading-relaxed">
+              <div className="space-y-4">
+                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest bg-slate-50 border border-slate-100 rounded-full px-4 py-1.5 inline-block mx-auto mb-2 shadow-sm">
+                  Gợi ý: {currentItem.isMainQuiz ? currentItem.quiz?.hint : currentItem.meaning}
+                </p>
+                <p className="text-slate-400 italic">"{currentItem.translation}"</p>
+              </div>
+              <h3 className="text-3xl md:text-4xl font-bold italic leading-relaxed">
                 {(currentItem.sentence || '').split(/________|____/).map((p, i, a) => (
                   <React.Fragment key={i}>
                     {p}
@@ -435,57 +453,124 @@ export default function Mimikara() {
                     <p className="text-[10px] font-black text-slate-300 uppercase tracking-widest">Phím Space để nghe lại</p>
                   </div>
 
-                  <div className="space-y-4">
-                    <p className="text-slate-400 italic">"{currentItem.translation}"</p>
-                    <h3 className="text-2xl font-bold italic leading-relaxed">
-                      {(() => {
-                        const pattern = currentItem.answer;
-                        if (!pattern || !currentItem.sentence) return currentItem.sentence;
-                        // Escape pattern for regex to handle potential special chars like ~
-                        const escapedPattern = pattern.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-                        const parts = currentItem.sentence.split(new RegExp(`(${escapedPattern})`, 'g'));
-                        return parts.map((p, i) => (
-                          <React.Fragment key={i}>
-                            {i > 0 && i % 2 !== 0 ? (
-                              <span className={`mx-1 border-b-2 transition-colors px-2 ${
-                                feedback === 'correct' ? 'border-emerald-500 text-emerald-600' : 
-                                feedback === 'incorrect' ? 'border-red-500 text-red-600' : 'border-black'
-                              }`}>
-                                {feedback ? pattern : (userInput || '...')}
-                              </span>
-                            ) : p}
-                          </React.Fragment>
-                        ));
-                      })()}
-                    </h3>
-                  </div>
-
-                  <div className="space-y-4">
-                    <form 
-                      onSubmit={(e) => { e.preventDefault(); handleSubmit(); }}
-                      className="w-full max-w-md mx-auto"
-                    >
-                      <input
-                        ref={inputRef}
-                        value={userInput}
-                        onChange={e => !feedback && setUserInput(e.target.value)}
-                        placeholder="Nghe và điền ngữ pháp..."
-                        className={`w-full py-6 px-10 rounded-full border-2 outline-none text-center text-xl font-bold transition-all shadow-xl ${
-                          feedback === 'correct' ? 'border-emerald-500' : 
-                          feedback === 'incorrect' ? 'border-red-500' : 'border-black/5 focus:border-black'
-                        }`}
-                      />
-                    </form>
-                    {feedback === 'incorrect' && (
-                      <p className="text-red-500 font-black text-xs uppercase animate-bounce">Sai rồi! Đáp án là: {currentItem.answer}</p>
-                    )}
-                  </div>
-                </>
+              <div className="space-y-4">
+                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest bg-slate-50 border border-slate-100 rounded-full px-4 py-1.5 inline-block mx-auto mb-2 shadow-sm">
+                  Gợi ý: {currentItem.isMainQuiz ? currentItem.quiz?.hint : currentItem.meaning}
+                </p>
+                <p className="text-slate-400 italic">"{currentItem.translation}"</p>
+              </div>
+              <h3 className="text-2xl md:text-3xl font-bold italic leading-relaxed">
+                {(() => {
+                  const pattern = currentItem.answer;
+                  if (!pattern || !currentItem.sentence) return currentItem.sentence;
+                  // Escape pattern for regex to handle potential special chars like ~
+                  const escapedPattern = pattern.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                  const parts = currentItem.sentence.split(new RegExp(`(${escapedPattern})`, 'g'));
+                  return parts.map((p, i) => (
+                    <React.Fragment key={i}>
+                      {i > 0 && i % 2 !== 0 ? (
+                        <span className={`mx-1 border-b-2 transition-colors px-2 inline-block min-w-[60px] ${
+                          feedback === 'correct' ? 'border-emerald-500 text-emerald-600' : 
+                          feedback === 'incorrect' ? 'border-red-500 text-red-600' : 'border-slate-300'
+                        }`}>
+                          {feedback ? pattern : (userInput || '...')}
+                        </span>
+                      ) : p}
+                    </React.Fragment>
+                  ));
+                })()}
+              </h3>
+            
+            <div className="space-y-4 w-full">
+              <form 
+                onSubmit={(e) => { e.preventDefault(); handleSubmit(); }}
+                className="w-full max-w-md mx-auto"
+              >
+                <input
+                  ref={inputRef}
+                  value={userInput}
+                  onChange={e => !feedback && setUserInput(e.target.value)}
+                  placeholder="Nghe và điền ngữ pháp..."
+                  className={`w-full py-6 px-10 rounded-full border-2 outline-none text-center text-xl font-bold transition-all shadow-xl ${
+                    feedback === 'correct' ? 'border-emerald-500' : 
+                    feedback === 'incorrect' ? 'border-red-500' : 'border-black/5 focus:border-black'
+                  }`}
+                />
+              </form>
+              {feedback === 'incorrect' && (
+                <div className="text-center">
+                  <p className="text-red-500 font-black text-xs uppercase animate-bounce mt-4">Sai rồi! Đáp án là: {currentItem.answer}</p>
+                </div>
               )}
             </div>
-          )
-        }[activeMode]}
+          </>
+        )}
       </div>
+    ),
+    multiple_choice: (
+      <div className="text-center space-y-12 w-full max-w-2xl mx-auto">
+        <div className="space-y-4">
+          <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest bg-slate-50 border border-slate-100 rounded-full px-4 py-1.5 inline-block mx-auto mb-2 shadow-sm">
+            Gợi ý: {currentItem.isMainQuiz ? currentItem.quiz?.hint : currentItem.meaning}
+          </p>
+          <p className="text-slate-400 italic">"{currentItem.translation}"</p>
+        </div>
+        <h3 className="text-3xl md:text-4xl font-bold italic leading-relaxed">
+          {(currentItem.sentence || '').split(/________|____/).map((p, i, a) => (
+            <React.Fragment key={i}>
+              {p}
+              {i < a.length - 1 && (
+                <span className={`mx-3 border-b-2 transition-colors px-2 inline-block min-w-[60px] ${
+                  feedback === 'correct' ? 'border-emerald-500 text-emerald-600' : 
+                  feedback === 'incorrect' ? 'border-red-500 text-red-600' : 'border-slate-300'
+                }`}>
+                  {feedback ? currentItem.answer : '...'}
+                </span>
+              )}
+            </React.Fragment>
+          ))}
+        </h3>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-8 w-full max-w-lg mx-auto">
+          {multipleChoiceOptions.map((opt, i) => {
+            let btnState = "bg-white border-2 border-slate-100 hover:border-black text-slate-700 hover:shadow-md";
+            if (feedback) {
+              if (opt === currentItem.answer) {
+                 btnState = "bg-emerald-50 border-emerald-500 text-emerald-700 shadow-inner";
+              } else if (userInput === opt) {
+                 btnState = "bg-red-50 border-red-500 text-red-700 shadow-inner";
+              } else {
+                 btnState = "bg-slate-50 border-slate-100 text-slate-300 opacity-50";
+              }
+            } else if (userInput === opt) {
+               btnState = "bg-black border-black text-white";
+            }
+
+            return (
+              <button
+                key={i}
+                disabled={!!feedback}
+                onClick={() => {
+                  setUserInput(opt);
+                  const isCorrect = opt === currentItem.answer;
+                  setFeedback(isCorrect ? 'correct' : 'incorrect');
+                  if (isCorrect) {
+                    setScore(s => s + 1);
+                    if (!completedIds.includes(currentItem.id)) {
+                      setCompletedIds(p => [...p, currentItem.id]);
+                    }
+                  }
+                }}
+                className={`py-5 px-6 rounded-2xl font-bold text-lg md:text-xl transition-all text-center focus:outline-none ${btnState}`}
+              >
+                {opt}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+    )
+  }[activeMode]}
+</div>
 
       <div className="flex gap-4 py-10 w-full max-w-3xl mx-auto">
         <button
@@ -497,10 +582,13 @@ export default function Mimikara() {
         </button>
         <button
           onClick={handleSubmit}
-          className="flex-1 py-4 bg-black text-white rounded-2xl text-[10px] font-black uppercase hover:shadow-2xl transition-all flex items-center justify-center gap-2"
+          disabled={activeMode === 'multiple_choice' && !feedback}
+          className="flex-1 py-4 bg-black text-white rounded-2xl text-[10px] font-black uppercase hover:shadow-2xl transition-all flex items-center justify-center gap-2 disabled:bg-slate-100 disabled:text-slate-400 disabled:shadow-none"
         >
           {['quiz', 'listening'].includes(activeMode) && !feedback ? (
             <>KIỂM TRA <Check className="w-4 h-4" /></>
+          ) : activeMode === 'multiple_choice' && !feedback ? (
+            <>CHỌN ĐÁP ÁN BÊN TRÊN</>
           ) : (
             <>{currentIndex === studyData.length - 1 ? 'HOÀN THÀNH' : 'TIẾP THEO'} <ChevronRight className="w-4 h-4" /></>
           )}
@@ -515,6 +603,7 @@ export default function Mimikara() {
     flashcard: StudyScreen,
     cards: StudyScreen,
     quiz: StudyScreen,
+    multiple_choice: StudyScreen,
     listening: StudyScreen
   }[activeMode];
 
