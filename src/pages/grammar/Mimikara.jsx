@@ -241,6 +241,45 @@ export default function Mimikara() {
     }
   };
 
+  // Unified renderer for sentences with blanks
+  const renderSentenceWithBlank = useCallback(() => {
+    if (!currentItem.sentence) return null;
+    
+    const blankClass = `mx-1 border-b-2 transition-colors px-2 inline-block min-w-[60px] ${
+      feedback === 'correct' ? 'border-emerald-500 text-emerald-600' : 
+      feedback === 'incorrect' ? 'border-red-500 text-red-600' : 'border-slate-300'
+    }`;
+    
+    const blankContent = feedback ? currentItem.answer : (activeMode === 'multiple_choice' ? '...' : (userInput || '...'));
+
+    // Case 1: Sentence has literal underscores
+    if (/_{4,}/.test(currentItem.sentence)) {
+      return currentItem.sentence.split(/_{4,}/).map((p, i, a) => (
+        <React.Fragment key={i}>
+          {p}
+          {i < a.length - 1 && <span className={blankClass}>{blankContent}</span>}
+        </React.Fragment>
+      ));
+    }
+    
+    // Case 2: Replace occurrences of 'answer' in the sentence
+    const pattern = currentItem.answer;
+    if (pattern) {
+      const escapedPattern = pattern.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      const parts = currentItem.sentence.split(new RegExp(`(${escapedPattern})`, 'g'));
+      
+      if (parts.length === 1) return currentItem.sentence;
+      
+      return parts.map((p, i) => (
+        <React.Fragment key={i}>
+          {i > 0 && i % 2 !== 0 ? <span className={blankClass}>{blankContent}</span> : p}
+        </React.Fragment>
+      ));
+    }
+    
+    return currentItem.sentence;
+  }, [currentItem, feedback, userInput, activeMode]);
+
   // RENDERING COMPONENTS (Memoized for performance)
   const MenuScreen = useMemo(() => (
     <div className="flex flex-col gap-12 animate-in fade-in duration-500">
@@ -401,19 +440,7 @@ export default function Mimikara() {
                 <p className="text-slate-400 italic">"{currentItem.translation}"</p>
               </div>
               <h3 className="text-3xl md:text-4xl font-bold italic leading-relaxed">
-                {(currentItem.sentence || '').split(/________|____/).map((p, i, a) => (
-                  <React.Fragment key={i}>
-                    {p}
-                    {i < a.length - 1 && (
-                      <span className={`mx-3 border-b-2 transition-colors ${
-                        feedback === 'correct' ? 'border-emerald-500 text-emerald-600' : 
-                        feedback === 'incorrect' ? 'border-red-500 text-red-600' : 'border-black'
-                      }`}>
-                        {feedback ? currentItem.answer : (userInput || '...')}
-                      </span>
-                    )}
-                  </React.Fragment>
-                ))}
+                {renderSentenceWithBlank()}
               </h3>
               <div className="space-y-4">
                 <form 
@@ -460,25 +487,7 @@ export default function Mimikara() {
                 <p className="text-slate-400 italic">"{currentItem.translation}"</p>
               </div>
               <h3 className="text-2xl md:text-3xl font-bold italic leading-relaxed">
-                {(() => {
-                  const pattern = currentItem.answer;
-                  if (!pattern || !currentItem.sentence) return currentItem.sentence;
-                  // Escape pattern for regex to handle potential special chars like ~
-                  const escapedPattern = pattern.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-                  const parts = currentItem.sentence.split(new RegExp(`(${escapedPattern})`, 'g'));
-                  return parts.map((p, i) => (
-                    <React.Fragment key={i}>
-                      {i > 0 && i % 2 !== 0 ? (
-                        <span className={`mx-1 border-b-2 transition-colors px-2 inline-block min-w-[60px] ${
-                          feedback === 'correct' ? 'border-emerald-500 text-emerald-600' : 
-                          feedback === 'incorrect' ? 'border-red-500 text-red-600' : 'border-slate-300'
-                        }`}>
-                          {feedback ? pattern : (userInput || '...')}
-                        </span>
-                      ) : p}
-                    </React.Fragment>
-                  ));
-                })()}
+                {renderSentenceWithBlank()}
               </h3>
             
             <div className="space-y-4 w-full">
@@ -516,19 +525,7 @@ export default function Mimikara() {
           <p className="text-slate-400 italic">"{currentItem.translation}"</p>
         </div>
         <h3 className="text-3xl md:text-4xl font-bold italic leading-relaxed">
-          {(currentItem.sentence || '').split(/________|____/).map((p, i, a) => (
-            <React.Fragment key={i}>
-              {p}
-              {i < a.length - 1 && (
-                <span className={`mx-3 border-b-2 transition-colors px-2 inline-block min-w-[60px] ${
-                  feedback === 'correct' ? 'border-emerald-500 text-emerald-600' : 
-                  feedback === 'incorrect' ? 'border-red-500 text-red-600' : 'border-slate-300'
-                }`}>
-                  {feedback ? currentItem.answer : '...'}
-                </span>
-              )}
-            </React.Fragment>
-          ))}
+          {renderSentenceWithBlank()}
         </h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-8 w-full max-w-lg mx-auto">
           {multipleChoiceOptions.map((opt, i) => {
