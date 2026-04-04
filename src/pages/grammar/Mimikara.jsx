@@ -460,11 +460,12 @@ export default function Mimikara() {
                   <h2 className="text-4xl font-black italic">{currentItem.pattern}</h2>
                   <p className="mt-4 text-[10px] font-bold text-slate-300 uppercase tracking-widest italic decoration-slate-100 underline underline-offset-8">NHẤN ĐỂ LẬT</p>
                 </div>
-                <div className="absolute inset-0 backface-hidden rotate-y-180 bg-gradient-to-br from-indigo-600 to-indigo-800 text-white rounded-[3rem] flex flex-col items-center justify-center p-12 text-center">
-                  <h3 className="text-2xl font-bold mb-4 italic leading-tight">{currentItem.meaning}</h3>
-                  <p className="text-sm text-white/60 italic mb-8 line-clamp-3">{currentItem.explanation}</p>
-                  <p className="text-[10px] font-black uppercase tracking-widest text-white/40">GÕ: {currentItem.pattern}</p>
-                  <div className="mt-4 px-4 py-1.5 bg-white/10 rounded-full text-[10px] font-black uppercase tracking-tighter">NHẤN ĐỂ LẬT LẠI</div>
+                <div className="absolute inset-0 backface-hidden rotate-y-180 bg-white border-2 border-slate-900 text-slate-900 rounded-[3rem] flex flex-col items-center justify-center p-12 text-center">
+                  <h3 className="text-2xl font-black mb-4 italic leading-tight">{currentItem.meaning}</h3>
+                  <p className="text-sm text-slate-500 italic mb-8 line-clamp-3 font-medium">{currentItem.explanation}</p>
+                  <div className="h-px w-12 bg-slate-100 mb-6" />
+                  <p className="text-[10px] font-black uppercase tracking-widest text-slate-300 italic">PATTERN: {currentItem.pattern}</p>
+                  <div className="mt-6 px-4 py-1.5 bg-slate-900 text-white rounded-full text-[10px] font-black uppercase tracking-tighter shadow-lg">NHẤN ĐỂ LẬT LẠI</div>
                 </div>
               </div>
             </div>
