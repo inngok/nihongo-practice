@@ -27,6 +27,7 @@ export default function Mimikara() {
   const inputRef = useRef(null);
   const [touchStartPos, setTouchStartPos] = useState({ x: null, y: null });
   const [touchEndPos, setTouchEndPos] = useState({ x: null, y: null });
+  const [dragOffset, setDragOffset] = useState(0);
   const [completedIds, setCompletedIds] = useState(() => {
     const saved = localStorage.getItem('mimikara_completed');
     try { return saved ? JSON.parse(saved) : []; } catch { return []; }
@@ -252,12 +253,19 @@ export default function Mimikara() {
     });
   };
 
-  const handleTouchMove = (e) => setTouchEndPos({ 
-    x: e.targetTouches[0].clientX, 
-    y: e.targetTouches[0].clientY 
-  });
+  const handleTouchMove = (e) => {
+    const currentX = e.targetTouches[0].clientX;
+    setTouchEndPos({ 
+      x: currentX, 
+      y: e.targetTouches[0].clientY 
+    });
+    if (touchStartPos.x && ['flashcard', 'cards'].includes(activeMode)) {
+      setDragOffset(currentX - touchStartPos.x);
+    }
+  };
 
   const handleTouchEnd = () => {
+    setDragOffset(0);
     if (!touchStartPos.x || !touchEndPos.x) return;
     
     const distanceX = touchStartPos.x - touchEndPos.x;
@@ -440,17 +448,23 @@ export default function Mimikara() {
             <div 
               key={`card-${currentIndex}-${currentItem.id}`}
               onClick={() => setIsFlipped(prev => !prev)} 
-              className="w-full max-w-sm aspect-[3/4] mx-auto perspective cursor-pointer group"
+              className="w-full max-w-sm aspect-[3/4] mx-auto perspective cursor-pointer group active:cursor-grabbing"
+              style={{
+                transform: `translateX(${dragOffset}px) rotate(${dragOffset * 0.05}deg)`,
+                transition: dragOffset === 0 ? 'transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)' : 'none',
+                opacity: 1 - Math.abs(dragOffset) / 1000
+              }}
             >
               <div className={`relative w-full h-full transition-all duration-700 preserve-3d shadow-2xl rounded-[3rem] ${isFlipped ? 'rotate-y-180' : 'group-hover:scale-105'}`}>
                 <div className="absolute inset-0 backface-hidden bg-white border-2 border-slate-100 rounded-[3rem] flex flex-col items-center justify-center p-12 text-center">
                   <h2 className="text-4xl font-black italic">{currentItem.pattern}</h2>
                   <p className="mt-4 text-[10px] font-bold text-slate-300 uppercase tracking-widest italic decoration-slate-100 underline underline-offset-8">NHẤN ĐỂ LẬT</p>
                 </div>
-                <div className="absolute inset-0 backface-hidden rotate-y-180 bg-black text-white rounded-[3rem] flex flex-col items-center justify-center p-12 text-center">
-                  <h3 className="text-2xl font-bold mb-4 italic">{currentItem.meaning}</h3>
-                  <p className="text-sm text-white/60 italic mb-8">{currentItem.explanation}</p>
-                  <p className="text-[10px] font-black uppercase tracking-widest text-emerald-400">NHẤN ĐỂ LẬT LẠI</p>
+                <div className="absolute inset-0 backface-hidden rotate-y-180 bg-gradient-to-br from-indigo-600 to-indigo-800 text-white rounded-[3rem] flex flex-col items-center justify-center p-12 text-center">
+                  <h3 className="text-2xl font-bold mb-4 italic leading-tight">{currentItem.meaning}</h3>
+                  <p className="text-sm text-white/60 italic mb-8 line-clamp-3">{currentItem.explanation}</p>
+                  <p className="text-[10px] font-black uppercase tracking-widest text-white/40">GÕ: {currentItem.pattern}</p>
+                  <div className="mt-4 px-4 py-1.5 bg-white/10 rounded-full text-[10px] font-black uppercase tracking-tighter">NHẤN ĐỂ LẬT LẠI</div>
                 </div>
               </div>
             </div>
