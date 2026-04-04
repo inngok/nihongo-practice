@@ -10,6 +10,7 @@ export default function ExamVocab({ type = 'comprehensive' }) {
   // Flashcard State
   const [cardIndex, setCardIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
+  const [isFlashcardReversed, setIsFlashcardReversed] = useState(false);
 
   // Quiz State
   const [quizData, setQuizData] = useState([]);
@@ -199,19 +200,50 @@ export default function ExamVocab({ type = 'comprehensive' }) {
         {viewMode === 'flashcard' && currentData.words.length > 0 && (
           <div className="max-w-4xl mx-auto flex flex-col items-center animate-in fade-in zoom-in-95 duration-500 py-12">
             <div className="w-full flex justify-between items-center mb-10 px-4">
-              <span className="text-[10px] font-black text-slate-400 tracking-[0.2em] uppercase">Tiến trình: {cardIndex + 1} / {currentData.words.length}</span>
-              <div className="h-1 bg-slate-100 w-64 rounded-full overflow-hidden"><div className="h-full bg-black transition-all" style={{ width: `${((cardIndex + 1) / currentData.words.length) * 100}%` }}></div></div>
+              <div className="flex flex-col gap-1">
+                <span className="text-[10px] font-black text-slate-400 tracking-[0.2em] uppercase">Tiến trình: {cardIndex + 1} / {currentData.words.length}</span>
+                <div className="h-1 bg-slate-100 w-48 md:w-64 rounded-full overflow-hidden"><div className="h-full bg-black transition-all" style={{ width: `${((cardIndex + 1) / currentData.words.length) * 100}%` }}></div></div>
+              </div>
+              
+              <div className="flex items-center gap-3 bg-slate-50 p-1.5 rounded-xl border border-slate-100 shadow-sm ml-4">
+                <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest pl-2">Hiện Nghĩa Trước</span>
+                <button 
+                  onClick={(e) => { e.stopPropagation(); setIsFlashcardReversed(!isFlashcardReversed); setIsFlipped(false); }}
+                  className={`relative w-10 h-5 rounded-full transition-colors duration-300 focus:outline-none ${isFlashcardReversed ? 'bg-indigo-600' : 'bg-slate-200'}`}
+                >
+                  <div className={`absolute top-0.5 left-0.5 w-4 h-4 bg-white rounded-full transition-transform duration-300 ${isFlashcardReversed ? 'translate-x-5' : ''}`} />
+                </button>
+              </div>
             </div>
             <div className="group perspective w-full aspect-[16/10] md:max-h-[400px] cursor-pointer" onClick={() => setIsFlipped(!isFlipped)}>
               <div className={`relative w-full h-full duration-500 preserve-3d shadow-xl rounded-[3rem] ${isFlipped ? 'rotate-y-180' : ''}`}>
                 <div className="absolute inset-0 backface-hidden bg-white border border-slate-100 rounded-[3rem] flex flex-col items-center justify-center p-12 text-center">
-                  <div className="text-6xl md:text-8xl font-black text-slate-900 leading-tight italic">{currentData.words[cardIndex].kanji}</div>
-                  <div className="mt-4 text-[10px] font-bold text-slate-300 uppercase tracking-widest italic decoration-slate-100 underline underline-offset-8">NHẤN ĐỂ LẬT</div>
+                  {!isFlashcardReversed ? (
+                    <>
+                      <div className="text-6xl md:text-8xl font-black text-slate-900 leading-tight italic">{currentData.words[cardIndex].kanji}</div>
+                      <div className="mt-4 text-[10px] font-bold text-slate-300 uppercase tracking-widest italic decoration-slate-100 underline underline-offset-8">NHẤN ĐỂ LẬT XEM NGHĨA</div>
+                    </>
+                  ) : (
+                    <>
+                      <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-4">Nghĩa tiếng Việt</div>
+                      <div className="text-4xl md:text-6xl font-black text-slate-900 leading-tight italic font-serif">"{currentData.words[cardIndex].meaning}"</div>
+                      <div className="mt-8 text-[10px] font-bold text-slate-300 uppercase tracking-widest italic decoration-slate-100 underline underline-offset-8">NHẤN ĐỂ LẬT XEM TỪ</div>
+                    </>
+                  )}
                 </div>
                 <div className="absolute inset-0 backface-hidden bg-white border-2 border-slate-950 text-slate-950 rounded-[3rem] rotate-y-180 flex flex-col items-center justify-center p-12 text-center">
-                  <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-4">Nghĩa tiếng Việt</div>
-                  <div className="text-3xl md:text-5xl font-black italic leading-tight mb-4">"{currentData.words[cardIndex].meaning}"</div>
-                  <div className="text-xl font-bold text-slate-400 uppercase tracking-widest font-mono">{currentData.words[cardIndex].kana}</div>
+                  {!isFlashcardReversed ? (
+                    <>
+                      <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-4">Nghĩa tiếng Việt</div>
+                      <div className="text-3xl md:text-5xl font-black italic leading-tight mb-4">"{currentData.words[cardIndex].meaning}"</div>
+                      <div className="text-xl font-bold text-slate-400 uppercase tracking-widest font-mono">{currentData.words[cardIndex].kana}</div>
+                    </>
+                  ) : (
+                    <>
+                      <div className="text-6xl md:text-8xl font-black text-slate-900 leading-tight italic">{currentData.words[cardIndex].kanji}</div>
+                      <div className="text-2xl font-bold text-slate-400 uppercase tracking-widest font-mono mt-4">{currentData.words[cardIndex].kana}</div>
+                    </>
+                  )}
                 </div>
               </div>
             </div>
