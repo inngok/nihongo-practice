@@ -29,12 +29,19 @@ export default function Mimikara() {
     const saved = localStorage.getItem('mimikara_completed');
     try { return saved ? JSON.parse(saved) : []; } catch { return []; }
   });
+  const containerRef = useRef(null);
 
   useEffect(() => {
     localStorage.setItem('mimikara_completed', JSON.stringify(completedIds));
   }, [completedIds]);
 
-  // Focus input automatically in quiz
+  // Focus management
+  useEffect(() => {
+    if (activeMode !== 'menu') {
+      containerRef.current?.focus();
+    }
+  }, [activeMode, currentIndex]);
+
   useEffect(() => {
     if (activeMode === 'quiz' && !feedback) inputRef.current?.focus();
   }, [currentIndex, activeMode, feedback]);
@@ -116,6 +123,7 @@ export default function Mimikara() {
 
     const actions = {
       quiz: () => isLastItem ? setShowResults(true) : null,
+      listening: () => isLastItem ? setShowResults(true) : null,
       default: () => {
         if (isLastItem) {
           if (prevMode) {
@@ -146,6 +154,34 @@ export default function Mimikara() {
     setShowHint(false);
   }, [currentIndex, studyData, activeMode, completedIds, switchMode, prevMode, setActiveMode, setPrevMode]);
 
+  const handleSubmit = useCallback(() => {
+    if (!['quiz', 'listening'].includes(activeMode)) {
+      handleNext();
+      return;
+    }
+
+    if (!feedback) {
+      if (!userInput.trim()) return;
+      
+      const normalize = (str) => str.trim().toLowerCase().replace(/[〜~、。？?\.．,，]/g, '');
+      const cleanInput = normalize(userInput);
+      const answer = normalize(currentItem.answer);
+      const accepts = (currentItem.accepts || []).map(a => normalize(a));
+
+      const isCorrect = cleanInput === answer || accepts.includes(cleanInput);
+
+      setFeedback(isCorrect ? 'correct' : 'incorrect');
+      if (isCorrect) {
+        setScore(s => s + 1);
+        if (!completedIds.includes(currentItem.id)) {
+          setCompletedIds(p => [...p, currentItem.id]);
+        }
+      }
+    } else {
+      handleNext();
+    }
+  }, [activeMode, feedback, userInput, currentItem, completedIds, handleNext]);
+
   const playAudio = useCallback((text) => {
     if (!text) return;
     window.speechSynthesis.cancel();
@@ -166,36 +202,30 @@ export default function Mimikara() {
   }, [currentIndex, activeMode, feedback, currentItem.sentence, playAudio]);
 
   const handleKeyDown = (e) => {
+    // If we're in an input, let the form handle Enter
+    if (e.key === 'Enter' && e.target.tagName === 'INPUT') return;
+
     if (e.key === 'Enter') {
-      if (!feedback) {
-        if (!userInput.trim()) return;
-        const cleanInput = userInput.trim().toLowerCase().replace(/[〜~、。？?]/g, '');
-        const answer = currentItem.answer.toLowerCase().replace(/[〜~、。？?]/g, '');
-        const accepts = (currentItem.accepts || []).map(a => a.toLowerCase().replace(/[〜~、。？?]/g, ''));
-
-        const isCorrect = cleanInput === answer || accepts.includes(cleanInput);
-
-        setFeedback(isCorrect ? 'correct' : 'incorrect');
-        if (isCorrect) {
-          setScore(s => s + 1);
-          if (!completedIds.includes(currentItem.id)) {
-            setCompletedIds(p => [...p, currentItem.id]);
-          }
-        }
-      } else {
+      e.preventDefault();
+      handleSubmit();
+    } else if (e.key === ' ') {
+      e.preventDefault();
+      if (activeMode === 'listening' && !feedback) {
+        playAudio(currentItem.sentence);
+      } else if (activeMode === 'cards') {
+        if (!isFlipped) setIsFlipped(true);
+        else handleNext();
+      }
+    } else if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+      if (['flashcard', 'cards'].includes(activeMode) || feedback) {
         handleNext();
       }
-    } else if (e.key === ' ') {
-      if (activeMode === 'listening' && !feedback) {
-        e.preventDefault();
-        playAudio(currentItem.sentence);
+    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+      if (currentIndex > 0) {
+        setCurrentIndex(curr => curr - 1);
+        setFeedback(null);
+        setUserInput('');
       }
-    } else if (e.key === 'ArrowRight' && feedback) {
-      handleNext();
-    } else if (e.key === 'ArrowLeft' && currentIndex > 0) {
-      setCurrentIndex(curr => curr - 1);
-      setFeedback(null);
-      setUserInput('');
     }
   };
 
@@ -310,21 +340,30 @@ export default function Mimikara() {
       <div className="flex-grow flex flex-col justify-center">
         {{
           cards: (
-            <div onClick={() => setIsFlipped(!isFlipped)} className="w-full max-w-sm aspect-[3/4] mx-auto perspective cursor-pointer">
-              <div className={`relative w-full h-full transition-all duration-700 preserve-3d shadow-2xl rounded-[3rem] ${isFlipped ? 'rotate-y-180' : ''}`}>
-                <div className="absolute inset-0 backface-hidden bg-white border-2 border-slate-100 rounded-[3rem] flex items-center justify-center p-12 text-center">
+            <div 
+              onClick={() => isFlipped ? handleNext() : setIsFlipped(true)} 
+              className="w-full max-w-sm aspect-[3/4] mx-auto perspective cursor-pointer group"
+            >
+              <div className={`relative w-full h-full transition-all duration-700 preserve-3d shadow-2xl rounded-[3rem] ${isFlipped ? 'rotate-y-180' : 'group-hover:scale-105'}`}>
+                <div className="absolute inset-0 backface-hidden bg-white border-2 border-slate-100 rounded-[3rem] flex flex-col items-center justify-center p-12 text-center">
                   <h2 className="text-4xl font-black italic">{currentItem.pattern}</h2>
+                  <p className="mt-4 text-[10px] font-bold text-slate-300 uppercase tracking-widest italic decoration-slate-100 underline underline-offset-8">NHẤN ĐỂ LẬT</p>
                 </div>
                 <div className="absolute inset-0 backface-hidden rotate-y-180 bg-black text-white rounded-[3rem] flex flex-col items-center justify-center p-12 text-center">
                   <h3 className="text-2xl font-bold mb-4 italic">{currentItem.meaning}</h3>
-                  <p className="text-sm text-white/60 italic">{currentItem.explanation}</p>
+                  <p className="text-sm text-white/60 italic mb-8">{currentItem.explanation}</p>
+                  <p className="text-[10px] font-black uppercase tracking-widest text-emerald-400">NHẤN LẦN NỮA ĐỂ SANG CÂU TIẾP</p>
                 </div>
               </div>
             </div>
           ),
           flashcard: (
             <div className="max-w-4xl mx-auto w-full space-y-8">
-              <div className="bg-white border-2 border-slate-900 rounded-[2.5rem] p-12 text-center">
+              <div 
+                onClick={handleNext}
+                className="bg-white border-2 border-slate-900 rounded-[2.5rem] p-12 text-center cursor-pointer hover:bg-slate-50 transition-all active:scale-[0.99] group relative overflow-hidden"
+              >
+                <div className="absolute top-4 right-8 text-[8px] font-black text-slate-200 uppercase tracking-widest group-hover:text-black transition-colors">Click to next • Nhấp để sang câu</div>
                 <h2 className="text-5xl font-black italic mb-6">{currentItem.pattern}</h2>
                 <div className="h-px w-20 bg-slate-100 mx-auto mb-6" />
                 <h3 className="text-2xl font-bold italic text-slate-700">{currentItem.meaning}</h3>
@@ -359,17 +398,21 @@ export default function Mimikara() {
                 ))}
               </h3>
               <div className="space-y-4">
-                <input
-                  ref={inputRef}
-                  value={userInput}
-                  onChange={e => !feedback && setUserInput(e.target.value)}
-                  onKeyDown={handleKeyDown}
-                  placeholder="Nhập đáp án..."
-                  className={`w-full max-w-md py-6 px-10 rounded-full border-2 outline-none text-center text-xl font-bold transition-all shadow-xl ${
-                    feedback === 'correct' ? 'border-emerald-500' : 
-                    feedback === 'incorrect' ? 'border-red-500' : 'border-black/5 focus:border-black'
-                  }`}
-                />
+                <form 
+                  onSubmit={(e) => { e.preventDefault(); handleSubmit(); }}
+                  className="w-full max-w-md mx-auto"
+                >
+                  <input
+                    ref={inputRef}
+                    value={userInput}
+                    onChange={e => !feedback && setUserInput(e.target.value)}
+                    placeholder="Nhập đáp án..."
+                    className={`w-full py-6 px-10 rounded-full border-2 outline-none text-center text-xl font-bold transition-all shadow-xl ${
+                      feedback === 'correct' ? 'border-emerald-500' : 
+                      feedback === 'incorrect' ? 'border-red-500' : 'border-black/5 focus:border-black'
+                    }`}
+                  />
+                </form>
                 {feedback === 'incorrect' && (
                   <p className="text-red-500 font-black text-xs uppercase animate-bounce">Sai rồi! Đáp án là: {currentItem.answer}</p>
                 )}
@@ -418,17 +461,21 @@ export default function Mimikara() {
                   </div>
 
                   <div className="space-y-4">
-                    <input
-                      ref={inputRef}
-                      value={userInput}
-                      onChange={e => !feedback && setUserInput(e.target.value)}
-                      onKeyDown={handleKeyDown}
-                      placeholder="Nghe và điền ngữ pháp..."
-                      className={`w-full max-w-md py-6 px-10 rounded-full border-2 outline-none text-center text-xl font-bold transition-all shadow-xl ${
-                        feedback === 'correct' ? 'border-emerald-500' : 
-                        feedback === 'incorrect' ? 'border-red-500' : 'border-black/5 focus:border-black'
-                      }`}
-                    />
+                    <form 
+                      onSubmit={(e) => { e.preventDefault(); handleSubmit(); }}
+                      className="w-full max-w-md mx-auto"
+                    >
+                      <input
+                        ref={inputRef}
+                        value={userInput}
+                        onChange={e => !feedback && setUserInput(e.target.value)}
+                        placeholder="Nghe và điền ngữ pháp..."
+                        className={`w-full py-6 px-10 rounded-full border-2 outline-none text-center text-xl font-bold transition-all shadow-xl ${
+                          feedback === 'correct' ? 'border-emerald-500' : 
+                          feedback === 'incorrect' ? 'border-red-500' : 'border-black/5 focus:border-black'
+                        }`}
+                      />
+                    </form>
                     {feedback === 'incorrect' && (
                       <p className="text-red-500 font-black text-xs uppercase animate-bounce">Sai rồi! Đáp án là: {currentItem.answer}</p>
                     )}
@@ -449,10 +496,14 @@ export default function Mimikara() {
           <ChevronLeft className="w-4 h-4" /> TRƯỚC
         </button>
         <button
-          onClick={handleNext}
+          onClick={handleSubmit}
           className="flex-1 py-4 bg-black text-white rounded-2xl text-[10px] font-black uppercase hover:shadow-2xl transition-all flex items-center justify-center gap-2"
         >
-          {currentIndex === studyData.length - 1 ? 'HOÀN THÀNH' : 'TIẾP THEO'} <ChevronRight className="w-4 h-4" />
+          {['quiz', 'listening'].includes(activeMode) && !feedback ? (
+            <>KIỂM TRA <Check className="w-4 h-4" /></>
+          ) : (
+            <>{currentIndex === studyData.length - 1 ? 'HOÀN THÀNH' : 'TIẾP THEO'} <ChevronRight className="w-4 h-4" /></>
+          )}
         </button>
       </div>
     </div>
@@ -468,7 +519,12 @@ export default function Mimikara() {
   }[activeMode];
 
   return (
-    <div className="min-h-screen w-full bg-white flex flex-col items-center pt-32 px-4 md:px-12 selection:bg-black selection:text-white">
+    <div 
+      ref={containerRef}
+      tabIndex="0"
+      className="min-h-screen w-full bg-white flex flex-col items-center pt-32 px-4 md:px-12 selection:bg-black selection:text-white outline-none focus:outline-none"
+      onKeyDown={handleKeyDown}
+    >
       <div className="w-full max-w-6xl mb-12 flex justify-between items-end">
         <div>
           <p className="text-[10px] font-black text-slate-300 uppercase tracking-widest mb-2">Mimikara Oboeru • N3</p>

@@ -39,7 +39,6 @@ export const grammarData = [
   {
     id: 7, unit: 1, pattern: "つもり", romaji: "tsumori", meaning: "Tưởng là / Cứ ngỡ là", explanation: "Diễn tả một ý định hoặc trạng thái mà bản thân tin là như vậy, nhưng thực tế lại không phải (hoặc chỉ là chủ quan).",
     examples: [
-      { jp: "メールを送ったつもりだったが、届いていなかった。", vn: "Tôi cứ ngỡ là đã gửi mail rồi, nhưng hóa ra nó vẫn chưa tới." },
       { jp: "バッグにさいふを入れたつもりだったが、なかった。", vn: "Tôi cứ ngõ là đã cho ví vào túi rồi, thế mà lúc tìm lại không thấy." },
       { jp: "メールをおくったつもりだったが、届いていなかった。", vn: "Tôi cứ ngỡ là đã gửi mail rồi, nhưng hóa ra nó vẫn chưa tới.", isBook: true, blank: "つもり" }
     ],
@@ -255,7 +254,7 @@ export const grammarData = [
   },
   {
     id: 43, unit: 5, pattern: "にしたがって", romaji: "ni shitagatte", meaning: "Theo như / Càng... càng...", explanation: "Tuân theo quy tắc hoặc chỉ sự thay đổi đồng thời.",
-    examples: [{ jp: "先生の指示にしたがって、行動してください。", vn: "Hãy hành động theo như chỉ thị của giáo viên." }, { jp: "山の頂上に登るにしたがって、気温が下がってきた。", vn: "Càng lên cao phía đỉnh núi, nhiệt độ càng giảm xuống." }, { jp: "「山をのぼるにしたがって、気温がさがってきた」", vn: "\"Càng lên cao phía đỉnh núi, nhiệt độ càng giảm xuống.\"", isBook: true, blank: "にしたがって" }],
+    examples: [{ jp: "先生の指示にしたがって、行動してください。", vn: "Hãy hành động theo như chỉ thị của giáo viên." }, { jp: "「山をのぼるにしたがって、気温がさがってきた」", vn: "\"Càng lên cao phía đỉnh núi, nhiệt độ càng giảm xuống.\"", isBook: true, blank: "にしたがって" }],
     quiz: { sentence: "ルール________、ゲームをしてください。", answer: "にしたがって", accepts: ["に従って", "にしたがい"], hint: "Theo như (tuân theo quy tắc)", translation: "Hãy chơi game theo đúng luật." }
   },
   {
