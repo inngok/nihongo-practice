@@ -60,7 +60,7 @@ export default function TempVocabTest() {
   const hasAnsweredCurrent = answers[currentQuestion.id] !== undefined;
 
   // Helper to format question with styled blanks and underlines
-  const formatQuestion = (text) => {
+  const formatQuestion = (text, selectedIdx = null) => {
     if (!text) return "";
     
     // Split by *keyword* for synonyms first
@@ -83,8 +83,14 @@ export default function TempVocabTest() {
           <React.Fragment key={j}>
             {sp}
             {j < subparts.length - 1 && (
-              <span className="mx-2 px-6 py-1 bg-slate-100 border-b-4 border-slate-900 rounded-lg inline-flex items-center justify-center min-w-[60px] h-10 align-middle">
-                <span className="text-[10px] font-black text-slate-300 animate-pulse uppercase tracking-[0.2em]">?</span>
+              <span className={`mx-2 px-6 py-2 bg-slate-50 border-2 rounded-2xl inline-flex items-center justify-center min-w-[80px] h-12 align-middle transition-all duration-500 ${selectedIdx !== undefined && currentQuestion.options[selectedIdx] ? 'border-black bg-white shadow-sm' : 'border-slate-100 border-dashed'}`}>
+                {(selectedIdx !== undefined && currentQuestion.options[selectedIdx]) ? (
+                  <span className="text-xl md:text-2xl font-black italic text-black animate-in zoom-in-95 duration-300">
+                    {currentQuestion.options[selectedIdx]?.text}
+                  </span>
+                ) : (
+                  <span className="text-base font-black text-slate-300 animate-pulse tracking-widest">???</span>
+                )}
               </span>
             )}
           </React.Fragment>
@@ -123,6 +129,7 @@ export default function TempVocabTest() {
   };
 
   const handleNext = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
     if (currentIndex < tempVocabTest.length - 1) {
       setCurrentIndex(prev => prev + 1);
     } else {
@@ -145,16 +152,16 @@ export default function TempVocabTest() {
 
   if (showResults) {
     return (
-      <div className="min-h-screen bg-slate-50 py-12 px-4 md:px-12 font-sans selection:bg-black selection:text-white flex flex-col items-center justify-center">
-        <div className="max-w-xl w-full space-y-12 text-center animate-in fade-in">
-          <h1 className="text-4xl md:text-5xl font-black italic uppercase">Kết Quả {activeTest.title}</h1>
+      <div className="min-h-screen bg-white py-12 px-4 md:px-12 font-sans flex flex-col items-center justify-center">
+        <div className="max-w-xl w-full space-y-10 text-center">
+          <h1 className="text-3xl font-bold uppercase tracking-widest">Kết quả</h1>
           
-          <div className="px-12 py-10 bg-white border-2 border-slate-900 rounded-[3rem] shadow-[0_20px_0_0_rgba(0,0,0,1)]">
-            <p className="text-sm font-bold uppercase tracking-widest text-slate-400 mb-4">ĐIỂM SỐ CỦA BẠN</p>
-            <p className="text-7xl font-black italic">{score}<span className="text-4xl text-slate-300">/{tempVocabTest.length}</span></p>
+          <div className="p-10 bg-slate-50 border border-slate-100 rounded-3xl">
+            <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-4">Điểm số</p>
+            <p className="text-6xl font-bold">{score}<span className="text-2xl text-slate-300">/{tempVocabTest.length}</span></p>
           </div>
           
-          <div className="pt-6 flex flex-col gap-4">
+          <div className="flex flex-col gap-3">
             <button
               onClick={() => {
                 setActiveTestId(null);
@@ -163,24 +170,18 @@ export default function TempVocabTest() {
                 setShowResults(false);
                 setScore(0);
               }}
-              className="w-full py-5 bg-black text-white rounded-[2rem] font-black uppercase tracking-widest hover:-translate-y-1 hover:shadow-2xl transition-all"
+              className="w-full py-4 bg-black text-white rounded-2xl font-bold text-sm tracking-widest uppercase hover:bg-slate-800 transition-all"
             >
-              Chọn Bài Test Khác
+              Làm Bài Khác
             </button>
             <button
               onClick={() => navigate('/exam-pc7')}
-              className="w-full py-5 bg-white border-2 border-slate-200 text-slate-400 rounded-[2rem] font-black uppercase tracking-widest hover:border-black hover:text-black transition-all"
+              className="w-full py-4 bg-white border border-slate-200 text-slate-400 rounded-2xl font-bold text-sm tracking-widest uppercase"
             >
-              Thoát Về Trang Chủ
+              Về Trang Chủ
             </button>
           </div>
         </div>
-        
-        <style dangerouslySetInnerHTML={{
-        __html: `
-        @keyframes fade-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .animate-in { animation: fade-in 0.4s ease-out forwards; }
-        `}} />
       </div>
     );
   }
@@ -214,120 +215,131 @@ export default function TempVocabTest() {
         />
       </div>
 
-      <div className="flex-grow flex flex-col pt-8 md:pt-12 px-6 md:px-12 max-w-4xl w-full mx-auto relative pb-12">
+      <div className="flex-grow flex flex-col pt-8 md:pt-12 px-6 md:px-12 w-full mx-auto relative pb-12 max-w-5xl">
         <div className="text-[10px] font-black tracking-widest text-slate-400 mb-6 uppercase flex justify-between items-center">
           <span>CÂU {currentIndex + 1} / {tempVocabTest.length}</span>
-          <span className="bg-slate-50 border border-slate-100 px-3 py-1 rounded-lg">
+          <span className="bg-slate-100 border border-slate-200 px-3 py-1 rounded-lg text-slate-600">
              {currentQuestion.type === 'usage' ? 'CÁCH SỬ DỤNG TỪ' : (currentQuestion.type === 'synonym' ? 'TỪ ĐỒNG NGHĨA' : 'ĐIỀN TỪ')}
           </span>
         </div>
 
-        {/* Question content */}
-        <div className="flex-grow flex flex-col justify-start">
-          {currentQuestion.type === 'usage' ? (
-            <div className="mb-8 animate-in fade-in">
-              <h2 className="text-4xl md:text-5xl font-black italic mb-3">{currentQuestion.word}</h2>
-              <p className="text-slate-400 font-bold italic mb-6">Ý nghĩa: {currentQuestion.meaning}</p>
-              <h3 className="text-2xl md:text-3xl font-bold leading-relaxed">{formatQuestion(currentQuestion.question)}</h3>
-            </div>
-          ) : (
-            <h2 className="text-2xl md:text-3xl font-black leading-relaxed mb-8 animate-in fade-in">
-              {formatQuestion(currentQuestion.question)}
-            </h2>
-          )}
+        <div className={`grid grid-cols-1 gap-12 w-full ${hasAnsweredCurrent ? 'lg:grid-cols-2' : ''}`}>
+          {/* Question content & Options */}
+          <div className="flex flex-col justify-start">
+            {currentQuestion.type === 'usage' ? (
+              <div className="mb-8">
+                <h2 className="text-4xl md:text-5xl font-black italic mb-3 text-slate-900">{currentQuestion.word}</h2>
+                <p className="text-slate-400 font-bold italic mb-6">Ý nghĩa: {currentQuestion.meaning}</p>
+                <h3 className="text-2xl md:text-3xl font-bold leading-relaxed text-slate-800">{formatQuestion(currentQuestion.question)}</h3>
+              </div>
+            ) : (
+              <h2 className="text-2xl md:text-3xl font-black leading-relaxed mb-8 text-slate-900">
+                {formatQuestion(currentQuestion.question, answers[currentQuestion.id])}
+              </h2>
+            )}
 
-          <div className="grid grid-cols-1 gap-4 w-full">
-            {currentQuestion.options.map((opt, idx) => {
-              const isSelected = answers[currentQuestion.id] === idx;
-              const isCorrectAnswer = currentQuestion.answer === idx;
-              
-              let btnStyle = 'border-slate-100 bg-white hover:border-slate-300 hover:bg-slate-50 text-slate-700';
-              let numStyle = 'bg-slate-100 text-slate-400';
-              let meaningStyle = 'text-slate-400';
+            <div className="grid grid-cols-1 gap-4 w-full">
+              {currentQuestion.options.map((opt, idx) => {
+                const isSelected = answers[currentQuestion.id] === idx;
+                const isCorrectAnswer = currentQuestion.answer === idx;
+                
+                let btnStyle = 'border-slate-100 bg-white hover:border-slate-300 hover:bg-slate-50 text-slate-700';
+                let numStyle = 'bg-slate-100 text-slate-400';
+                let meaningStyle = 'text-slate-400';
 
-              if (hasAnsweredCurrent) {
-                if (isCorrectAnswer) {
-                  btnStyle = 'border-emerald-500 bg-emerald-50 text-emerald-900 shadow-[0_4px_0_0_rgb(16,185,129)] -translate-y-1';
-                  numStyle = 'bg-emerald-500 text-white';
-                  meaningStyle = 'text-emerald-700 opacity-90';
-                } else if (isSelected && !isCorrectAnswer) {
-                  btnStyle = 'border-rose-300 bg-rose-50 text-rose-900 opacity-80';
-                  numStyle = 'bg-rose-400 text-white';
-                  meaningStyle = 'text-rose-700 opacity-90';
-                } else {
-                  btnStyle = 'border-slate-50 bg-white opacity-50 grayscale';
-                  numStyle = 'bg-slate-50 text-slate-300';
-                  meaningStyle = 'text-slate-500 opacity-80';
+                if (hasAnsweredCurrent) {
+                  if (isSelected || isCorrectAnswer) {
+                     if (isCorrectAnswer) {
+                        btnStyle = 'border-emerald-500 bg-emerald-50 text-emerald-900';
+                        numStyle = 'bg-emerald-500 text-white';
+                        meaningStyle = 'text-emerald-700 opacity-90';
+                     } else {
+                        btnStyle = 'border-rose-300 bg-rose-50 text-rose-900';
+                        numStyle = 'bg-rose-400 text-white';
+                        meaningStyle = 'text-rose-700 opacity-90';
+                     }
+                  } else {
+                    btnStyle = 'border-slate-50 bg-white opacity-40 grayscale';
+                    numStyle = 'bg-slate-50 text-slate-300';
+                    meaningStyle = 'text-slate-500 opacity-80';
+                  }
                 }
-              }
 
-              return (
-                <button
-                  key={idx}
-                  onClick={() => handleSelect(idx)}
-                  disabled={hasAnsweredCurrent}
-                  className={`w-full text-left flex flex-col p-5 md:p-6 rounded-[1.5rem] border-2 transition-all duration-300 ${btnStyle} ${!hasAnsweredCurrent ? 'active:scale-[0.98]' : 'cursor-default'}`}
-                >
-                  <div className="w-full flex items-center justify-between gap-4">
-                    <div className="flex items-center gap-4">
-                      <div className={`shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-sm font-black transition-colors ${numStyle}`}>
-                        {idx + 1}
+                return (
+                  <button
+                    key={idx}
+                    onClick={() => handleSelect(idx)}
+                    disabled={hasAnsweredCurrent}
+                    className={`w-full text-left flex flex-col p-5 md:p-6 rounded-[1.5rem] border-2 transition-all ${btnStyle} ${!hasAnsweredCurrent ? 'active:scale-[0.98]' : 'cursor-default'}`}
+                  >
+                    <div className="w-full flex items-center justify-between gap-4">
+                      <div className="flex items-center gap-4">
+                        <div className={`shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-sm font-black transition-colors ${numStyle}`}>
+                          {idx + 1}
+                        </div>
+                        <div className="flex flex-col">
+                          <span className="text-lg md:text-xl font-bold">{opt.text}</span>
+                          {hasAnsweredCurrent && opt.meaning && (
+                            <span className={`text-sm font-medium italic mt-1 ${meaningStyle}`}>
+                              {opt.meaning}
+                            </span>
+                          )}
+                        </div>
                       </div>
-                      <div className="flex flex-col">
-                        <span className="text-lg md:text-xl font-bold">{opt.text}</span>
-                        {hasAnsweredCurrent && opt.meaning && (
-                          <span className={`text-sm font-medium italic mt-1 ${meaningStyle}`}>
-                            {opt.meaning}
-                          </span>
-                        )}
-                      </div>
+                      {hasAnsweredCurrent && isCorrectAnswer && <CheckCircle className="w-6 h-6 text-emerald-500 shrink-0" />}
+                      {hasAnsweredCurrent && isSelected && !isCorrectAnswer && <XCircle className="w-6 h-6 text-rose-400 shrink-0" />}
                     </div>
-                    {hasAnsweredCurrent && isCorrectAnswer && <CheckCircle className="w-6 h-6 text-emerald-500 shrink-0" />}
-                    {hasAnsweredCurrent && isSelected && !isCorrectAnswer && <XCircle className="w-6 h-6 text-rose-400 shrink-0" />}
-                  </div>
-                </button>
-              );
-            })}
+                  </button>
+                );
+              })}
+            </div>
           </div>
           
+          {/* Explanation Column (Desktop) or Below (Mobile) */}
           {hasAnsweredCurrent && (
-            <div className="mt-8 md:mt-12 overflow-hidden rounded-[2rem] shadow-2xl animate-in fade-in slide-in-from-top-4 duration-500 border border-emerald-100">
-               <div className={`p-6 md:p-8 ${answers[currentQuestion.id] === currentQuestion.answer ? 'bg-emerald-500' : 'bg-rose-500'} text-white flex flex-col md:flex-row gap-6 items-start md:items-center justify-between`}>
-                 <div>
-                   <div className="flex items-center gap-3 mb-3">
-                     <span className="px-3 py-1 bg-white/20 rounded-full text-[10px] font-black tracking-widest uppercase shadow-sm">
-                       {answers[currentQuestion.id] === currentQuestion.answer ? 'QUÁ CHÍNH XÁC' : 'SAI MẤT RỒI!'}
-                     </span>
-                   </div>
-                   <h3 className="text-3xl md:text-4xl font-black mb-2 tracking-tight">
-                     {currentQuestion.type === 'usage' ? currentQuestion.word : currentQuestion.options[currentQuestion.answer].text}
-                   </h3>
-                   {currentQuestion.options[currentQuestion.answer].meaning && (
-                     <p className="text-white/90 font-bold text-base md:text-lg italic mt-1">
-                       Ý nghĩa: {currentQuestion.options[currentQuestion.answer].meaning}
-                     </p>
-                   )}
+            <div className="border border-slate-100 rounded-3xl overflow-hidden bg-slate-50/50 self-start h-fit lg:sticky lg:top-24">
+               <div className={`px-6 py-4 border-b border-slate-100 flex items-center justify-between ${answers[currentQuestion.id] === currentQuestion.answer ? 'text-emerald-600' : 'text-rose-600'}`}>
+                 <div className="flex items-center gap-2">
+                    <div className={`w-2 h-2 rounded-full ${answers[currentQuestion.id] === currentQuestion.answer ? 'bg-emerald-500' : 'bg-rose-500'}`} />
+                    <span className="text-[10px] font-bold uppercase tracking-widest">
+                       {answers[currentQuestion.id] === currentQuestion.answer ? 'Chính xác' : 'Chưa đúng'}
+                    </span>
                  </div>
                  
                  <button 
                    onClick={() => playAudio(fullCorrectSentence)}
-                   className="shrink-0 w-14 h-14 bg-white text-slate-900 rounded-[1rem] flex items-center justify-center hover:scale-110 active:scale-95 transition-all shadow-xl"
-                   title="Nghe câu chứa từ vựng"
+                   className="w-10 h-10 bg-white border border-slate-200 text-slate-500 rounded-xl flex items-center justify-center hover:bg-slate-50 transition-all shadow-sm"
                  >
-                   <Volume2 className="w-6 h-6" strokeWidth={2.5} />
+                   <Volume2 className="w-5 h-5" />
                  </button>
                </div>
                
-               <div className="bg-white p-6 md:p-8">
-                 <p className="text-[10px] font-black text-slate-300 uppercase tracking-widest mb-3">Câu Hoàn Chỉnh & Giải Thích</p>
-                 <p className="text-base md:text-lg font-bold text-slate-800 mb-4 pb-4 border-b border-slate-50 italic">
-                   {fullCorrectSentence}
-                 </p>
-                 <p className="text-sm md:text-base font-medium text-slate-600 leading-relaxed">
-                   {currentQuestion.explanation}
-                 </p>
+               <div className="p-6 md:p-8 space-y-6 text-slate-600">
+                  <div className="space-y-2">
+                     <p className="text-[10px] font-bold text-slate-300 uppercase tracking-widest">Câu hoàn chỉnh</p>
+                     <p className="text-lg md:text-xl font-bold text-slate-800 leading-relaxed italic">
+                        {(() => {
+                           const target = currentQuestion.type === 'usage' ? currentQuestion.word : currentQuestion.options[currentQuestion.answer].text;
+                           const parts = fullCorrectSentence.split(new RegExp(`(${target})`, 'g'));
+                           return parts.map((part, i) => 
+                             part === target ? (
+                               <span key={i} className="text-emerald-500 border-b-2 border-emerald-500/30">
+                                 {part}
+                               </span>
+                             ) : part
+                           );
+                        })()}
+                     </p>
+                  </div>
+
+                  <div className="space-y-4 pt-4 border-t border-slate-100">
+                     <p className="text-[10px] font-bold text-slate-300 uppercase tracking-widest leading-none">Giải thích</p>
+                     <p className="text-sm md:text-base font-medium leading-relaxed">
+                        {currentQuestion.explanation}
+                     </p>
+                  </div>
                </div>
-             </div>
+            </div>
           )}
         </div>
       </div>
