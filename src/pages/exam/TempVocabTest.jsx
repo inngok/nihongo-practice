@@ -59,20 +59,40 @@ export default function TempVocabTest() {
   const currentQuestion = tempVocabTest[currentIndex];
   const hasAnsweredCurrent = answers[currentQuestion.id] !== undefined;
 
-  // Helper to format question with underline for marked words (synonym questions)
+  // Helper to format question with styled blanks and underlines
   const formatQuestion = (text) => {
     if (!text) return "";
-    // Replace *word* with underlined span
-    const parts = text.split(/\*(.*?)\*/g);
-    if (parts.length === 1) return text;
     
-    return parts.map((part, i) => 
-      i % 2 === 1 ? (
-        <span key={i} className="underline decoration-slate-900 underline-offset-8 decoration-4">
-          {part}
-        </span>
-      ) : part
-    );
+    // Split by *keyword* for synonyms first
+    const parts = text.split(/\*(.*?)\*/g);
+    
+    return parts.map((part, i) => {
+      // Handle the synonym word (part between asterisks)
+      if (i % 2 === 1) {
+        return (
+          <span key={i} className="underline decoration-black underline-offset-8 decoration-4 font-black">
+            {part}
+          </span>
+        );
+      }
+      
+      // Handle ( ) in the text parts
+      if (part.includes('( )')) {
+        const subparts = part.split('( )');
+        return subparts.map((sp, j) => (
+          <React.Fragment key={j}>
+            {sp}
+            {j < subparts.length - 1 && (
+              <span className="mx-2 px-6 py-1 bg-slate-100 border-b-4 border-slate-900 rounded-lg inline-flex items-center justify-center min-w-[60px] h-10 align-middle">
+                <span className="text-[10px] font-black text-slate-300 animate-pulse uppercase tracking-[0.2em]">?</span>
+              </span>
+            )}
+          </React.Fragment>
+        ));
+      }
+      
+      return part;
+    });
   };
 
   const playAudio = (text) => {
