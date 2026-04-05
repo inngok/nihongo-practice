@@ -59,10 +59,28 @@ export default function TempVocabTest() {
   const currentQuestion = tempVocabTest[currentIndex];
   const hasAnsweredCurrent = answers[currentQuestion.id] !== undefined;
 
+  // Helper to format question with underline for marked words (synonym questions)
+  const formatQuestion = (text) => {
+    if (!text) return "";
+    // Replace *word* with underlined span
+    const parts = text.split(/\*(.*?)\*/g);
+    if (parts.length === 1) return text;
+    
+    return parts.map((part, i) => 
+      i % 2 === 1 ? (
+        <span key={i} className="underline decoration-slate-900 underline-offset-8 decoration-4">
+          {part}
+        </span>
+      ) : part
+    );
+  };
+
   const playAudio = (text) => {
     if ('speechSynthesis' in window) {
       window.speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance(text);
+      // Clean up markers for speech
+      const cleanText = text.replace(/\*/g, '');
+      const utterance = new SpeechSynthesisUtterance(cleanText);
       utterance.lang = 'ja-JP';
       utterance.rate = 0.9;
       window.speechSynthesis.speak(utterance);
@@ -190,11 +208,11 @@ export default function TempVocabTest() {
             <div className="mb-8 animate-in fade-in">
               <h2 className="text-4xl md:text-5xl font-black italic mb-3">{currentQuestion.word}</h2>
               <p className="text-slate-400 font-bold italic mb-6">Ý nghĩa: {currentQuestion.meaning}</p>
-              <h3 className="text-2xl md:text-3xl font-bold leading-relaxed">{currentQuestion.question}</h3>
+              <h3 className="text-2xl md:text-3xl font-bold leading-relaxed">{formatQuestion(currentQuestion.question)}</h3>
             </div>
           ) : (
             <h2 className="text-2xl md:text-3xl font-black leading-relaxed mb-8 animate-in fade-in">
-              {currentQuestion.question}
+              {formatQuestion(currentQuestion.question)}
             </h2>
           )}
 

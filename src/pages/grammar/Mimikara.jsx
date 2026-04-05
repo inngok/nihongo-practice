@@ -227,7 +227,7 @@ export default function Mimikara() {
       e.preventDefault();
       if (activeMode === 'listening' && !feedback) {
         playAudio(currentItem.sentence);
-      } else if (activeMode === 'cards') {
+      } else if (['cards', 'flashcard'].includes(activeMode)) {
         setIsFlipped(prev => !prev);
       }
     } else if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
@@ -310,10 +310,20 @@ export default function Mimikara() {
       ));
     }
     
-    // Case 2: Replace occurrences of 'answer' in the sentence
-    const pattern = currentItem.answer;
-    if (pattern) {
-      const escapedPattern = pattern.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    // Case 2: Replace occurrences of 'answer' or 'pattern' in the sentence
+    let patternToMatch = currentItem.answer;
+    
+    // If answer is not in sentence, fall back to the main pattern (ignoring common symbols)
+    const normalize = (s) => (s || '').replace(/[〜~]/g, '').trim();
+    if (!patternToMatch || !currentItem.sentence.includes(patternToMatch)) {
+      const mainPattern = normalize(currentItem.pattern);
+      if (currentItem.sentence.includes(mainPattern)) {
+        patternToMatch = mainPattern;
+      }
+    }
+
+    if (patternToMatch) {
+      const escapedPattern = patternToMatch.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
       const parts = currentItem.sentence.split(new RegExp(`(${escapedPattern})`, 'g'));
       
       if (parts.length === 1) return currentItem.sentence;
@@ -473,23 +483,35 @@ export default function Mimikara() {
           flashcard: (
             <div className="max-w-4xl mx-auto w-full space-y-8">
               <div 
-                onClick={handleNext}
-                className="bg-white border-2 border-slate-900 rounded-[2.5rem] p-12 text-center cursor-pointer hover:bg-slate-50 transition-all active:scale-[0.99] group relative overflow-hidden"
+                onClick={() => setIsFlipped(prev => !prev)}
+                className="bg-white border-2 border-slate-900 rounded-[2.5rem] p-12 text-center cursor-pointer hover:bg-slate-100 transition-all active:scale-[0.99] group relative overflow-hidden min-h-[300px] flex flex-col justify-center"
               >
-                <div className="absolute top-4 right-8 text-[8px] font-black text-slate-200 uppercase tracking-widest group-hover:text-black transition-colors">Click to next • Nhấp để sang câu</div>
-                <h2 className="text-5xl font-black italic mb-6">{currentItem.pattern}</h2>
-                <div className="h-px w-20 bg-slate-100 mx-auto mb-6" />
-                <h3 className="text-2xl font-bold italic text-slate-700">{currentItem.meaning}</h3>
-              </div>
-              <div className="space-y-4">
-                {currentItem.examples?.map((ex, idx) => (
-                  <div key={idx} className={`relative p-6 rounded-[1.5rem] italic ${ex.isBook ? 'bg-slate-900 text-white' : 'bg-slate-50 text-slate-900'}`}>
-                    {ex.isBook && <span className="absolute -top-2 -right-2 bg-emerald-500 text-white text-[8px] font-black px-2 py-1 rounded-full uppercase">Mimikara Example</span>}
-                    <p className="font-bold mb-1">{ex.jp}</p>
-                    <p className={`text-xs font-bold ${ex.isBook ? 'text-white/60' : 'text-slate-400'}`}>{ex.vn}</p>
+                {!isFlipped ? (
+                  <div className="animate-in fade-in zoom-in-95 duration-300">
+                    <h2 className="text-5xl font-black italic mb-6">{currentItem.pattern}</h2>
+                    <p className="text-[10px] font-black text-slate-300 uppercase tracking-[0.2em] animate-pulse">Nhấn để xem nghĩa / Space to flip</p>
                   </div>
-                ))}
+                ) : (
+                  <div className="animate-in fade-in zoom-in-95 duration-300">
+                    <h2 className="text-xl font-black italic text-slate-300 mb-2 uppercase tracking-widest">{currentItem.pattern}</h2>
+                    <div className="h-px w-20 bg-slate-100 mx-auto mb-6" />
+                    <h3 className="text-3xl font-black italic text-black mb-4">{currentItem.meaning}</h3>
+                    <p className="text-[10px] font-bold text-slate-400 italic mb-2 px-6">{currentItem.explanation}</p>
+                    <p className="text-[10px] font-black text-slate-200 uppercase tracking-widest mt-6">Nhấn để ẩn / Space to flip back</p>
+                  </div>
+                )}
               </div>
+              {isFlipped && (
+                <div className="space-y-4 animate-in slide-in-from-top-4 duration-500">
+                  {currentItem.examples?.map((ex, idx) => (
+                    <div key={idx} className={`relative p-6 rounded-[1.5rem] italic ${ex.isBook ? 'bg-slate-900 text-white' : 'bg-slate-50 text-slate-900'}`}>
+                      {ex.isBook && <span className="absolute -top-2 -right-2 bg-emerald-500 text-white text-[8px] font-black px-2 py-1 rounded-full uppercase">Mimikara Example</span>}
+                      <p className="font-bold mb-1">{ex.jp}</p>
+                      <p className={`text-xs font-bold ${ex.isBook ? 'text-white/60' : 'text-slate-400'}`}>{ex.vn}</p>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           ),
           quiz: (
