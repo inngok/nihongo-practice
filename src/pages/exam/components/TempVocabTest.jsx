@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ChevronLeft, ArrowRight, CheckCircle, XCircle, Volume2, LayoutGrid } from 'lucide-react';
-import { tempVocabTests } from './tempVocabTestData';
+import { tempVocabTests } from '../data/tempVocabTestData';
 
 export default function TempVocabTest() {
   const navigate = useNavigate();
@@ -57,7 +57,7 @@ export default function TempVocabTest() {
   const tempVocabTest = activeTest.data;
 
   const currentQuestion = tempVocabTest[currentIndex];
-  const hasAnsweredCurrent = answers[currentQuestion.id] !== undefined;
+  const hasAnsweredCurrent = answers[currentIndex] !== undefined;
 
   // Helper to format question with styled blanks and underlines
   const formatQuestion = (text, selectedIdx = null) => {
@@ -116,7 +116,7 @@ export default function TempVocabTest() {
   const handleSelect = (idx) => {
     if (hasAnsweredCurrent) return;
     
-    setAnswers(prev => ({ ...prev, [currentQuestion.id]: idx }));
+    setAnswers(prev => ({ ...prev, [currentIndex]: idx }));
 
     const isCorrect = currentQuestion.answer === idx;
     const sentenceToSpeech = currentQuestion.type === 'usage' 
@@ -139,8 +139,8 @@ export default function TempVocabTest() {
 
   const calculateScore = () => {
     let s = 0;
-    tempVocabTest.forEach(q => {
-      if (answers[q.id] === q.answer) s += 1;
+    tempVocabTest.forEach((q, idx) => {
+      if (answers[idx] === q.answer) s += 1;
     });
     setScore(s);
     setShowResults(true);
@@ -234,13 +234,13 @@ export default function TempVocabTest() {
               </div>
             ) : (
               <h2 className="text-2xl md:text-3xl font-black leading-relaxed mb-8 text-slate-900">
-                {formatQuestion(currentQuestion.question, answers[currentQuestion.id])}
+                {formatQuestion(currentQuestion.question, answers[currentIndex])}
               </h2>
             )}
 
             <div className="grid grid-cols-1 gap-4 w-full">
               {currentQuestion.options.map((opt, idx) => {
-                const isSelected = answers[currentQuestion.id] === idx;
+                const isSelected = answers[currentIndex] === idx;
                 const isCorrectAnswer = currentQuestion.answer === idx;
                 
                 let btnStyle = 'border-slate-100 bg-white hover:border-slate-300 hover:bg-slate-50 text-slate-700';
@@ -298,11 +298,11 @@ export default function TempVocabTest() {
           {/* Explanation Column (Desktop) or Below (Mobile) */}
           {hasAnsweredCurrent && (
             <div className="border border-slate-100 rounded-3xl overflow-hidden bg-slate-50/50 self-start h-fit lg:sticky lg:top-24">
-               <div className={`px-6 py-4 border-b border-slate-100 flex items-center justify-between ${answers[currentQuestion.id] === currentQuestion.answer ? 'text-emerald-600' : 'text-rose-600'}`}>
+               <div className={`px-6 py-4 border-b border-slate-100 flex items-center justify-between ${answers[currentIndex] === currentQuestion.answer ? 'text-emerald-600' : 'text-rose-600'}`}>
                  <div className="flex items-center gap-2">
-                    <div className={`w-2 h-2 rounded-full ${answers[currentQuestion.id] === currentQuestion.answer ? 'bg-emerald-500' : 'bg-rose-500'}`} />
+                    <div className={`w-2 h-2 rounded-full ${answers[currentIndex] === currentQuestion.answer ? 'bg-emerald-500' : 'bg-rose-500'}`} />
                     <span className="text-[10px] font-bold uppercase tracking-widest">
-                       {answers[currentQuestion.id] === currentQuestion.answer ? 'Chính xác' : 'Chưa đúng'}
+                       {answers[currentIndex] === currentQuestion.answer ? 'Chính xác' : 'Chưa đúng'}
                     </span>
                  </div>
                  

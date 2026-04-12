@@ -466,7 +466,7 @@ export const tempVocabTests = [
         explanation: "Trước của bữa ăn làm sạch tay bằng khăn ướt (おしぼり). Câu 1 nhầm với しぼって (vắt), Câu 2 nhầm với しぼられた (bị mắng)."
       },
       {
-        id: 12, type: "synonym",
+        id: 19, type: "synonym",
         question: "田中さんの*実家*はどこですか。",
         options: [
           { text: "今の住所", meaning: "Địa chỉ của bây giờ" },
@@ -502,7 +502,7 @@ export const tempVocabTests = [
         explanation: "Hôm qua đã ngủ say (ぐっすり = とても深く)."
       },
       {
-        id: 15, type: "synonym",
+        id: 22, type: "synonym",
         question: "これは八百屋でもらった*おまけ*です。",
         options: [
           { text: "おつり", meaning: "Tiền thừa" },

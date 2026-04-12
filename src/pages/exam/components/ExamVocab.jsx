@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect, useCallback, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { examVocabData } from './examData';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { examVocabData } from '../data/examData';
 import { ChevronLeft, ArrowRight, List, Brain, CheckCircle, RefreshCcw } from 'lucide-react';
 
 export default function ExamVocab({ type = 'comprehensive' }) {
@@ -23,9 +23,35 @@ export default function ExamVocab({ type = 'comprehensive' }) {
   const [isShuffle, setIsShuffle] = useState(true);
   const inputRef = useRef(null);
 
+  const [searchParams] = useSearchParams();
+  const dayParam = searchParams.get('day');
+  const weekParam = searchParams.get('week');
+  const isAll = searchParams.get('all') === 'true';
+
   const currentData = useMemo(() => {
-    return examVocabData[type] || { title: '', words: [] };
-  }, [type]);
+    const rawData = examVocabData[type] || { title: '', words: [] };
+    
+    if (type === 'kanji-pc8' && weekParam && !isAll) {
+      const filteredWords = rawData.words.filter(w => 
+        String(w.week) === String(weekParam) && String(w.day) === String(dayParam)
+      );
+      return {
+        ...rawData,
+        title: `Hán tự PC8 - Tuần ${weekParam} Ngày ${dayParam}`,
+        words: filteredWords
+      };
+    }
+
+    if (type === 'kanji-pc8' && isAll) {
+      return {
+        ...rawData,
+        title: `Hán tự PC8 - Tất cả Tuần ${weekParam}`,
+        words: rawData.words
+      };
+    }
+    
+    return rawData;
+  }, [type, dayParam, weekParam, isAll]);
 
   // Actions
   const startQuiz = useCallback((type = 'jp-to-vn') => {
@@ -102,7 +128,7 @@ export default function ExamVocab({ type = 'comprehensive' }) {
 
       {/* Background Watermark */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[20vw] font-black text-slate-100 opacity-[0.03] pointer-events-none select-none leading-none z-0 whitespace-nowrap uppercase">
-        PC7 EXAM
+        {type.includes('pc8') ? 'PC8 EXAM' : 'PC7 EXAM'}
       </div>
 
       <div className="w-full max-w-5xl relative z-10">
@@ -110,10 +136,16 @@ export default function ExamVocab({ type = 'comprehensive' }) {
         {/* Navigation & Header */}
         <div className="mb-12">
           <button
-            onClick={() => navigate('/exam-pc7')}
+            onClick={() => {
+              if (type === 'kanji-pc8' && (dayParam || isAll)) {
+                navigate('/exam-pc8/kanji');
+              } else {
+                navigate(type.includes('pc8') ? '/exam-pc8' : '/exam-pc7');
+              }
+            }}
             className="text-[10px] font-bold uppercase tracking-[0.4em] text-slate-400 hover:text-black transition-colors mb-8 decoration-slate-100"
           >
-            Quay lại Ôn thi
+            Quay lại {type === 'kanji-pc8' && (dayParam || isAll) ? 'Lộ trình' : 'Ôn thi'}
           </button>
 
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-12">
@@ -123,7 +155,7 @@ export default function ExamVocab({ type = 'comprehensive' }) {
                   {currentData.title}
                 </h1>
                 <p className="text-xs md:text-sm text-slate-400 font-medium italic mt-1">
-                  Ôn tập tổng hợp từ vựng quan trọng cho kỳ thi PC7
+                  Ôn tập tổng hợp nội dung quan trọng cho kỳ thi {type.includes('pc8') ? 'PC8' : 'PC7'}
                 </p>
               </div>
             </div>
@@ -181,6 +213,7 @@ export default function ExamVocab({ type = 'comprehensive' }) {
                   <div className="flex-grow grid grid-cols-1 md:grid-cols-3 gap-2 md:gap-8 items-center">
                     <div className="flex flex-col">
                       <span className="text-2xl font-black text-slate-900 leading-tight">{word.kanji}</span>
+                      {word.sino && <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">{word.sino}</span>}
                     </div>
                     <div className="flex items-center md:justify-center">
                       <span className="text-xs font-bold text-slate-400 uppercase tracking-widest italic">{word.kana}</span>
@@ -235,12 +268,14 @@ export default function ExamVocab({ type = 'comprehensive' }) {
                   {!isFlashcardReversed ? (
                     <>
                       <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-4">Nghĩa tiếng Việt</div>
-                      <div className="text-3xl md:text-5xl font-black italic leading-tight mb-4">"{currentData.words[cardIndex].meaning}"</div>
+                      <div className="text-3xl md:text-5xl font-black italic leading-tight mb-2">"{currentData.words[cardIndex].meaning}"</div>
+                      {currentData.words[cardIndex].sino && <div className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-4">({currentData.words[cardIndex].sino})</div>}
                       <div className="text-xl font-bold text-slate-400 uppercase tracking-widest font-mono">{currentData.words[cardIndex].kana}</div>
                     </>
                   ) : (
                     <>
                       <div className="text-6xl md:text-8xl font-black text-slate-900 leading-tight italic">{currentData.words[cardIndex].kanji}</div>
+                      {currentData.words[cardIndex].sino && <div className="text-xs font-bold text-slate-400 uppercase tracking-[0.2em] mt-2 italic">{currentData.words[cardIndex].sino}</div>}
                       <div className="text-2xl font-bold text-slate-400 uppercase tracking-widest font-mono mt-4">{currentData.words[cardIndex].kana}</div>
                     </>
                   )}

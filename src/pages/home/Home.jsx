@@ -78,11 +78,11 @@ export default function Home() {
       {/* Specialty Bottom Section */}
       <div className="mt-8 md:mt-10 relative z-10 flex flex-wrap items-center justify-center gap-4 w-full">
         <Link
-          to="/exam-pc7"
+          to="/dong-du"
           className="group px-8 py-4 bg-slate-50 border border-slate-100 rounded-[2rem] hover:bg-black hover:border-black hover:-translate-y-1 hover:shadow-2xl transition-all duration-300"
         >
           <span className="text-[10px] md:text-[11px] font-black tracking-[0.3em] uppercase text-slate-500 group-hover:text-white transition-colors">
-            Ôn thi PC7
+            Đông Du
           </span>
         </Link>
 

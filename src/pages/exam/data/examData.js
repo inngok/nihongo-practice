@@ -1,4 +1,5 @@
-import { kanjiComprehensiveData } from './data/kanjiComprehensiveData';
+import { kanjiComprehensiveData } from './kanjiComprehensiveData';
+import { kanjiPC8Data } from './kanjiPC8Data';
 
 export const examVocabData = {
   "comprehensive": {
@@ -82,5 +83,10 @@ export const examVocabData = {
     title: "Hán tự tổng hợp PC7",
     japanese: "漢字総合 - PC7対策",
     words: kanjiComprehensiveData
+  },
+  "kanji-pc8": {
+    title: "Hán tự tổng hợp PC8",
+    japanese: "漢字総合 - PC8対策",
+    words: kanjiPC8Data
   }
 };
