@@ -21,6 +21,7 @@ export default function ExamVocab({ type = 'comprehensive' }) {
   const [showHint, setShowHint] = useState(false);
   const [quizType, setQuizType] = useState('jp-to-vn'); // 'jp-to-vn', 'vn-to-jp'
   const [isShuffle, setIsShuffle] = useState(true);
+  const [showResults, setShowResults] = useState(false);
   const inputRef = useRef(null);
 
   const [searchParams] = useSearchParams();
@@ -119,17 +120,14 @@ export default function ExamVocab({ type = 'comprehensive' }) {
       setFeedback(null);
       setShowHint(false);
     } else {
-      setViewMode('summary');
+      setShowResults(true);
     }
   };
 
   return (
     <div className="min-h-screen bg-white flex flex-col items-center pt-32 md:pt-24 pb-20 px-4 md:px-6 font-sans relative overflow-hidden text-slate-900">
 
-      {/* Background Watermark */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[20vw] font-black text-slate-100 opacity-[0.03] pointer-events-none select-none leading-none z-0 whitespace-nowrap uppercase">
-        {type.includes('pc8') ? 'PC8 EXAM' : 'PC7 EXAM'}
-      </div>
+
 
       <div className="w-full max-w-5xl relative z-10">
 
@@ -143,15 +141,15 @@ export default function ExamVocab({ type = 'comprehensive' }) {
                 navigate(type.includes('pc8') ? '/exam-pc8' : '/exam-pc7');
               }
             }}
-            className="text-[10px] font-bold uppercase tracking-[0.4em] text-slate-400 hover:text-black transition-colors mb-8 decoration-slate-100"
+            className="px-6 py-2 border-2 border-slate-900 text-[10px] font-black uppercase tracking-widest hover:bg-slate-900 hover:text-white transition-all font-sans relative z-[200] cursor-pointer mb-8"
           >
-            Quay lại {type === 'kanji-pc8' && (dayParam || isAll) ? 'Lộ trình' : 'Ôn thi'}
+            {viewMode === 'list' ? 'Quay lại' : 'Thoát luyện tập'}
           </button>
 
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-12">
             <div className="space-y-6 flex-grow">
                <div className="border-l-4 border-black pl-6 py-2 animate-in slide-in-from-left-4 duration-500">
-                <h1 className="text-2xl md:text-4xl font-black text-slate-900 tracking-tighter leading-tight italic uppercase">
+                <h1 className="text-2xl md:text-4xl font-black text-slate-900 tracking-tighter leading-tight">
                   {currentData.title}
                 </h1>
                 <p className="text-xs md:text-sm text-slate-400 font-medium italic mt-1">
@@ -349,35 +347,68 @@ export default function ExamVocab({ type = 'comprehensive' }) {
           </div>
         )}
 
-        {/* SUMMARY VIEW */}
-        {viewMode === 'summary' && (
-          <div className="py-20 flex flex-col items-center text-center animate-in zoom-in duration-500">
-            <div className="w-24 h-24 bg-slate-900 text-white rounded-full flex items-center justify-center mb-10 shadow-xl">
-              <CheckCircle className="w-12 h-12" />
-            </div>
-            <div className="space-y-4 mb-16">
-              <h2 className="text-4xl md:text-6xl font-black text-slate-900 tracking-tighter italic uppercase">Hoàn thành!</h2>
-              <div className="flex items-center justify-center gap-4 text-2xl font-black">
-                <span className="text-emerald-500 italic">Đúng {score}</span>
-                <span className="text-slate-200">/</span>
-                <span className="text-slate-400 italic">{quizData.length} từ</span>
-              </div>
-            </div>
-            <div className="flex gap-6">
-              <button 
-                onClick={() => setViewMode('list')} 
-                className="px-10 py-5 bg-black text-white rounded-2xl font-black text-[10px] tracking-[0.3em] uppercase hover:scale-105 transition-all"
-              >
-                Danh sách
-              </button>
-              <button 
-                onClick={startQuiz} 
-                className="px-10 py-5 bg-slate-100 text-slate-600 rounded-2xl font-black text-[10px] tracking-[0.3em] uppercase hover:bg-slate-200 transition-all font-bold"
-              >
-                Làm lại
-              </button>
-            </div>
-          </div>
+        {/* Results Screen - Now a clean, centered modal popup */}
+        {showResults && (
+           <div className="fixed inset-0 z-[2000] flex items-center justify-center p-6 sm:p-4 animate-in fade-in duration-300">
+             {/* Deep backdrop */}
+             <div 
+               className="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity"
+               onClick={() => setShowResults(false)}
+             />
+             
+             {/* Compact Result Modal */}
+             <div className="relative w-full max-w-sm bg-white rounded-[2.5rem] shadow-[0_30px_100px_-10px_rgba(0,0,0,0.3)] p-8 md:p-10 text-center animate-in zoom-in duration-300">
+                
+                {/* Floating Icon */}
+                <div className="w-16 h-16 bg-black rounded-2xl flex items-center justify-center mx-auto shadow-2xl absolute -top-8 left-1/2 -translate-x-1/2 rotate-3 border-4 border-white">
+                  <Brain className="w-8 h-8 text-white" />
+                </div>
+
+                <div className="mt-8 space-y-6">
+                  <div className="space-y-1">
+                    <h2 className="text-3xl font-black italic uppercase tracking-tighter text-slate-900 leading-none">Hoàn thành!</h2>
+                    <p className="text-slate-400 font-bold uppercase tracking-widest text-[9px]">Kết quả luyện tập của bạn</p>
+                  </div>
+
+                  <div className="py-6 border-y border-slate-50">
+                    <div className="text-7xl font-black text-slate-950 tracking-tighter italic">
+                      {score}
+                      <span className="text-2xl font-black text-slate-200 italic align-top ml-1">/ {quizData.length || currentData.words.length}</span>
+                    </div>
+                  </div>
+
+                  <p className="text-slate-500 text-[13px] font-medium italic leading-relaxed px-2">
+                    {score === (quizData.length || currentData.words.length) ? 'Tuyệt đỉnh! Bạn đã chinh phục hoàn toàn bài học này.' : 
+                     score > (quizData.length || currentData.words.length) / 2 ? 'Rất tốt! Hãy tiếp tục phát huy nhé.' : 
+                     'Đừng nản lòng! Hãy ôn lại và thử sức một lần nữa nhé.'}
+                  </p>
+
+                  <div className="grid grid-cols-1 gap-3 pt-2">
+                    <button 
+                      onClick={() => {
+                          setShowResults(false);
+                          if (viewMode === 'quiz') startQuiz(quizType);
+                          else { setCardIndex(0); setIsFlipped(false); }
+                      }}
+                      className="w-full py-4.5 bg-black text-white rounded-2xl text-[11px] font-black uppercase tracking-[0.3em] hover:scale-[1.02] active:scale-95 transition-all shadow-xl shadow-black/10 flex items-center justify-center gap-3"
+                    >
+                      <RefreshCcw className="w-4 h-4" />
+                      Luyện tập lại
+                    </button>
+                    <button 
+                      onClick={() => {
+                          setShowResults(false);
+                          setViewMode('list');
+                      }}
+                      className="w-full py-4.5 bg-slate-50 text-slate-400 rounded-2xl text-[11px] font-black uppercase tracking-[0.3em] hover:text-black transition-all flex items-center justify-center gap-3"
+                    >
+                      <List className="w-4 h-4" />
+                      Danh sách từ vựng
+                    </button>
+                  </div>
+                </div>
+             </div>
+           </div>
         )}
 
       </div>

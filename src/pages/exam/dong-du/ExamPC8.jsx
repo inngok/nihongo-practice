@@ -34,10 +34,7 @@ export default function ExamPC8() {
     <div className="min-h-screen bg-white">
       {/* Header Area */}
       <div className="pt-24 pb-12 px-6 md:px-12 max-w-7xl mx-auto border-b border-slate-50 relative overflow-hidden">
-        {/* Background Watermark */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[15vw] font-black text-slate-100 opacity-[0.03] pointer-events-none select-none leading-none z-0 whitespace-nowrap uppercase">
-          PC8 EXAM
-        </div>
+
 
         <Link
           to="/dong-du"
@@ -48,7 +45,7 @@ export default function ExamPC8() {
         <div className="relative z-10 flex flex-col md:flex-row md:items-end justify-between gap-8">
           <div className="space-y-4">
             <span className="text-[10px] tracking-[0.4em] font-bold text-slate-300 uppercase">Chương trình đặc biệt</span>
-            <h1 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tighter leading-tight italic uppercase">
+            <h1 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tighter leading-tight">
               Ôn thi PC8
             </h1>
             <p className="text-slate-400 font-medium text-sm md:text-base max-w-xl italic leading-relaxed">

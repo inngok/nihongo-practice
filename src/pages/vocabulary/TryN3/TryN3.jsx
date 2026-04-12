@@ -107,10 +107,7 @@ export default function TryN3() {
   return (
     <div className="min-h-screen bg-white flex flex-col items-center pt-52 md:pt-40 pb-20 px-4 md:px-6 font-sans relative overflow-hidden text-slate-900">
 
-      {/* Background Watermark */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[20vw] font-black text-slate-100 opacity-[0.03] pointer-events-none select-none leading-none z-0 whitespace-nowrap uppercase">
-        TRY! N3
-      </div>
+
 
       <div className="w-full max-w-5xl relative z-10">
 
@@ -134,7 +131,7 @@ export default function TryN3() {
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-12">
             <div className="space-y-6 flex-grow">
                <div className="border-l-4 border-black pl-6 py-2 animate-in slide-in-from-left-4 duration-500">
-                <h1 className="text-2xl md:text-4xl font-black text-slate-900 tracking-tighter leading-tight italic uppercase">
+                <h1 className="text-2xl md:text-4xl font-black text-slate-900 tracking-tighter leading-tight">
                   {currentData.title}
                 </h1>
                 <p className="text-xs md:text-sm text-slate-400 font-medium italic mt-1">
