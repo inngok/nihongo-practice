@@ -11,7 +11,7 @@ export default function KanjiSet4() {
   const [viewMode, setViewMode] = useState('list'); // 'list', 'flashcard', 'quiz'
   const [flashcardIndex, setFlashcardIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
-  const [isShuffle, setIsShuffle] = useState(true);
+  const [isShuffle, setIsShuffle] = useState(false);
   const [studyData, setStudyData] = useState([]);
 
   // Quiz State
@@ -169,7 +169,7 @@ export default function KanjiSet4() {
                 {viewMode === 'list' ? 'Quay lại' : 'Thoát luyện tập'}
               </button>
 
-              {viewMode === 'quiz' && (
+              {(viewMode === 'quiz' || viewMode === 'flashcard') && (
                  <div className="flex items-center gap-3 bg-slate-50 p-1 rounded-xl border border-slate-100 shadow-sm scale-90 animate-in fade-in duration-300">
                    <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest pl-2 font-sans">Xáo trộn</span>
                    <button 
@@ -182,7 +182,8 @@ export default function KanjiSet4() {
                        } else {
                          setStudyData(currentData);
                        }
-                       setQuizIndex(0);
+                       if (viewMode === 'quiz') setQuizIndex(0);
+                       if (viewMode === 'flashcard') setFlashcardIndex(0);
                      }}
                      className={`relative w-8 h-4 rounded-full transition-colors duration-300 focus:outline-none ${isShuffle ? 'bg-black' : 'bg-slate-200'}`}
                    >
