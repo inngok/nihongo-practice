@@ -62,7 +62,8 @@ const FlashcardSection = memo(({ words, cardIndex, isFlipped, setIsFlipped, next
   };
 
   return (
-    <div className="max-w-4xl mx-auto flex flex-col items-center animate-in fade-in zoom-in-95 duration-500 py-12"
+    <div className="max-w-4xl mx-auto flex flex-col items-center animate-in fade-in zoom-in-95 duration-500 py-12 touch-none"
+         style={{ touchAction: 'none' }}
          onTouchStart={handleTouchStart}
          onTouchMove={handleTouchMove}
          onTouchEnd={handleTouchEnd}>
@@ -77,7 +78,6 @@ const FlashcardSection = memo(({ words, cardIndex, isFlipped, setIsFlipped, next
         style={{
           transform: `translateX(${dragOffset}px) rotate(${dragOffset * 0.05}deg)`,
           transition: dragOffset === 0 ? 'transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)' : 'none',
-          touchAction: 'none'
         }}
         onClick={() => setIsFlipped(!isFlipped)}
       >

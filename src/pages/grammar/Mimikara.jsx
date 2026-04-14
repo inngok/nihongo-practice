@@ -435,7 +435,8 @@ export default function Mimikara() {
 
   const StudyScreen = (
     <div 
-      className="flex flex-col flex-grow animate-in"
+      className="flex flex-col flex-grow animate-in touch-none"
+      style={{ touchAction: 'none' }}
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
@@ -460,16 +461,12 @@ export default function Mimikara() {
         {{
           cards: (
             <div 
-              className="group perspective w-full aspect-[9/11] sm:aspect-[16/9] cursor-pointer touch-none" 
+              className="group perspective w-full aspect-[9/11] sm:aspect-[16/9] cursor-pointer" 
               style={{
                 transform: `translateX(${dragOffset}px) rotate(${dragOffset * 0.05}deg)`,
-                transition: dragOffset === 0 ? 'transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)' : 'none',
-                touchAction: 'none'
+                transition: dragOffset === 0 ? 'transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)' : 'none'
               }}
               onClick={() => setIsFlipped(!isFlipped)}
-              onTouchStart={handleTouchStart}
-              onTouchMove={handleTouchMove}
-              onTouchEnd={handleTouchEnd}
             >
               <div className={`relative w-full h-full transition-all duration-700 preserve-3d shadow-2xl rounded-[3rem] ${isFlipped ? 'rotate-y-180' : 'group-hover:scale-105'}`}>
                 <div className="absolute inset-0 backface-hidden bg-white border-2 border-slate-100 rounded-[3rem] flex flex-col items-center justify-center p-12 text-center">

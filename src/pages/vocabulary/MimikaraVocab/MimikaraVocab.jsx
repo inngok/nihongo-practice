@@ -294,7 +294,13 @@ export default function MimikaraVocab() {
         )}
 
         {viewMode === 'flashcard' && currentData.words.length > 0 && (
-          <div className="max-w-4xl mx-auto flex flex-col items-center animate-in fade-in zoom-in-95 duration-500 py-12">
+          <div 
+            className="max-w-4xl mx-auto flex flex-col items-center animate-in fade-in zoom-in-95 duration-500 py-12 touch-none"
+            style={{ touchAction: 'none' }}
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+          >
             <div className="w-full flex justify-between items-center mb-10 px-4">
               <span className="text-[10px] font-black text-slate-400 tracking-[0.2em] uppercase">Tiến trình: {cardIndex + 1} / {currentData.words.length}</span>
               <div className="h-1 bg-slate-100 w-64 rounded-full overflow-hidden"><div className="h-full bg-black transition-all" style={{ width: `${((cardIndex + 1) / currentData.words.length) * 100}%` }}></div></div>
@@ -304,12 +310,8 @@ export default function MimikaraVocab() {
               style={{
                 transform: `translateX(${dragOffset}px) rotate(${dragOffset * 0.05}deg)`,
                 transition: dragOffset === 0 ? 'transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)' : 'none',
-                touchAction: 'none'
               }}
               onClick={() => setIsFlipped(!isFlipped)}
-              onTouchStart={handleTouchStart}
-              onTouchMove={handleTouchMove}
-              onTouchEnd={handleTouchEnd}
             >
               <div className={`relative w-full h-full duration-500 preserve-3d shadow-xl rounded-[2.5rem] md:rounded-[3rem] ${isFlipped ? 'rotate-y-180' : ''}`}>
                 <div className="absolute inset-0 backface-hidden bg-white border border-slate-100 rounded-[2.5rem] md:rounded-[3rem] flex flex-col items-center justify-center p-8 md:p-12 text-center">
