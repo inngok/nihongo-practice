@@ -311,6 +311,9 @@ export default function KanjiSet4() {
             <div 
               key={`${activePage}-${viewMode}`}
               className="max-w-4xl mx-auto flex flex-col items-center animate-in fade-in zoom-in-95 duration-700"
+              onTouchStart={handleTouchStart}
+              onTouchMove={handleTouchMove}
+              onTouchEnd={handleTouchEnd}
             >
               
               {/* Progress Top */}
@@ -335,9 +338,6 @@ export default function KanjiSet4() {
                   transition: dragOffset === 0 ? 'transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)' : 'none',
                 }}
                 onClick={() => setIsFlipped(!isFlipped)}
-                onTouchStart={handleTouchStart}
-                onTouchMove={handleTouchMove}
-                onTouchEnd={handleTouchEnd}
               >
                 <div className={`relative w-full h-full duration-500 preserve-3d shadow-[0_30px_70px_-20px_rgba(0,0,0,0.1)] rounded-3xl md:rounded-[3rem] ${isFlipped ? 'rotate-y-180' : ''}`}>
                   
