@@ -125,7 +125,7 @@ export const tempVocabTests = [
       },
       {
         id: 11, type: "synonym",
-        question: "彼はわたしの幼なじみです。",
+        question: "彼はわたしの*幼なじみ*です。",
         options: [
           { text: "若い友だち", meaning: "Bạn trẻ" },
           { text: "子どもの友だち", meaning: "Bạn của con" },
@@ -137,7 +137,7 @@ export const tempVocabTests = [
       },
       {
         id: 12, type: "synonym",
-        question: "みんな田中先生をそんけいしています。",
+        question: "みんな田中先生を*そんけい*しています。",
         options: [
           { text: "遠くから見て", meaning: "Nhìn từ xa" },
           { text: "すごいと思って", meaning: "Nghĩ là tuyệt vời" },
@@ -149,7 +149,7 @@ export const tempVocabTests = [
       },
       {
         id: 13, type: "synonym",
-        question: "ここはようじのピアノ教室だ。",
+        question: "ここはようじの*ピアノ教室*だ。",
         options: [
           { text: "小学校に入る前の子ども", meaning: "Trẻ chưa vào tiểu học" },
           { text: "小学生6年までの子ども", meaning: "Trẻ em đến lớp 6" },
@@ -161,7 +161,7 @@ export const tempVocabTests = [
       },
       {
         id: 14, type: "synonym",
-        question: "これからも、わたしはあなたの味方です。",
+        question: "これからも、わたしはあなたの*味方*です。",
         options: [
           { text: "おうえんする人", meaning: "Người cổ vũ/ủng hộ" },
           { text: "世話をする人", meaning: "Người chăm sóc" },
@@ -173,7 +173,7 @@ export const tempVocabTests = [
       },
       {
         id: 15, type: "synonym",
-        question: "彼は学生時代からもてていたらしい。",
+        question: "彼は学生時代からもてていた*らしい*。",
         options: [
           { text: "力があった", meaning: "Có sức mạnh" },
           { text: "勉強ができた", meaning: "Học giỏi" },
@@ -371,7 +371,7 @@ export const tempVocabTests = [
       },
       {
         id: 11, type: "synonym",
-        question: "日本に来てから、じすいしている。",
+        question: "日本に来てから、*じすい*している。",
         options: [
           { text: "あまり食べないように", meaning: "Cố gắng không ăn nhiều" },
           { text: "自分で料理を作って", meaning: "Tự mình nấu món ăn" },
@@ -383,7 +383,7 @@ export const tempVocabTests = [
       },
       {
         id: 12, type: "synonym",
-        question: "とり肉をあげた料理が好きです。",
+        question: "とり肉を*あげた*料理が好きです。",
         options: [
           { text: "電子レンジで熱する", meaning: "Làm nóng bằng lò vi sóng" },
           { text: "なべで熱する", meaning: "Làm nóng bằng nồi" },
@@ -395,7 +395,7 @@ export const tempVocabTests = [
       },
       {
         id: 13, type: "synonym",
-        question: "しあさっては久しぶりのデートだ。",
+        question: "*しあさって*は久しぶりのデートだ。",
         options: [
           { text: "あさっての次の日", meaning: "Ngày tiếp theo của ngày kia" },
           { text: "あさっての2日後", meaning: "2 ngày sau của ngày kia" },
@@ -407,7 +407,7 @@ export const tempVocabTests = [
       },
       {
         id: 14, type: "synonym",
-        question: "洗濯物をたたむのは、うちでは息子の仕事だ。",
+        question: "洗濯物を*たたむ*のは、うちでは息子の仕事だ。",
         options: [
           { text: "外に出す", meaning: "Đưa ra ngoài" },
           { text: "中に入れる", meaning: "Cho vào trong" },
@@ -419,7 +419,7 @@ export const tempVocabTests = [
       },
       {
         id: 15, type: "synonym",
-        question: "台所の塩が切れている。",
+        question: "台所の塩が*切れている*。",
         options: [
           { text: "残っていない", meaning: "Không còn lại" },
           { text: "細かくなっていた", "meaning": "Đã trở nên nhỏ" },
@@ -460,34 +460,58 @@ export const tempVocabTests = [
           { text: "ぞうきんをしっかりおしぼりしてから掃除する。" },
           { text: "テストで悪い点をとって、おしぼりされた。" },
           { text: "食事の前におしぼりで手をきれいにする。" },
-          { text: "会社でも自分の机は自分でおしぼりするべきだ。" }
+          { text: "会社 thậm chí của mình là mình tự nhủ (おしぼり) nên làm." }
         ],
         answer: 2,
         explanation: "Trước của bữa ăn làm sạch tay bằng khăn ướt (おしぼり). Câu 1 nhầm với しぼって (vắt), Câu 2 nhầm với しぼられた (bị mắng)."
       },
       {
-        id: 19, type: "usage", word: "おかわり", meaning: "Bát nữa/Cốc nữa/Thêm suất nữa",
-        question: "Từ おかわり được sử dụng đúng trong câu nào?",
+        id: 19, type: "synonym",
+        question: "田中さんの*実家*はどこですか。",
         options: [
-          { text: "母と久しぶりに会ったが、おかわりはなかった。" },
-          { text: "部長のおかわりに、小林さんが出張するらしい。" },
-          { text: "この町も10年間でおかわりしてしまった。" },
-          { text: "きのうはビールを何杯もおかわりした。" }
+          { text: "今の住所", meaning: "Địa chỉ của bây giờ" },
+          { text: "生まれた家", meaning: "Nhà đã được sinh ra" },
+          { text: "自分の部屋", meaning: "Phòng của bản thân" },
+          { text: "結婚してからの家", meaning: "Nhà từ sau khi kết hôn" }
         ],
-        answer: 3,
-        explanation: "Hôm qua đã gọi thêm (おかわり) bia biết bao nhiêu ly rồi. Câu 1 và 3 nhầm với 変わり (thay đổi), Câu 2 nhầm với 代わり (thay thế)."
+        answer: 1,
+        explanation: "Nhà đẻ (実家 = 生まれた家) của anh Tanaka là ở đâu."
       },
       {
-        id: 20, type: "usage", word: "こぼす", meaning: "Làm tràn/Làm đổ",
-        question: "Từ こぼす được sử dụng đúng trong câu nào?",
+        id: 13, type: "synonym",
+        question: "留学生活は大変なので、*節約*している。",
         options: [
-          { text: "サラダにマヨネーズをこぼしてください。" },
-          { text: "コーヒーには必ずミルクをこぼして飲む。" },
-          { text: "カーペットにジュースをこぼして母にしかられた。" },
-          { text: "カップラーメンにお湯をこぼして3分待つ。" }
+          { text: "むだなお金を使わない", meaning: "Không sử dụng tiền vô ích" },
+          { text: "友だちに助けてもらっている", meaning: "Đang nhận được bạn bè giúp đỡ" },
+          { text: "親にお金を借りている", meaning: "Đang mượn tiền ở bố mẹ" },
+          { text: "電気やガスが止まっている", meaning: "Điện và ga đang dừng lại" }
         ],
-        answer: 2,
-        explanation: "Đã làm đổ (こぼして) nước ép hoa quả ra thảm bị mẹ mắng rồi. Câu 1 và 2 dùng かける/いれる, Câu 4 dùng そそぐ."
+        answer: 0,
+        explanation: "Cuộc sống du học vì vất vả nên, đang tiết kiệm (節約 = むだなお金を使わない)."
+      },
+      {
+        id: 14, type: "synonym",
+        question: "昨日は*ぐっすり*寝た。",
+        options: [
+          { text: "泣きながら", meaning: "Vừa khóc" },
+          { text: "とても深く", meaning: "Rất sâu" },
+          { text: "薬を飲んで", meaning: "Uống thuốc rồi" },
+          { text: "とても短い時間", meaning: "Thời gian rất ngắn" }
+        ],
+        answer: 1,
+        explanation: "Hôm qua đã ngủ say (ぐっすり = とても深く)."
+      },
+      {
+        id: 22, type: "synonym",
+        question: "これは八百屋でもらった*おまけ*です。",
+        options: [
+          { text: "おつり", meaning: "Tiền thừa" },
+          { text: "割引", meaning: "Giảm giá" },
+          { text: "得", meaning: "Lãi/Lời" },
+          { text: "サービス", meaning: "Dịch vụ/Hàng khuyến mãi" }
+        ],
+        answer: 3,
+        explanation: "Cái này là hàng khuyến mãi (おまけ = サービス) đã nhận ở cửa hàng rau."
       }
     ]
   },
@@ -617,7 +641,7 @@ export const tempVocabTests = [
       },
       {
         id: 11, type: "synonym",
-        question: "この手紙の差出人は親友です。",
+        question: "この手紙の*差出人*は親友です。",
         options: [
           { text: "届けてくれた人", meaning: "Người đã chuyển đến" },
           { text: "送った人", meaning: "Người đã gửi" },
@@ -641,7 +665,7 @@ export const tempVocabTests = [
       },
       {
         id: 13, type: "synonym",
-        question: "留学生活は大変なので、節約している。",
+        question: "留学生活は大変なので、*節約*している。",
         options: [
           { text: "むだなお金を使わない", meaning: "Không sử dụng tiền vô ích" },
           { text: "友だちに助けてもらっている", meaning: "Đang nhận được bạn bè giúp đỡ" },
@@ -653,7 +677,7 @@ export const tempVocabTests = [
       },
       {
         id: 14, type: "synonym",
-        question: "昨日はぐっすり寝た。",
+        question: "昨日は*ぐっすり*寝た。",
         options: [
           { text: "泣きながら", meaning: "Vừa khóc" },
           { text: "とても深く", meaning: "Rất sâu" },
@@ -665,7 +689,7 @@ export const tempVocabTests = [
       },
       {
         id: 15, type: "synonym",
-        question: "これは八百屋でもらったおまけです。",
+        question: "これは八百屋でもらった*おまけ*です。",
         options: [
           { text: "おつり", meaning: "Tiền thừa" },
           { text: "割引", meaning: "Giảm giá" },
@@ -863,7 +887,7 @@ export const tempVocabTests = [
       },
       {
         id: 11, type: "synonym",
-        question: "この先はつき当たりです。",
+        question: "この先は*つき当たり*です。",
         options: [
           { text: "車がぶつかるところ", meaning: "Nơi xe ô tô va chạm" },
           { text: "それ以上進めないところ", meaning: "Nơi không thể tiến lên hơn cái đó" },
@@ -875,7 +899,7 @@ export const tempVocabTests = [
       },
       {
         id: 12, type: "synonym",
-        question: "このホームに上り電車が来る。",
+        question: "このホームに*上り*電車が来る。",
         options: [
           { text: "北に向かっている", meaning: "Đang hướng về phía bắc" },
           { text: "高いところに向かっている", meaning: "Đang hướng về nơi cao" },
@@ -887,7 +911,7 @@ export const tempVocabTests = [
       },
       {
         id: 13, type: "synonym",
-        question: "朝早いバスはがらがらだ。",
+        question: "朝早いバスは*がらがら*だ。",
         options: [
           { text: "人がとても少ない", meaning: "Người rất ít" },
           { text: "人がうるさい", meaning: "Người ồn ào" },
@@ -899,7 +923,7 @@ export const tempVocabTests = [
       },
       {
         id: 14, type: "synonym",
-        question: "駅前の病院のそばにコンビニがある。",
+        question: "駅前の病院の*そば*にコンビニがある。",
         options: [
           { text: "すぐとなり", meaning: "Ngay bên cạnh" },
           { text: "すぐ近く", meaning: "Ngay gần" },
@@ -911,7 +935,7 @@ export const tempVocabTests = [
       },
       {
         id: 15, type: "synonym",
-        question: "このカーブはとてもゆるい。",
+        question: "このカーブはとても*ゆるい*。",
         options: [
           { text: "ゆっくりだ", meaning: "Chậm rãi" },
           { text: "長い", meaning: "Dài" },
@@ -1109,10 +1133,10 @@ export const tempVocabTests = [
       },
       {
         id: 11, type: "synonym",
-        question: "弟は大学生だが、今日もサボったようだ。",
+        question: "弟は大学生だが、今日も*サボった*ようだ。",
         options: [
           { text: "病気で休んだ", meaning: "Đã nghỉ bằng bệnh" },
-          { text: "理由がないのに休んだ", meaning: "Đã nghỉ mặc dù không có lý do" },
+          { text: "理由がないのに休んだ", meaning: "Đã nghỉ mặc dù không ada lý do" },
           { text: "寝坊して遅れた", meaning: "Đã ngủ quên và muộn" },
           { text: "アルバイトばかりした", meaning: "Chỉ toàn làm thêm" }
         ],
@@ -1121,7 +1145,7 @@ export const tempVocabTests = [
       },
       {
         id: 12, type: "synonym",
-        question: "用意したプリントがあまった。",
+        question: "用意したプリントが*あまった*。",
         options: [
           { text: "足りなかった", meaning: "Đã không đủ" },
           { text: "簡単すぎた", meaning: "Đã quá đơn giản" },
@@ -1133,7 +1157,7 @@ export const tempVocabTests = [
       },
       {
         id: 13, type: "synonym",
-        question: "これからの進路を先生に相談した。",
+        question: "これからの*進路*を先生に相談した。",
         options: [
           { text: "家への帰り方", meaning: "Cách đi về vào nhà" },
           { text: "車の運転のし方", meaning: "Cách làm của lái xe ô tô" },
@@ -1145,7 +1169,7 @@ export const tempVocabTests = [
       },
       {
         id: 14, type: "synonym",
-        question: "この文章を明日までに暗記する。",
+        question: "この文章を明日までに*暗記する*。",
         options: [
           { text: "意味を調べる", meaning: "Tra cứu ý nghĩa" },
           { text: "全部覚える", meaning: "Nhớ toàn bộ" },
@@ -1157,7 +1181,7 @@ export const tempVocabTests = [
       },
       {
         id: 15, type: "synonym",
-        question: "きのうの試合はくやしかった。",
+        question: "きのうの試合は*くやしかった*。",
         options: [
           { text: "とても残念だった", meaning: "Đã rất đáng tiếc" },
           { text: "とてもうれしかった", meaning: "Đã rất vui" },
@@ -1355,7 +1379,7 @@ export const tempVocabTests = [
       },
       {
         id: 11, type: "synonym",
-        question: "この書類をよく見なおしてください。",
+        question: "この書類をよく*見なおして*ください。",
         options: [
           { text: "見て間違いをなおして", meaning: "Nhìn rồi sửa sai" },
           { text: "もう一度注意して見て", meaning: "Nhìn chú ý thêm một lần nữa" },
@@ -1367,7 +1391,7 @@ export const tempVocabTests = [
       },
       {
         id: 12, type: "synonym",
-        question: "どんな人でも短所はある。",
+        question: "どんな人でも*短所*はある。",
         options: [
           { text: "短いところ", meaning: "Điểm ngắn" },
           { text: "すぐ怒るところ", meaning: "Điểm ngay lập tức tức giận" },
@@ -1379,7 +1403,7 @@ export const tempVocabTests = [
       },
       {
         id: 13, type: "synonym",
-        question: "マリアさんはとっくに帰国しました。",
+        question: "マリアさんは*とっくに*帰国しました。",
         options: [
           { text: "ずっと前に", meaning: "Trước đây suốt" },
           { text: "ちょっと前に", meaning: "Trước đây một chút" },
@@ -1391,7 +1415,7 @@ export const tempVocabTests = [
       },
       {
         id: 14, type: "synonym",
-        question: "アルバイトをして生活費をかせぐ。",
+        question: "アルバイトをして生活費を*かせぐ*。",
         options: [
           { text: "貯金する", meaning: "Tiết kiệm tiền" },
           { text: "国に送る", meaning: "Gửi về nước" },
@@ -1403,7 +1427,7 @@ export const tempVocabTests = [
       },
       {
         id: 15, type: "synonym",
-        question: "彼女とは会社の同期です。",
+        question: "彼女とは会社の*同期*です。",
         options: [
           { text: "友だちのような仲間", meaning: "Bạn bè giống như bè bạn" },
           { text: "同じ年に入った仲間", meaning: "Bạn bè đã vào cùng năm" },

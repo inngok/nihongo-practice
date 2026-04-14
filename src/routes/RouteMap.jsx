@@ -12,13 +12,20 @@ const Vocabulary = lazy(() => import("../pages/vocabulary/Vocabulary"));
 const Kanji = lazy(() => import("../pages/kanji/Kanji"));
 const KanjiSet4 = lazy(() => import("../pages/kanji/KanjiSet4/KanjiSet4"));
 const Soumatome = lazy(() => import("../pages/vocabulary/Soumatome/Soumatome"));
-const ExamPC7 = lazy(() => import("../pages/exam/ExamPC7"));
-const ExamVocab = lazy(() => import("../pages/exam/ExamVocab"));
-const TempVocabTest = lazy(() => import("../pages/exam/TempVocabTest"));
+const ExamPC7 = lazy(() => import("../pages/exam/dong-du/ExamPC7"));
+const DongDu = lazy(() => import("../pages/exam/dong-du/DongDu"));
+const ExamPC8 = lazy(() => import("../pages/exam/dong-du/ExamPC8"));
+const ExamJLPT = lazy(() => import("../pages/exam/jlpt/ExamJLPT"));
+const SentenceSort = lazy(() => import("../pages/exam/jlpt/SentenceSort"));
+const ExamVocab = lazy(() => import("../pages/exam/components/ExamVocab"));
+const KanjiPC8Selector = lazy(() => import("../pages/exam/dong-du/KanjiPC8Selector"));
+const TempVocabTest = lazy(() => import("../pages/exam/components/TempVocabTest"));
 const TryN3 = lazy(() => import("../pages/vocabulary/TryN3/TryN3"));
 const MimikaraVocab = lazy(() => import("../pages/vocabulary/MimikaraVocab/MimikaraVocab"));
+const DekiruVocab = lazy(() => import("../pages/vocabulary/DekiruVocab/DekiruVocab"));
 const Translator = lazy(() => import("../pages/translator/Translator"));
 const Tips = lazy(() => import("../pages/tips/Tips"));
+const ConfusingGrammar = lazy(() => import("../pages/grammar/ConfusingGrammar"));
 
 const PageLoader = () => (
   <div className="min-h-[calc(100vh-80px)] mt-20 flex items-center justify-center bg-white">
@@ -36,9 +43,12 @@ const Layout = () => {
     location.pathname === '/vocabulary/soumatome' ||
     location.pathname === '/vocabulary/try-n3' ||
     location.pathname === '/vocabulary/mimikara' ||
+    location.pathname === '/vocabulary/dekiru' ||
     location.pathname === '/kanji/set-4' ||
     location.pathname.startsWith('/exam-') ||
+    location.pathname === '/dong-du' ||
     location.pathname === '/translator' ||
+    location.pathname === '/grammar/confusing' ||
     location.pathname === '/tips';
 
   return (
@@ -84,12 +94,21 @@ export default function RouteMap() {
         <Route path="/vocabulary/soumatome" element={<Soumatome />} />
         <Route path="/vocabulary/try-n3" element={<TryN3 />} />
         <Route path="/vocabulary/mimikara" element={<MimikaraVocab />} />
+        <Route path="/vocabulary/dekiru" element={<DekiruVocab />} />
         <Route path="/kanji" element={<Kanji />} />
         <Route path="/kanji/set-4" element={<KanjiSet4 />} />
         <Route path="/exam-pc7" element={<ExamPC7 />} />
         <Route path="/exam-pc7/vocab-comprehensive" element={<ExamVocab type="comprehensive" />} />
+        <Route path="/exam-pc7/kanji-comprehensive" element={<ExamVocab type="kanji-comprehensive" />} />
         <Route path="/exam-pc7/goi-test" element={<TempVocabTest />} />
+        <Route path="/dong-du" element={<DongDu />} />
+        <Route path="/exam-pc8" element={<ExamPC8 />} />
+        <Route path="/exam-pc8/kanji" element={<KanjiPC8Selector />} />
+        <Route path="/exam-pc8/kanji/study" element={<ExamVocab type="kanji-pc8" />} />
+        <Route path="/exam-jlpt" element={<ExamJLPT />} />
+        <Route path="/exam-jlpt/sentence-sort" element={<SentenceSort />} />
         <Route path="/translator" element={<Translator />} />
+        <Route path="/grammar/confusing" element={<ConfusingGrammar />} />
         <Route path="/tips" element={<Tips />} />
         <Route path="*" element={<Fallback />} />
       </Route>

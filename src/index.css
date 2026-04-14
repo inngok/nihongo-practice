@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+.font-kanji {
+  font-family: 'M PLUS Rounded 1c', sans-serif !important;
+}
+
 @layer utilities {
   .perspective {
     perspective: 1000px;

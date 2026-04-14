@@ -1,6 +1,13 @@
 import React, { useState, useMemo, useEffect, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Brain, RotateCcw, List } from 'lucide-react';
 import { week1Data } from './week1';
+import { week6Data } from './week6';
+
+const allData = { 
+  ...week1Data, 
+  ...week6Data 
+};
 
 export default function Soumatome() {
   const navigate = useNavigate();
@@ -25,7 +32,7 @@ export default function Soumatome() {
   const inputRef = useRef(null);
 
   const currentData = useMemo(() => {
-    return week1Data[activeWeek]?.[activeDay] || { title: '', words: [] };
+    return allData[activeWeek]?.[activeDay] || { title: '', words: [] };
   }, [activeWeek, activeDay]);
 
   // Actions
@@ -108,10 +115,7 @@ export default function Soumatome() {
   return (
     <div className="min-h-screen bg-white flex flex-col items-center pt-52 md:pt-40 pb-20 px-4 md:px-6 font-sans relative overflow-hidden text-slate-900">
 
-      {/* Background Watermark */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[20vw] font-black text-slate-100 opacity-[0.03] pointer-events-none select-none leading-none z-0 whitespace-nowrap">
-        SOUMATOME
-      </div>
+
 
       <div className="w-full max-w-5xl relative z-10">
 

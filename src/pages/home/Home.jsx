@@ -3,12 +3,9 @@ import { Link } from 'react-router-dom';
 
 export default function Home() {
   return (
-    <div className="w-full h-full flex-grow bg-white flex flex-col items-center justify-center py-16 md:py-24 px-4 md:px-6 font-sans relative overflow-hidden">
+    <div className="w-full h-full flex-grow bg-white flex flex-col items-center justify-center pt-32 pb-16 md:py-24 px-4 md:px-6 font-sans relative overflow-hidden">
 
-      {/* Background Watermark */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[35vw] font-black text-slate-100 opacity-[0.03] pointer-events-none select-none leading-none z-0 whitespace-nowrap">
-        日本語
-      </div>
+
 
       {/* Hero Section */}
       <div className="w-full max-w-4xl flex flex-col items-center text-center gap-2 md:gap-3 mb-6 md:mb-8 relative z-10">
@@ -81,11 +78,20 @@ export default function Home() {
       {/* Specialty Bottom Section */}
       <div className="mt-8 md:mt-10 relative z-10 flex flex-wrap items-center justify-center gap-4 w-full">
         <Link
-          to="/exam-pc7"
+          to="/dong-du"
           className="group px-8 py-4 bg-slate-50 border border-slate-100 rounded-[2rem] hover:bg-black hover:border-black hover:-translate-y-1 hover:shadow-2xl transition-all duration-300"
         >
           <span className="text-[10px] md:text-[11px] font-black tracking-[0.3em] uppercase text-slate-500 group-hover:text-white transition-colors">
-            Ôn thi PC7
+            Đông Du
+          </span>
+        </Link>
+
+        <Link
+          to="/exam-jlpt"
+          className="group px-8 py-4 bg-slate-50 border border-slate-100 rounded-[2rem] hover:bg-black hover:border-black hover:-translate-y-1 hover:shadow-2xl transition-all duration-300"
+        >
+          <span className="text-[10px] md:text-[11px] font-black tracking-[0.3em] uppercase text-slate-500 group-hover:text-white transition-colors">
+            Ôn thi JLPT
           </span>
         </Link>
 
@@ -98,6 +104,15 @@ export default function Home() {
           </span>
         </Link>
         
+        <Link
+          to="/grammar/confusing"
+          className="group px-8 py-4 bg-slate-50 border border-slate-100 rounded-[2rem] hover:bg-black hover:border-black hover:-translate-y-1 hover:shadow-2xl transition-all duration-300"
+        >
+          <span className="text-[10px] md:text-[11px] font-black tracking-[0.3em] uppercase text-slate-500 group-hover:text-white transition-colors">
+            Phân biệt
+          </span>
+        </Link>
+
         <Link
           to="/tips"
           className="group px-8 py-4 bg-slate-50 border border-slate-100 rounded-[2rem] hover:bg-black hover:border-black hover:-translate-y-1 hover:shadow-2xl transition-all duration-300"
