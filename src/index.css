@@ -2,6 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  font-family: 'Outfit', 'Noto Sans JP', sans-serif;
+}
+
+body {
+  font-family: 'Outfit', 'Noto Sans JP', sans-serif;
+}
+
 @layer utilities {
   .perspective {
     perspective: 1000px;
