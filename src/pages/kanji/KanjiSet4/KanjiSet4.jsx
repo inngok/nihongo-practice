@@ -249,7 +249,10 @@ export default function KanjiSet4() {
         
         {/* List View */}
         {viewMode === 'list' && (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+          <div 
+            key={activePage}
+            className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6 animate-in fade-in duration-700"
+          >
             {currentData.length > 0 ? (
               currentData.map((item, index) => (
                 <div 
@@ -285,7 +288,10 @@ export default function KanjiSet4() {
         {/* Flashcard View */}
         {viewMode === 'flashcard' && (
           currentData.length > 0 ? (
-            <div className="max-w-4xl mx-auto flex flex-col items-center animate-in fade-in zoom-in-95 duration-500">
+            <div 
+              key={`${activePage}-${viewMode}`}
+              className="max-w-4xl mx-auto flex flex-col items-center animate-in fade-in zoom-in-95 duration-700"
+            >
               
               {/* Progress Top */}
               <div className="w-full flex justify-between items-center mb-10 px-4">
@@ -381,7 +387,10 @@ export default function KanjiSet4() {
 
         {/* Quiz View */}
         {viewMode === 'quiz' && studyData.length > 0 && (
-          <div className="max-w-2xl mx-auto flex flex-col items-center animate-in fade-in slide-in-from-bottom-8 duration-700">
+          <div 
+            key={`${activePage}-${viewMode}`}
+            className="max-w-2xl mx-auto flex flex-col items-center animate-in fade-in slide-in-from-bottom-2 duration-700"
+          >
              <div className="w-full max-w-lg mb-12 flex items-end justify-between px-6 py-4 bg-slate-50/50 rounded-3xl border border-slate-100 backdrop-blur-sm">
                 <div className="flex flex-col">
                   <span className="text-[10px] font-black text-slate-300 uppercase tracking-[0.2em] mb-1">Mục tiêu</span>

@@ -37,7 +37,7 @@ export default function KanjiPC8Selector() {
       </div>
 
       {/* Selector Grid */}
-      <div className="px-6 md:px-12 py-16 max-w-7xl mx-auto">
+      <div className="px-6 md:px-12 py-16 max-w-7xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-1000">
         {weeks.map((w) => (
           <div key={w.week} className="mb-16">
             <div className="flex items-center gap-4 mb-10">
