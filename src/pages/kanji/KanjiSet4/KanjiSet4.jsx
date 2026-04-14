@@ -24,6 +24,10 @@ export default function KanjiSet4() {
   const [showResults, setShowResults] = useState(false);
   const inputRef = useRef(null);
 
+  // Swipe Support State
+  const [touchStartX, setTouchStartX] = useState(0);
+  const [touchEndX, setTouchEndX] = useState(0);
+
   // Filter and memoize current page data
   const currentData = useMemo(() => {
     if (activePage === 'all') {
@@ -32,21 +36,9 @@ export default function KanjiSet4() {
     return kanjiData[activePage] || [];
   }, [activePage]);
   
-  // Update studyData when currentData or isShuffle changes
+  // Sync studyData whenever currentData or isShuffle changes
+  // This ensures that switching pages while in Flashcard/Quiz mode updates the data correctly
   useEffect(() => {
-    if (viewMode === 'list') {
-       setStudyData(currentData);
-    }
-  }, [currentData, viewMode]);
-
-  // Page selection logic (automatically sorted numerically)
-  const availablePages = useMemo(() => 
-    Object.keys(kanjiData).map(Number).sort((a, b) => a - b),
-    [kanjiData]
-  );
-
-  // Initialize Quiz/Flashcard with Shuffle
-  const startMode = useCallback((mode) => {
     let data = [...currentData];
     if (isShuffle) {
       data.sort(() => Math.random() - 0.5);
@@ -55,11 +47,23 @@ export default function KanjiSet4() {
     setFlashcardIndex(0);
     setQuizIndex(0);
     setScore(0);
-    setUserInput('');
+    setIsFlipped(false);
     setFeedback(null);
+    setUserInput('');
     setShowHint(false);
-    setViewMode(mode);
+    setShowResults(false);
   }, [currentData, isShuffle]);
+
+  // Page selection logic (automatically sorted numerically)
+  const availablePages = useMemo(() => 
+    Object.keys(kanjiData).map(Number).sort((a, b) => a - b),
+    [kanjiData]
+  );
+
+  // Initialize Quiz/Flashcard
+  const startMode = useCallback((mode) => {
+    setViewMode(mode);
+  }, []);
 
   // Keyboard navigation for Flashcard & Quiz
   useEffect(() => {
@@ -113,6 +117,22 @@ export default function KanjiSet4() {
     setFlashcardIndex(0);
     setIsFlipped(false);
     if (viewMode === 'quiz') setViewMode('list'); 
+    // Scroll to top when page changes on mobile
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  // Touch Swipe Handlers for Flashcards
+  const handleTouchStart = (e) => setTouchStartX(e.targetTouches[0].clientX);
+  const handleTouchMove = (e) => setTouchEndX(e.targetTouches[0].clientX);
+  const handleTouchEnd = () => {
+    if (!touchStartX || !touchEndX) return;
+    const distance = touchStartX - touchEndX;
+    const isLeftSwipe = distance > 50;
+    const isRightSwipe = distance < -50;
+    if (isLeftSwipe) handleNext();
+    if (isRightSwipe) handlePrev();
+    setTouchStartX(0);
+    setTouchEndX(0);
   };
 
   // Quiz Logic
@@ -141,7 +161,7 @@ export default function KanjiSet4() {
   };
 
   return (
-    <div className="min-h-screen bg-white flex flex-col items-center pt-52 md:pt-40 pb-20 px-4 md:px-6 font-sans relative overflow-hidden text-slate-900">
+    <div className="min-h-screen bg-white flex flex-col items-center pt-32 md:pt-40 pb-20 px-4 md:px-6 font-sans relative overflow-hidden text-slate-900">
       
       {/* Background Watermark */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[35vw] font-black text-slate-100 opacity-[0.03] pointer-events-none select-none leading-none z-0 whitespace-nowrap">
@@ -172,23 +192,12 @@ export default function KanjiSet4() {
               {(viewMode === 'quiz' || viewMode === 'flashcard') && (
                  <div className="flex items-center gap-3 bg-slate-50 p-1 rounded-xl border border-slate-100 shadow-sm scale-90 animate-in fade-in duration-300">
                    <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest pl-2 font-sans">Xáo trộn</span>
-                   <button 
-                     onClick={() => {
-                       const nextShuffle = !isShuffle;
-                       setIsShuffle(nextShuffle);
-                       if (nextShuffle) {
-                         const data = [...studyData].sort(() => Math.random() - 0.5);
-                         setStudyData(data);
-                       } else {
-                         setStudyData(currentData);
-                       }
-                       if (viewMode === 'quiz') setQuizIndex(0);
-                       if (viewMode === 'flashcard') setFlashcardIndex(0);
-                     }}
-                     className={`relative w-8 h-4 rounded-full transition-colors duration-300 focus:outline-none ${isShuffle ? 'bg-black' : 'bg-slate-200'}`}
-                   >
-                     <div className={`absolute top-0.5 left-0.5 w-3 h-3 bg-white rounded-full transition-transform duration-300 ${isShuffle ? 'translate-x-4' : ''}`} />
-                   </button>
+                    <button 
+                      onClick={() => setIsShuffle(!isShuffle)}
+                      className={`relative w-8 h-4 rounded-full transition-colors duration-300 focus:outline-none ${isShuffle ? 'bg-black' : 'bg-slate-200'}`}
+                    >
+                      <div className={`absolute top-0.5 left-0.5 w-3 h-3 bg-white rounded-full transition-transform duration-300 ${isShuffle ? 'translate-x-4' : ''}`} />
+                    </button>
                  </div>
               )}
             </div>
@@ -196,7 +205,7 @@ export default function KanjiSet4() {
             <div className="space-y-4">
               <div className="flex items-center gap-3 flex-wrap">
                 <span className="text-slate-300 font-bold text-[10px] tracking-[0.3em] uppercase">Set 04</span>
-                <div className="flex gap-2 flex-wrap items-center">
+                <div className="flex flex-wrap gap-2 items-center max-w-full">
                    <button
                      onClick={() => switchPage('all')}
                      className={`px-4 py-1.5 text-[9px] font-black tracking-widest uppercase rounded-full transition-all ${activePage === 'all' ? 'bg-black text-white' : 'bg-slate-50 text-slate-400 hover:bg-slate-100'}`}
@@ -263,7 +272,7 @@ export default function KanjiSet4() {
                     {(index + 1).toString().padStart(2, '0')}
                   </span>
                   
-                  <div className="text-5xl font-black text-slate-900 group-hover:scale-110 transition-transform duration-500 py-1">
+                  <div className="text-5xl font-bold text-slate-900 group-hover:scale-110 transition-transform duration-500 py-1 font-kanji">
                     {item.kanji}
                   </div>
                   
@@ -294,13 +303,13 @@ export default function KanjiSet4() {
             >
               
               {/* Progress Top */}
-              <div className="w-full flex justify-between items-center mb-10 px-4">
-                <span className="text-[10px] font-black text-slate-400 tracking-[0.2em] uppercase">
-                  Tiến trình: {flashcardIndex + 1} / {studyData.length}
+              <div className="w-full flex flex-col sm:flex-row justify-between items-center mb-8 gap-4 px-4">
+                <span className="text-[10px] font-extrabold text-slate-400 tracking-[0.2em] uppercase">
+                  {flashcardIndex + 1} / {studyData.length}
                 </span>
-                <div className="h-1.5 w-64 bg-slate-100 rounded-full overflow-hidden">
+                <div className="h-1 w-full max-w-[200px] bg-slate-100 rounded-full overflow-hidden">
                   <div 
-                    className="h-full bg-slate-900 transition-all duration-500" 
+                    className="h-full bg-slate-900 transition-all duration-500 ease-out" 
                     style={{ width: `${((flashcardIndex + 1) / studyData.length) * 100}%` }}
                   />
                 </div>
@@ -308,23 +317,27 @@ export default function KanjiSet4() {
 
               {/* The Card */}
               <div 
-                className="group perspective w-full aspect-[16/10] md:max-h-[450px] cursor-pointer"
+                key={flashcardIndex}
+                className="group perspective w-full aspect-[9/11] sm:aspect-[16/10] md:max-h-[450px] cursor-pointer animate-in fade-in zoom-in-95 duration-500"
                 onClick={() => setIsFlipped(!isFlipped)}
+                onTouchStart={handleTouchStart}
+                onTouchMove={handleTouchMove}
+                onTouchEnd={handleTouchEnd}
               >
-                <div className={`relative w-full h-full duration-500 preserve-3d shadow-[0_40px_100px_-20px_rgba(0,0,0,0.08)] rounded-[3rem] ${isFlipped ? 'rotate-y-180' : ''}`}>
+                <div className={`relative w-full h-full duration-500 preserve-3d shadow-[0_30px_70px_-20px_rgba(0,0,0,0.1)] rounded-3xl md:rounded-[3rem] ${isFlipped ? 'rotate-y-180' : ''}`}>
                   
                   {/* Front Side */}
-                  <div className="absolute inset-0 backface-hidden bg-white border border-slate-100 rounded-[3rem] flex flex-col items-center justify-center p-8">
-                     <div className="absolute top-8 text-[10px] font-bold text-slate-300 uppercase tracking-[0.3em]">Hán tự</div>
-                     <div className="text-[7rem] md:text-[12rem] font-black text-slate-900 select-none leading-none">{studyData[flashcardIndex].kanji}</div>
+                  <div className="absolute inset-0 backface-hidden bg-white border border-slate-100 rounded-3xl md:rounded-[3rem] flex flex-col items-center justify-center p-8">
+                     <div className="absolute top-8 text-[9px] font-bold text-slate-200 uppercase tracking-[0.4em]">Hán tự</div>
+                     <div className="text-[7rem] md:text-[12rem] font-bold text-slate-900 select-none leading-none font-kanji">{studyData[flashcardIndex].kanji}</div>
                      <div className="absolute bottom-8 flex items-center justify-center w-full px-4 text-[10px] font-bold text-slate-300 uppercase tracking-widest decoration-slate-100 italic">
                        NHẤN ĐỂ LẬT
                      </div>
                   </div>
 
                   {/* Back Side */}
-                  <div className="absolute inset-0 backface-hidden bg-white border-2 border-slate-900 text-slate-950 rounded-[3rem] rotate-y-180 flex flex-col items-center justify-center p-12 overflow-hidden">
-                     <div className="absolute -top-10 -right-10 text-[20vw] font-black text-slate-100 rotate-12 select-none pointer-events-none leading-none">
+                  <div className="absolute inset-0 backface-hidden bg-white border-2 border-slate-900 text-slate-950 rounded-3xl md:rounded-[3rem] rotate-y-180 flex flex-col items-center justify-center p-8 md:p-12 overflow-hidden">
+                     <div className="absolute -top-10 -right-10 text-[25vw] font-black text-slate-50 rotate-12 select-none pointer-events-none leading-none opacity-50">
                        {studyData[flashcardIndex].kanji}
                      </div>
                      
@@ -404,7 +417,7 @@ export default function KanjiSet4() {
 
              <div className="text-center space-y-8 w-full">
                 <div className="space-y-4 relative group">
-                  <div className="text-[8rem] md:text-[10rem] font-black text-slate-900 leading-none select-none drop-shadow-sm transition-transform group-hover:scale-105 duration-500">
+                  <div className="text-[8rem] md:text-[10rem] font-bold text-slate-900 leading-none select-none drop-shadow-sm transition-transform group-hover:scale-105 duration-500 font-kanji">
                     {studyData[quizIndex].kanji}
                   </div>
                   <div className="flex flex-col items-center">

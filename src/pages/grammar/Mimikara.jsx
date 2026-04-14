@@ -467,7 +467,7 @@ export default function Mimikara() {
             >
               <div className={`relative w-full h-full transition-all duration-700 preserve-3d shadow-2xl rounded-[3rem] ${isFlipped ? 'rotate-y-180' : 'group-hover:scale-105'}`}>
                 <div className="absolute inset-0 backface-hidden bg-white border-2 border-slate-100 rounded-[3rem] flex flex-col items-center justify-center p-12 text-center">
-                  <h2 className="text-4xl font-black italic">{currentItem.pattern}</h2>
+                  <h2 className="text-2xl md:text-4xl font-black italic whitespace-normal md:whitespace-nowrap">{currentItem.pattern}</h2>
                   <p className="mt-4 text-[10px] font-bold text-slate-300 uppercase tracking-widest italic decoration-slate-100 underline underline-offset-8">NHẤN ĐỂ LẬT</p>
                 </div>
                 <div className="absolute inset-0 backface-hidden rotate-y-180 bg-white border-2 border-slate-900 text-slate-900 rounded-[3rem] flex flex-col items-center justify-center p-12 text-center">
@@ -488,7 +488,7 @@ export default function Mimikara() {
               >
                 {!isFlipped ? (
                   <div className="animate-in fade-in zoom-in-95 duration-300">
-                    <h2 className="text-5xl font-black italic mb-6">{currentItem.pattern}</h2>
+                    <h2 className="text-3xl md:text-5xl font-black italic mb-6 whitespace-normal md:whitespace-nowrap">{currentItem.pattern}</h2>
                     <p className="text-[10px] font-black text-slate-300 uppercase tracking-[0.2em] animate-pulse">Nhấn để xem nghĩa / Space to flip</p>
                   </div>
                 ) : (
