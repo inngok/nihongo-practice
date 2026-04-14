@@ -4,7 +4,14 @@ import { page3Data } from './page3';
 import { page4Data } from './page4';
 import { page5Data } from './page5';
 import { page6Data } from './page6';
+import { page7Data } from './page7';
+import { page8Data } from './page8';
+import { page9Data } from './page9';
+import { page10Data } from './page10';
+import { page11Data } from './page11';
 import { page12Data } from './page12';
+import { page13Data } from './page13';
+import { page14Data } from './page14';
 import { page15Data } from './page15';
 import { page16Data } from './page16';
 import { page17Data } from './page17';
@@ -20,7 +27,14 @@ export const kanjiData = {
   4: page4Data,
   5: page5Data,
   6: page6Data,
+  7: page7Data,
+  8: page8Data,
+  9: page9Data,
+  10: page10Data,
+  11: page11Data,
   12: page12Data,
+  13: page13Data,
+  14: page14Data,
   15: page15Data,
   16: page16Data,
   17: page17Data,
