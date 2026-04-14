@@ -470,12 +470,29 @@ export default function Mimikara() {
                   <h2 className="text-2xl md:text-4xl font-semibold italic whitespace-normal md:whitespace-nowrap font-kanji">{currentItem.pattern}</h2>
                   <p className="mt-4 text-[10px] font-bold text-slate-300 uppercase tracking-widest italic decoration-slate-100 underline underline-offset-8">NHẤN ĐỂ LẬT</p>
                 </div>
-                <div className="absolute inset-0 backface-hidden rotate-y-180 bg-white border-2 border-slate-900 text-slate-900 rounded-[3rem] flex flex-col items-center justify-center p-12 text-center">
-                  <h3 className="text-2xl font-black mb-4 italic leading-tight">{currentItem.meaning}</h3>
-                  <p className="text-sm text-slate-500 italic mb-8 line-clamp-3 font-medium">{currentItem.explanation}</p>
-                  <div className="h-px w-12 bg-slate-100 mb-6" />
-                  <p className="text-[10px] font-black uppercase tracking-widest text-slate-300 italic">PATTERN: {currentItem.pattern}</p>
-                  <div className="mt-6 px-4 py-1.5 bg-slate-900 text-white rounded-full text-[10px] font-black uppercase tracking-tighter shadow-lg">NHẤN ĐỂ LẬT LẠI</div>
+                <div className="absolute inset-0 backface-hidden rotate-y-180 bg-white border-2 border-slate-900 text-slate-900 rounded-[3rem] flex flex-col items-center p-8 md:p-12 text-center overflow-hidden">
+                   <div className="w-full flex-grow flex flex-col items-center justify-center overflow-y-auto no-scrollbar space-y-4">
+                      <div className="space-y-2">
+                        <h3 className="text-xl md:text-2xl font-black italic leading-tight">{currentItem.meaning}</h3>
+                        <p className="text-xs md:text-sm text-slate-500 italic font-medium px-4">{currentItem.explanation}</p>
+                      </div>
+                      
+                      {currentItem.examples && currentItem.examples.length > 0 && (
+                        <div className="w-full space-y-3 pt-4 border-t border-slate-100">
+                           {currentItem.examples.map((ex, idx) => (
+                             <div key={idx} className="text-left">
+                               <p className="text-[11px] font-bold text-slate-900 leading-snug">{ex.jp}</p>
+                               <p className="text-[10px] text-slate-400 font-medium italic">{ex.vn}</p>
+                             </div>
+                           ))}
+                        </div>
+                      )}
+                   </div>
+                   
+                   <div className="mt-6 pt-4 border-t border-slate-50 w-full flex flex-col items-center gap-2">
+                     <p className="text-[9px] font-black uppercase tracking-widest text-slate-300">PATTERN: {currentItem.pattern}</p>
+                     <div className="px-4 py-1.5 bg-slate-900 text-white rounded-full text-[9px] font-black uppercase tracking-tighter shadow-lg">LẬT LẠI</div>
+                   </div>
                 </div>
               </div>
             </div>
@@ -502,14 +519,16 @@ export default function Mimikara() {
                 )}
               </div>
               {isFlipped && (
-                <div className="space-y-4 animate-in slide-in-from-top-4 duration-500">
-                  {currentItem.examples?.map((ex, idx) => (
-                    <div key={idx} className={`relative p-6 rounded-[1.5rem] italic ${ex.isBook ? 'bg-slate-900 text-white' : 'bg-slate-50 text-slate-900'}`}>
-                      {ex.isBook && <span className="absolute -top-2 -right-2 bg-emerald-500 text-white text-[8px] font-black px-2 py-1 rounded-full uppercase">Mimikara Example</span>}
-                      <p className="font-bold mb-1">{ex.jp}</p>
-                      <p className={`text-xs font-bold ${ex.isBook ? 'text-white/60' : 'text-slate-400'}`}>{ex.vn}</p>
-                    </div>
-                  ))}
+                <div className="animate-in slide-in-from-top-4 duration-500">
+                  <div className="space-y-2 bg-slate-50 p-6 rounded-[2rem] border border-slate-100">
+                    <p className="text-[10px] font-black text-slate-300 uppercase tracking-widest mb-2 px-2">Ví dụ Mimikara</p>
+                    {currentItem.examples?.map((ex, idx) => (
+                      <div key={idx} className={`relative p-4 rounded-[1.5rem] italic ${ex.isBook ? 'bg-white shadow-sm' : 'text-slate-900'}`}>
+                        <p className="font-bold text-sm mb-1">{ex.jp}</p>
+                        <p className="text-[11px] font-medium text-slate-400">{ex.vn}</p>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               )}
             </div>

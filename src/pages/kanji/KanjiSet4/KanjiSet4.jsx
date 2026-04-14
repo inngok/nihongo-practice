@@ -172,11 +172,13 @@ export default function KanjiSet4() {
   };
 
   return (
-    <div className="min-h-screen bg-white flex flex-col items-center pt-32 md:pt-40 pb-20 px-4 md:px-6 font-sans relative overflow-hidden text-slate-900">
+    <div className="min-h-screen w-full bg-white flex flex-col items-center pt-24 md:pt-32 px-4 md:px-12 selection:bg-black selection:text-white">
       
-      {/* Background Watermark */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[35vw] font-black text-slate-100 opacity-[0.03] pointer-events-none select-none leading-none z-0 whitespace-nowrap">
-        漢字集
+      {/* Header Section */}
+      <div className={`w-full max-w-6xl mb-8 flex justify-between items-end ${viewMode !== 'list' ? 'hidden sm:flex' : 'flex'}`}>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[35vw] font-black text-slate-100 opacity-[0.03] pointer-events-none select-none leading-none z-0 whitespace-nowrap">
+          漢字集
+        </div>
       </div>
 
       <div className="w-full max-w-6xl relative z-10">
@@ -332,7 +334,7 @@ export default function KanjiSet4() {
               {/* The Card */}
               <div 
                 key={flashcardIndex}
-                className="group perspective w-full aspect-[9/11] sm:aspect-[16/10] md:max-h-[450px] cursor-pointer animate-in fade-in zoom-in-95 duration-500"
+                className="group perspective w-full aspect-[4/5] sm:aspect-[16/10] md:max-h-[450px] cursor-pointer animate-in fade-in zoom-in-95 duration-500"
                 style={{
                   transform: `translateX(${dragOffset}px) rotate(${dragOffset * 0.05}deg)`,
                   transition: dragOffset === 0 ? 'transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)' : 'none',
