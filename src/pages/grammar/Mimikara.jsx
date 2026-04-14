@@ -420,7 +420,7 @@ export default function Mimikara() {
                 <span className="text-[10px] font-black text-slate-300">U{item.unit} • #{item.id}</span>
                 {completedIds.includes(item.id) && <Check className="w-4 h-4 text-emerald-500" />}
               </div>
-              <h3 className="text-2xl font-black italic mb-2">{item.pattern}</h3>
+              <h3 className="text-2xl font-semibold italic mb-2 font-kanji">{item.pattern}</h3>
               {item.romaji && <p className="text-[10px] font-bold text-slate-300 uppercase tracking-widest mb-2">{item.romaji}</p>}
               <p className="text-slate-500 font-bold text-sm italic">{item.meaning}</p>
             </div>
@@ -467,7 +467,7 @@ export default function Mimikara() {
             >
               <div className={`relative w-full h-full transition-all duration-700 preserve-3d shadow-2xl rounded-[3rem] ${isFlipped ? 'rotate-y-180' : 'group-hover:scale-105'}`}>
                 <div className="absolute inset-0 backface-hidden bg-white border-2 border-slate-100 rounded-[3rem] flex flex-col items-center justify-center p-12 text-center">
-                  <h2 className="text-2xl md:text-4xl font-black italic whitespace-normal md:whitespace-nowrap">{currentItem.pattern}</h2>
+                  <h2 className="text-2xl md:text-4xl font-semibold italic whitespace-normal md:whitespace-nowrap font-kanji">{currentItem.pattern}</h2>
                   <p className="mt-4 text-[10px] font-bold text-slate-300 uppercase tracking-widest italic decoration-slate-100 underline underline-offset-8">NHẤN ĐỂ LẬT</p>
                 </div>
                 <div className="absolute inset-0 backface-hidden rotate-y-180 bg-white border-2 border-slate-900 text-slate-900 rounded-[3rem] flex flex-col items-center justify-center p-12 text-center">
@@ -488,12 +488,12 @@ export default function Mimikara() {
               >
                 {!isFlipped ? (
                   <div className="animate-in fade-in zoom-in-95 duration-300">
-                    <h2 className="text-3xl md:text-5xl font-black italic mb-6 whitespace-normal md:whitespace-nowrap">{currentItem.pattern}</h2>
+                    <h2 className="text-3xl md:text-5xl font-semibold italic mb-6 whitespace-normal md:whitespace-nowrap font-kanji">{currentItem.pattern}</h2>
                     <p className="text-[10px] font-black text-slate-300 uppercase tracking-[0.2em] animate-pulse">Nhấn để xem nghĩa / Space to flip</p>
                   </div>
                 ) : (
                   <div className="animate-in fade-in zoom-in-95 duration-300">
-                    <h2 className="text-xl font-black italic text-slate-300 mb-2 uppercase tracking-widest">{currentItem.pattern}</h2>
+                    <h2 className="text-xl font-semibold italic text-slate-300 mb-2 uppercase tracking-widest font-kanji">{currentItem.pattern}</h2>
                     <div className="h-px w-20 bg-slate-100 mx-auto mb-6" />
                     <h3 className="text-3xl font-black italic text-black mb-4">{currentItem.meaning}</h3>
                     <p className="text-[10px] font-bold text-slate-400 italic mb-2 px-6">{currentItem.explanation}</p>

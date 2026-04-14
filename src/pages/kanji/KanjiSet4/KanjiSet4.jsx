@@ -27,6 +27,7 @@ export default function KanjiSet4() {
   // Swipe Support State
   const [touchStartX, setTouchStartX] = useState(0);
   const [touchEndX, setTouchEndX] = useState(0);
+  const [dragOffset, setDragOffset] = useState(0);
 
   // Filter and memoize current page data
   const currentData = useMemo(() => {
@@ -122,13 +123,23 @@ export default function KanjiSet4() {
   };
 
   // Touch Swipe Handlers for Flashcards
-  const handleTouchStart = (e) => setTouchStartX(e.targetTouches[0].clientX);
-  const handleTouchMove = (e) => setTouchEndX(e.targetTouches[0].clientX);
+  const handleTouchStart = (e) => {
+    setTouchStartX(e.targetTouches[0].clientX);
+    setTouchEndX(0);
+  };
+  const handleTouchMove = (e) => {
+    const currentX = e.targetTouches[0].clientX;
+    setTouchEndX(currentX);
+    if (touchStartX) {
+      setDragOffset(currentX - touchStartX);
+    }
+  };
   const handleTouchEnd = () => {
+    setDragOffset(0);
     if (!touchStartX || !touchEndX) return;
     const distance = touchStartX - touchEndX;
-    const isLeftSwipe = distance > 50;
-    const isRightSwipe = distance < -50;
+    const isLeftSwipe = distance > 80;
+    const isRightSwipe = distance < -80;
     if (isLeftSwipe) handleNext();
     if (isRightSwipe) handlePrev();
     setTouchStartX(0);
@@ -272,7 +283,7 @@ export default function KanjiSet4() {
                     {(index + 1).toString().padStart(2, '0')}
                   </span>
                   
-                  <div className="text-5xl font-bold text-slate-900 group-hover:scale-110 transition-transform duration-500 py-1 font-kanji">
+                  <div className="text-5xl font-semibold text-slate-900 group-hover:scale-110 transition-transform duration-500 py-1 font-kanji">
                     {item.kanji}
                   </div>
                   
@@ -319,6 +330,10 @@ export default function KanjiSet4() {
               <div 
                 key={flashcardIndex}
                 className="group perspective w-full aspect-[9/11] sm:aspect-[16/10] md:max-h-[450px] cursor-pointer animate-in fade-in zoom-in-95 duration-500"
+                style={{
+                  transform: `translateX(${dragOffset}px) rotate(${dragOffset * 0.05}deg)`,
+                  transition: dragOffset === 0 ? 'transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)' : 'none',
+                }}
                 onClick={() => setIsFlipped(!isFlipped)}
                 onTouchStart={handleTouchStart}
                 onTouchMove={handleTouchMove}
@@ -329,7 +344,7 @@ export default function KanjiSet4() {
                   {/* Front Side */}
                   <div className="absolute inset-0 backface-hidden bg-white border border-slate-100 rounded-3xl md:rounded-[3rem] flex flex-col items-center justify-center p-8">
                      <div className="absolute top-8 text-[9px] font-bold text-slate-200 uppercase tracking-[0.4em]">Hán tự</div>
-                     <div className="text-[7rem] md:text-[12rem] font-bold text-slate-900 select-none leading-none font-kanji">{studyData[flashcardIndex].kanji}</div>
+                     <div className="text-[7rem] md:text-[12rem] font-semibold text-slate-900 select-none leading-none font-kanji">{studyData[flashcardIndex].kanji}</div>
                      <div className="absolute bottom-8 flex items-center justify-center w-full px-4 text-[10px] font-bold text-slate-300 uppercase tracking-widest decoration-slate-100 italic">
                        NHẤN ĐỂ LẬT
                      </div>
@@ -417,7 +432,7 @@ export default function KanjiSet4() {
 
              <div className="text-center space-y-8 w-full">
                 <div className="space-y-4 relative group">
-                  <div className="text-[8rem] md:text-[10rem] font-bold text-slate-900 leading-none select-none drop-shadow-sm transition-transform group-hover:scale-105 duration-500 font-kanji">
+                  <div className="text-[8rem] md:text-[10rem] font-semibold text-slate-900 leading-none select-none drop-shadow-sm transition-transform group-hover:scale-105 duration-500 font-kanji">
                     {studyData[quizIndex].kanji}
                   </div>
                   <div className="flex flex-col items-center">
