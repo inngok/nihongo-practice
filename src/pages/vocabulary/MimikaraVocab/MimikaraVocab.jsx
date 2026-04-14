@@ -77,6 +77,9 @@ export default function MimikaraVocab() {
     setTouchEndX(currentX);
     if (touchStartX) {
       setDragOffset(currentX - touchStartX);
+      if (Math.abs(currentX - touchStartX) > 10) {
+        if (e.cancelable) e.preventDefault();
+      }
     }
   };
   const handleTouchEnd = () => {
@@ -301,6 +304,7 @@ export default function MimikaraVocab() {
               style={{
                 transform: `translateX(${dragOffset}px) rotate(${dragOffset * 0.05}deg)`,
                 transition: dragOffset === 0 ? 'transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)' : 'none',
+                touchAction: 'none'
               }}
               onClick={() => setIsFlipped(!isFlipped)}
               onTouchStart={handleTouchStart}

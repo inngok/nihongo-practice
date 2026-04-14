@@ -261,6 +261,10 @@ export default function Mimikara() {
     });
     if (touchStartPos.x && ['flashcard', 'cards'].includes(activeMode)) {
       setDragOffset(currentX - touchStartPos.x);
+      // Prevent browser scrolling when swiping horizontally
+      if (Math.abs(currentX - touchStartPos.x) > 10) {
+        if (e.cancelable) e.preventDefault();
+      }
     }
   };
 
@@ -456,14 +460,16 @@ export default function Mimikara() {
         {{
           cards: (
             <div 
-              key={`card-${currentIndex}-${currentItem.id}`}
-              onClick={() => setIsFlipped(prev => !prev)} 
-              className="w-full max-w-sm aspect-[3/4] mx-auto perspective cursor-pointer group active:cursor-grabbing"
+              className="group perspective w-full aspect-[9/11] sm:aspect-[16/9] cursor-pointer touch-none" 
               style={{
                 transform: `translateX(${dragOffset}px) rotate(${dragOffset * 0.05}deg)`,
-                transition: dragOffset === 0 ? 'transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)' : 'none',
-                opacity: 1 - Math.abs(dragOffset) / 1000
+                transition: dragOffset === 0 ? 'transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)' : 'none',
+                touchAction: 'none'
               }}
+              onClick={() => setIsFlipped(!isFlipped)}
+              onTouchStart={handleTouchStart}
+              onTouchMove={handleTouchMove}
+              onTouchEnd={handleTouchEnd}
             >
               <div className={`relative w-full h-full transition-all duration-700 preserve-3d shadow-2xl rounded-[3rem] ${isFlipped ? 'rotate-y-180' : 'group-hover:scale-105'}`}>
                 <div className="absolute inset-0 backface-hidden bg-white border-2 border-slate-100 rounded-[3rem] flex flex-col items-center justify-center p-12 text-center">
