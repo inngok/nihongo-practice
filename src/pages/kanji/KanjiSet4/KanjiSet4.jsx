@@ -24,6 +24,12 @@ export default function KanjiSet4() {
   const [showResults, setShowResults] = useState(false);
   const inputRef = useRef(null);
 
+  // MCQ State
+  const [mcqOptions, setMcqOptions] = useState([]);
+  const [mcqSelected, setMcqSelected] = useState(null);
+  
+  const allKanjiFlat = useMemo(() => Object.values(kanjiData).flat(), []);
+
   // Swipe Support State
   const [touchStartX, setTouchStartX] = useState(0);
   const [touchEndX, setTouchEndX] = useState(0);
@@ -53,13 +59,86 @@ export default function KanjiSet4() {
     setUserInput('');
     setShowHint(false);
     setShowResults(false);
+    setMcqSelected(null);
   }, [currentData, isShuffle]);
+
+  const handleRestart = () => {
+    setFlashcardIndex(0);
+    setQuizIndex(0);
+    setScore(0);
+    setIsFlipped(false);
+    setFeedback(null);
+    setUserInput('');
+    setMcqSelected(null);
+    setShowHint(false);
+    setShowResults(false);
+  };
 
   // Page selection logic (automatically sorted numerically)
   const availablePages = useMemo(() => 
     Object.keys(kanjiData).map(Number).sort((a, b) => a - b),
     [kanjiData]
   );
+
+  // Generate options for MCQ mode
+  useEffect(() => {
+    if (viewMode === 'mcq' && studyData.length > 0 && !showResults) {
+      const currentItem = studyData[quizIndex];
+      const formatOption = (item) => `${item.hano} - ${item.meaning}`;
+      const correctOption = formatOption(currentItem);
+
+      // Find homophones (same Hán Việt, different option string)
+      let homophones = allKanjiFlat.filter(item => 
+        item.hano.toLowerCase() === currentItem.hano.toLowerCase() &&
+        formatOption(item) !== correctOption
+      );
+
+      // Remove duplicates
+      const uniqueOptions = new Set();
+      const distractorOptions = [];
+      
+      homophones.forEach(item => {
+        const opt = formatOption(item);
+        if (!uniqueOptions.has(opt)) {
+          uniqueOptions.add(opt);
+          distractorOptions.push(opt);
+        }
+      });
+
+      // Shuffle and pick up to 3 distractors
+      distractorOptions.sort(() => Math.random() - 0.5);
+      const options = distractorOptions.slice(0, 3);
+
+      // Fill the rest with random options if needed
+      while (options.length < 3) {
+        const randomItem = allKanjiFlat[Math.floor(Math.random() * allKanjiFlat.length)];
+        const randomOpt = formatOption(randomItem);
+        if (randomOpt !== correctOption && !options.includes(randomOpt)) {
+            options.push(randomOpt);
+        }
+      }
+
+      // Add correct option and shuffle
+      options.push(correctOption);
+      options.sort(() => Math.random() - 0.5);
+      
+      setMcqOptions(options);
+      setMcqSelected(null);
+      setFeedback(null);
+    }
+  }, [viewMode, quizIndex, studyData, showResults, allKanjiFlat]);
+
+  const handleMcqSelect = (option) => {
+    if (feedback) return;
+    const currentItem = studyData[quizIndex];
+    if (option === `${currentItem.hano} - ${currentItem.meaning}`) {
+      setFeedback('correct');
+      setScore(s => s + 1);
+    } else {
+      setFeedback('incorrect');
+    }
+    setMcqSelected(option);
+  };
 
   // Initialize Quiz/Flashcard
   const startMode = useCallback((mode) => {
@@ -81,11 +160,18 @@ export default function KanjiSet4() {
           if (!feedback) checkAnswer();
           else nextQuiz();
         }
+      } else if (viewMode === 'mcq') {
+        if (e.key === 'Enter' && feedback) {
+          nextQuiz();
+        } else if (!feedback && e.key >= '1' && e.key <= '4') {
+          const idx = parseInt(e.key) - 1;
+          if (mcqOptions[idx]) handleMcqSelect(mcqOptions[idx]);
+        }
       }
     };
     window.addEventListener('keydown', handleKey);
     return () => window.removeEventListener('keydown', handleKey);
-  }, [viewMode, flashcardIndex, isFlipped, feedback, userInput]);
+  }, [viewMode, flashcardIndex, isFlipped, feedback, userInput, mcqOptions]);
 
   // Focus input on quiz
   useEffect(() => {
@@ -168,6 +254,7 @@ export default function KanjiSet4() {
       setQuizIndex(i => i + 1);
       setUserInput('');
       setFeedback(null);
+      setMcqSelected(null);
       setShowHint(false);
     } else {
       setShowResults(true);
@@ -262,10 +349,16 @@ export default function KanjiSet4() {
               Flashcard
             </button>
             <button 
+              onClick={() => startMode('mcq')}
+              className={`px-4 md:px-8 py-2.5 rounded-xl text-[10px] md:text-xs font-bold transition-all duration-300 ${viewMode === 'mcq' ? 'bg-black text-white shadow-md' : 'text-slate-400 hover:text-slate-600'}`}
+            >
+              Trắc nghiệm
+            </button>
+            <button 
               onClick={() => startMode('quiz')}
               className={`px-4 md:px-8 py-2.5 rounded-xl text-[10px] md:text-xs font-bold transition-all duration-300 ${viewMode === 'quiz' ? 'bg-black text-white shadow-md' : 'text-slate-400 hover:text-slate-600'}`}
             >
-              Luyện tập
+              Gõ phím
             </button>
           </div>
         </div>
@@ -419,6 +512,85 @@ export default function KanjiSet4() {
           )
         )}
 
+        {/* MCQ View */}
+        {viewMode === 'mcq' && studyData.length > 0 && (
+          <div 
+            key={`${activePage}-${viewMode}`}
+            className="max-w-4xl mx-auto flex flex-col items-center animate-in fade-in slide-in-from-bottom-2 duration-700"
+          >
+             <div className="w-full max-w-lg mb-8 flex items-end justify-between px-6 py-4 bg-slate-50/50 rounded-3xl border border-slate-100 backdrop-blur-sm">
+                <div className="flex flex-col">
+                  <span className="text-[10px] font-black text-slate-300 uppercase tracking-[0.2em] mb-1">Mục tiêu</span>
+                  <span className="text-xl font-black text-slate-900 italic tracking-tighter">{quizIndex + 1} <span className="text-slate-200 text-sm">/ {studyData.length}</span></span>
+                </div>
+                <div className="flex flex-col items-end">
+                  <span className="text-[10px] font-black text-slate-300 uppercase tracking-[0.2em] mb-1">Chính xác</span>
+                  <span className="text-xl font-black text-emerald-500 italic tracking-tighter">{score}</span>
+                </div>
+             </div>
+
+             <div className="text-center space-y-6 w-full">
+                <div className="space-y-4 relative group">
+                  <div className="text-[7rem] md:text-[9rem] font-medium text-slate-900 leading-none select-none drop-shadow-sm font-kanji">
+                    {studyData[quizIndex].kanji}
+                  </div>
+                  <div className="flex flex-col items-center">
+                    <span className="inline-block px-4 py-1.5 bg-slate-100 rounded-full text-[9px] font-black text-slate-400 uppercase tracking-[0.3em]">Hán Việt - Nghĩa</span>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-2xl mx-auto mt-6">
+                   {mcqOptions.map((option, idx) => {
+                     const isCorrect = option === `${studyData[quizIndex].hano} - ${studyData[quizIndex].meaning}`;
+                     const isSelected = mcqSelected === option;
+                     
+                     let btnClass = "py-5 px-6 bg-white border-2 rounded-2xl text-base md:text-lg font-bold transition-all flex items-center justify-between group ";
+                     
+                     if (!feedback) {
+                       btnClass += "border-slate-100 text-slate-700 hover:border-black hover:shadow-md cursor-pointer hover:-translate-y-1";
+                     } else {
+                       if (isCorrect) {
+                         btnClass += "border-emerald-500 bg-emerald-50 text-emerald-700 shadow-md transform scale-[1.02] z-10";
+                       } else if (isSelected) {
+                         btnClass += "border-red-500 bg-red-50 text-red-700 opacity-90";
+                       } else {
+                         btnClass += "border-slate-100 bg-slate-50 text-slate-400 opacity-50 cursor-not-allowed";
+                       }
+                     }
+                     
+                     return (
+                       <button
+                         key={idx}
+                         onClick={() => handleMcqSelect(option)}
+                         disabled={!!feedback}
+                         className={btnClass}
+                       >
+                         <span className="flex items-center gap-3 text-left">
+                           <span className={`flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-black ${!feedback ? 'bg-slate-100 text-slate-400 group-hover:bg-black group-hover:text-white transition-colors' : (isCorrect ? 'bg-emerald-200 text-emerald-800' : (isSelected ? 'bg-red-200 text-red-800' : 'bg-slate-200 text-slate-400'))}`}>
+                             {idx + 1}
+                           </span>
+                           {option}
+                         </span>
+                         {feedback && isCorrect && <CheckCircle className="w-5 h-5 text-emerald-500 flex-shrink-0 ml-2" />}
+                       </button>
+                     );
+                   })}
+                </div>
+
+                {feedback && (
+                  <div className="mt-8 animate-in slide-in-from-top-4 duration-500">
+                    <button 
+                      onClick={nextQuiz}
+                      className={`py-4 px-10 ${feedback === 'correct' ? 'bg-emerald-600 hover:bg-emerald-700' : 'bg-slate-900 hover:bg-black'} text-white text-[11px] font-black uppercase tracking-[0.2em] rounded-2xl transition-all shadow-lg hover:scale-105 active:scale-95`}
+                    >
+                      {quizIndex === studyData.length - 1 ? 'Xem kết quả' : 'Câu tiếp theo (Enter)'}
+                    </button>
+                  </div>
+                )}
+             </div>
+          </div>
+        )}
+
         {/* Quiz View */}
         {viewMode === 'quiz' && studyData.length > 0 && (
           <div 
@@ -543,10 +715,7 @@ export default function KanjiSet4() {
 
                   <div className="grid grid-cols-1 gap-3 pt-2">
                     <button 
-                      onClick={() => {
-                          setShowResults(false);
-                          startMode('quiz');
-                      }}
+                      onClick={() => handleRestart()}
                       className="w-full py-4.5 bg-black text-white rounded-2xl text-[11px] font-black uppercase tracking-[0.3em] hover:scale-[1.02] active:scale-95 transition-all shadow-xl shadow-black/10 flex items-center justify-center gap-3"
                     >
                       <RotateCcw className="w-4 h-4" />

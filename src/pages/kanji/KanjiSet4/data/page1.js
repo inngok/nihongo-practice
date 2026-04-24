@@ -22,7 +22,7 @@ export const page1Data = [
   { kanji: '主', hano: 'Chủ', meaning: 'chính yếu' },
 
   // Cột 2
-  { kanji: '丼', hano: 'Đàm', meaning: 'cái tô' },
+  { kanji: '丼', hano: 'Đảm', meaning: 'cái tô' },
   { kanji: '久', hano: 'Cửu', meaning: 'lâu dài' },
   { kanji: '乏', hano: 'Phạp', meaning: 'nghèo, thiếu thốn' },
   { kanji: '乗', hano: 'Thừa', meaning: 'lên xe' },

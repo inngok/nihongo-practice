@@ -82,9 +82,15 @@ export default function ConfusingGrammar() {
         {/* Header Section */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-12 border-b border-slate-100 pb-8">
           <div className="space-y-2">
-            <h1 className="text-3xl md:text-4xl font-black tracking-tight text-slate-900 uppercase">Phân Biệt & Kính Ngữ</h1>
+            <h1 className="text-3xl md:text-4xl font-black tracking-tight text-slate-900 uppercase">
+              {activeTab === 'confusion' ? 'Phân Biệt Ngữ Pháp' : activeTab === 'verbs' ? verbPairsData.title : 'Kính Ngữ Master'}
+            </h1>
             <p className="text-sm text-slate-500 max-w-xl font-medium leading-relaxed">
-              Tài liệu tổng hợp tinh hoa ngữ pháp N3. Phân biệt các mẫu dễ nhầm lẫn và làm chủ hệ thống Kính ngữ chuyên sâu.
+              {activeTab === 'confusion' 
+                ? 'Phân biệt các mẫu ngữ pháp dễ nhầm lẫn trong kỳ thi JLPT N3.' 
+                : activeTab === 'verbs' 
+                ? verbPairsData.description 
+                : 'Làm chủ hệ thống Kính ngữ chuyên sâu: Tôn kính ngữ, Khiêm nhường ngữ và Lịch sự ngữ.'}
             </p>
           </div>
 

@@ -128,6 +128,7 @@ export default function Mimikara() {
     setUserInput('');
     setScore(0);
     setShowResults(false);
+    setIsFlipped(false);
     requestAnimationFrame(() => window.scrollTo({ top: 0, behavior: 'smooth' }));
   }, [activeData, isShuffle, activeMode]);
 
@@ -480,17 +481,7 @@ export default function Mimikara() {
                         <p className="text-xs md:text-sm text-slate-500 italic font-medium px-4">{currentItem.explanation}</p>
                       </div>
                       
-                      {currentItem.examples && currentItem.examples.length > 0 && (
-                        <div className="w-full space-y-3 pt-4 border-t border-slate-100">
-                           {currentItem.examples.map((ex, idx) => (
-                             <div key={idx} className="text-left">
-                               <p className="text-[11px] font-bold text-slate-900 leading-snug">{ex.jp}</p>
-                               <p className="text-[10px] text-slate-400 font-medium italic">{ex.vn}</p>
-                             </div>
-                           ))}
-                        </div>
-                      )}
-                   </div>
+                    </div>
                    
                    <div className="mt-6 pt-4 border-t border-slate-50 w-full flex flex-col items-center gap-2">
                      <p className="text-[9px] font-black uppercase tracking-widest text-slate-300">PATTERN: {currentItem.pattern}</p>
@@ -521,19 +512,6 @@ export default function Mimikara() {
                   </div>
                 )}
               </div>
-              {isFlipped && (
-                <div className="animate-in slide-in-from-top-4 duration-500">
-                  <div className="space-y-2 bg-slate-50 p-6 rounded-[2rem] border border-slate-100">
-                    <p className="text-[10px] font-black text-slate-300 uppercase tracking-widest mb-2 px-2">Ví dụ Mimikara</p>
-                    {currentItem.examples?.map((ex, idx) => (
-                      <div key={idx} className={`relative p-4 rounded-[1.5rem] italic ${ex.isBook ? 'bg-white shadow-sm' : 'text-slate-900'}`}>
-                        <p className="font-bold text-sm mb-1">{ex.jp}</p>
-                        <p className="text-[11px] font-medium text-slate-400">{ex.vn}</p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
             </div>
           ),
           quiz: (
