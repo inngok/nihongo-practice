@@ -2,10 +2,18 @@ import React, { useState, useMemo, useEffect, useCallback, useRef } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { Brain, RotateCcw, List } from 'lucide-react';
 import { week1Data } from './week1';
+import { week2Data } from './week2';
+import { week3Data } from './week3';
+import { week4Data } from './week4';
+import { week5Data } from './week5';
 import { week6Data } from './week6';
 
 const allData = { 
   ...week1Data, 
+  ...week2Data, 
+  ...week3Data, 
+  ...week4Data, 
+  ...week5Data, 
   ...week6Data 
 };
 
