@@ -26,6 +26,7 @@ const DekiruVocab = lazy(() => import("../pages/vocabulary/DekiruVocab/DekiruVoc
 const Translator = lazy(() => import("../pages/translator/Translator"));
 const Tips = lazy(() => import("../pages/tips/Tips"));
 const ConfusingGrammar = lazy(() => import("../pages/grammar/ConfusingGrammar"));
+const Shizen = lazy(() => import("../pages/vocabulary/Shizen/Shizen"));
 
 const PageLoader = () => (
   <div className="min-h-[calc(100vh-80px)] mt-20 flex items-center justify-center bg-white">
@@ -44,6 +45,7 @@ const Layout = () => {
     location.pathname === '/vocabulary/try-n3' ||
     location.pathname === '/vocabulary/mimikara' ||
     location.pathname === '/vocabulary/dekiru' ||
+    location.pathname === '/vocabulary/shizen' ||
     location.pathname === '/kanji/set-4' ||
     location.pathname.startsWith('/exam-') ||
     location.pathname === '/dong-du' ||
@@ -95,6 +97,7 @@ export default function RouteMap() {
         <Route path="/vocabulary/try-n3" element={<TryN3 />} />
         <Route path="/vocabulary/mimikara" element={<MimikaraVocab />} />
         <Route path="/vocabulary/dekiru" element={<DekiruVocab />} />
+        <Route path="/vocabulary/shizen" element={<Shizen />} />
         <Route path="/kanji" element={<Kanji />} />
         <Route path="/kanji/set-4" element={<KanjiSet4 />} />
         <Route path="/exam-pc7" element={<ExamPC7 />} />
