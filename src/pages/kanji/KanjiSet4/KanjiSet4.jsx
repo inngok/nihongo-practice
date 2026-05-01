@@ -326,7 +326,7 @@ export default function KanjiSet4() {
                    ))}
                 </div>
               </div>
-              <h1 className="text-4xl md:text-6xl font-black text-slate-900 tracking-tighter leading-tight flex flex-wrap items-baseline gap-4">
+              <h1 className="text-3xl sm:text-4xl md:text-6xl font-black text-slate-900 tracking-tighter leading-tight flex flex-wrap items-baseline gap-2 md:gap-4">
                 Hán tự 4
                 <span className="text-base md:text-2xl font-bold text-slate-200 tracking-tight italic">
                   ({activePage === 'all' ? Object.values(kanjiData).flat().length : (kanjiData[activePage]?.length || 0)} chữ)
@@ -335,7 +335,7 @@ export default function KanjiSet4() {
             </div>
           </div>
           
-          <div className="flex-shrink-0 flex bg-slate-50 p-1 rounded-2xl border border-slate-100 shadow-sm self-start lg:self-end overflow-hidden">
+          <div className="flex-shrink-0 flex bg-slate-50 p-1 rounded-2xl border border-slate-100 shadow-sm self-start lg:self-end overflow-x-auto no-scrollbar max-w-full">
             <button 
               onClick={() => setViewMode('list')}
               className={`px-4 md:px-8 py-2.5 rounded-xl text-[10px] md:text-xs font-bold transition-all duration-300 ${viewMode === 'list' ? 'bg-black text-white shadow-md' : 'text-slate-400 hover:text-slate-600'}`}

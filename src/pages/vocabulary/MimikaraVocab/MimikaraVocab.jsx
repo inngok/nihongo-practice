@@ -155,7 +155,7 @@ export default function MimikaraVocab() {
   };
 
   return (
-    <div className="min-h-screen bg-white flex flex-col items-center pt-52 md:pt-40 pb-20 px-4 md:px-6 font-sans relative overflow-hidden text-slate-900">
+    <div className="min-h-screen bg-white flex flex-col items-center pt-28 md:pt-40 pb-20 px-4 md:px-6 font-sans relative overflow-hidden text-slate-900">
 
 
 
@@ -303,7 +303,7 @@ export default function MimikaraVocab() {
           >
             <div className="w-full flex justify-between items-center mb-10 px-4">
               <span className="text-[10px] font-black text-slate-400 tracking-[0.2em] uppercase">Tiến trình: {cardIndex + 1} / {currentData.words.length}</span>
-              <div className="h-1 bg-slate-100 w-64 rounded-full overflow-hidden"><div className="h-full bg-black transition-all" style={{ width: `${((cardIndex + 1) / currentData.words.length) * 100}%` }}></div></div>
+              <div className="h-1 bg-slate-100 w-32 md:w-64 rounded-full overflow-hidden"><div className="h-full bg-black transition-all" style={{ width: `${((cardIndex + 1) / currentData.words.length) * 100}%` }}></div></div>
             </div>
             <div 
               className="group perspective w-full aspect-[9/11] sm:aspect-[16/10] md:max-h-[400px] cursor-pointer" 

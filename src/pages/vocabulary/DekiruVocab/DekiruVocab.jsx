@@ -69,7 +69,7 @@ const FlashcardSection = memo(({ words, cardIndex, isFlipped, setIsFlipped, next
          onTouchEnd={handleTouchEnd}>
       <div className="w-full flex justify-between items-center mb-10 px-4">
         <span className="text-[10px] font-black text-slate-400 tracking-[0.2em] uppercase">Tiến trình: {cardIndex + 1} / {words.length}</span>
-        <div className="h-1 bg-slate-100 w-64 rounded-full overflow-hidden">
+        <div className="h-1 bg-slate-100 w-32 md:w-64 rounded-full overflow-hidden">
           <div className="h-full bg-black transition-all" style={{ width: `${((cardIndex + 1) / words.length) * 100}%` }}></div>
         </div>
       </div>
@@ -338,7 +338,7 @@ export default function DekiruVocab() {
   }, [quizIndex, viewMode, feedback]);
 
   return (
-    <div className="min-h-screen bg-white flex flex-col items-center pt-52 md:pt-40 pb-20 px-4 md:px-6 font-sans relative overflow-hidden text-slate-900">
+    <div className="min-h-screen bg-white flex flex-col items-center pt-28 md:pt-40 pb-20 px-4 md:px-6 font-sans relative overflow-hidden text-slate-900">
       
       {/* Watermark */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[15vw] font-black text-slate-100 opacity-[0.03] pointer-events-none select-none leading-none z-0 whitespace-nowrap uppercase">

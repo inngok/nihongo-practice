@@ -121,7 +121,7 @@ export default function Soumatome() {
   };
 
   return (
-    <div className="min-h-screen bg-white flex flex-col items-center pt-52 md:pt-40 pb-20 px-4 md:px-6 font-sans relative overflow-hidden text-slate-900">
+    <div className="min-h-screen bg-white flex flex-col items-center pt-28 md:pt-40 pb-20 px-4 md:px-6 font-sans relative overflow-hidden text-slate-900">
 
 
 
@@ -276,9 +276,9 @@ export default function Soumatome() {
           <div className="max-w-4xl mx-auto flex flex-col items-center animate-in fade-in zoom-in-95 duration-500">
             <div className="w-full flex justify-between items-center mb-10 px-4">
               <span className="text-[10px] font-black text-slate-400 tracking-[0.2em] uppercase">Tiến trình: {cardIndex + 1} / {currentData.words.length}</span>
-              <div className="h-1 bg-slate-100 w-64 rounded-full overflow-hidden"><div className="h-full bg-black transition-all" style={{ width: `${((cardIndex + 1) / currentData.words.length) * 100}%` }}></div></div>
+              <div className="h-1 bg-slate-100 w-32 md:w-64 rounded-full overflow-hidden"><div className="h-full bg-black transition-all" style={{ width: `${((cardIndex + 1) / currentData.words.length) * 100}%` }}></div></div>
             </div>
-            <div className="group perspective w-full aspect-[16/10] md:max-h-[400px] cursor-pointer" onClick={() => setIsFlipped(!isFlipped)}>
+            <div className="group perspective w-full aspect-[4/5] sm:aspect-[16/10] md:max-h-[400px] cursor-pointer" onClick={() => setIsFlipped(!isFlipped)}>
               <div className={`relative w-full h-full duration-500 preserve-3d shadow-xl rounded-[3rem] ${isFlipped ? 'rotate-y-180' : ''}`}>
                 <div className="absolute inset-0 backface-hidden bg-white border border-slate-100 rounded-[3rem] flex flex-col items-center justify-center p-12">
                   <div className="text-6xl md:text-8xl font-black text-slate-900 text-center leading-tight">{currentData.words[cardIndex].kanji}</div>

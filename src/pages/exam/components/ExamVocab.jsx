@@ -130,7 +130,7 @@ export default function ExamVocab({ type = 'comprehensive' }) {
   };
 
   return (
-    <div className="min-h-screen bg-white flex flex-col items-center pt-32 md:pt-24 pb-20 px-4 md:px-6 font-sans relative overflow-hidden text-slate-900">
+    <div className="min-h-screen bg-white flex flex-col items-center pt-24 md:pt-24 pb-20 px-4 md:px-6 font-sans relative overflow-hidden text-slate-900">
       <div className="w-full max-w-4xl relative z-10 selection:bg-slate-100">
 
         {/* Navigation & Header */}
@@ -196,7 +196,7 @@ export default function ExamVocab({ type = 'comprehensive' }) {
                 </button>
 
                 {/* Mode Switcher - Text based minimalist */}
-                <div className="flex gap-4 border-l border-slate-100 pl-6">
+                <div className="flex flex-wrap gap-3 md:gap-4 md:border-l border-slate-100 md:pl-6">
                   <button onClick={() => setViewMode('list')} className={`text-[10px] font-bold uppercase tracking-widest transition-all ${viewMode === 'list' ? 'text-black' : 'text-slate-300 hover:text-slate-400'}`}>Danh sách</button>
                   <button onClick={() => { setViewMode('flashcard'); setCardIndex(0); setIsFlipped(false); }} className={`text-[10px] font-bold uppercase tracking-widest transition-all ${viewMode === 'flashcard' ? 'text-black' : 'text-slate-300 hover:text-slate-400'}`}>Ghi nhớ</button>
                   <button onClick={() => setViewMode('quiz')} className={`text-[10px] font-bold uppercase tracking-widest transition-all ${viewMode === 'quiz' ? 'text-black' : 'text-slate-300 hover:text-slate-400'}`}>Kiểm tra</button>
