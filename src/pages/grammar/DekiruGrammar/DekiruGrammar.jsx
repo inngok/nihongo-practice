@@ -1,7 +1,8 @@
 import React, { useState, useMemo, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Brain, Layers, List, Search, ChevronLeft, ChevronRight, Check } from 'lucide-react';
-import { dekiruGrammarData } from '../data/dekiruGrammarData';
+import { jpd316 } from '../data/jpd316Data';
+import { jpd326 } from '../data/jpd326Data';
 
 export default function DekiruGrammar() {
   const { type } = useParams();
@@ -11,9 +12,14 @@ export default function DekiruGrammar() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [searchTerm, setSearchTerm] = useState('');
 
+  const dataMap = {
+    jdp316: jpd316,
+    jdp326: jpd326,
+  };
+
   const activeData = useMemo(() => {
     if (!type) return [];
-    const data = dekiruGrammarData[type] || [];
+    const data = dataMap[type] || [];
     if (selectedUnit === 'all') return data;
     return data.filter(i => i.unit === parseInt(selectedUnit));
   }, [type, selectedUnit]);
@@ -42,8 +48,8 @@ export default function DekiruGrammar() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {[
-              { id: 'jdp316', title: 'JDP316', japanese: '', label: 'N3' },
-              { id: 'jdp326', title: 'JDP326', japanese: '', label: 'N3' }
+              { id: 'jdp316', title: 'Bài 1-5', japanese: 'Unit 1〜5', label: 'N3' },
+              { id: 'jdp326', title: 'Bài 6-10', japanese: 'Unit 6〜10', label: 'N3' }
             ].map((item, idx) => (
               <div
                 key={item.id}
@@ -88,7 +94,7 @@ export default function DekiruGrammar() {
         <div className="mb-12 flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
           <div>
             <h1 className="text-4xl font-extrabold text-slate-900 tracking-tight mb-2">
-              {type === 'jdp316' ? 'Dekiru JDP316' : 'Dekiru JDP326'}
+              {type === 'jdp316' ? 'Dekiru Bài 1-5' : 'Dekiru Bài 6-10'}
             </h1>
             <p className="text-slate-500 text-sm font-medium uppercase tracking-widest">
               Unit {selectedUnit === 'all' ? 'Tất cả' : selectedUnit}
@@ -96,7 +102,7 @@ export default function DekiruGrammar() {
           </div>
 
           <div className="flex flex-wrap gap-2">
-            {['all', ...(type === 'jdp326' ? [6, 7, 8, 9, 10] : [1, 2, 3, 4, 5, 6, 7, 8, 9, 10])].map(num => (
+            {['all', ...(type === 'jdp326' ? [6, 7, 8, 9, 10] : [1, 2, 3, 4, 5])].map(num => (
               <button
                 key={num}
                 onClick={() => setSelectedUnit(num)}
