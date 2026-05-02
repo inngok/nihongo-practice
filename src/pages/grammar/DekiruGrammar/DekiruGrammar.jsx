@@ -96,21 +96,6 @@ export default function DekiruGrammar() {
             <h1 className="text-4xl font-extrabold text-slate-900 tracking-tight mb-2">
               {type === 'jdp316' ? 'Dekiru Bài 1-5' : 'Dekiru Bài 6-10'}
             </h1>
-            <p className="text-slate-500 text-sm font-medium uppercase tracking-widest">
-              Unit {selectedUnit === 'all' ? 'Tất cả' : selectedUnit}
-            </p>
-          </div>
-
-          <div className="flex flex-wrap gap-2">
-            {['all', ...(type === 'jdp326' ? [6, 7, 8, 9, 10] : [1, 2, 3, 4, 5])].map(num => (
-              <button
-                key={num}
-                onClick={() => setSelectedUnit(num)}
-                className={`px-4 py-1.5 rounded-lg text-[10px] font-bold transition-all ${selectedUnit === num ? 'bg-slate-900 text-white' : 'bg-slate-50 text-slate-400 hover:bg-slate-100'}`}
-              >
-                {num === 'all' ? 'ALL' : `BÀI ${num}`}
-              </button>
-            ))}
           </div>
         </div>
 
@@ -148,9 +133,8 @@ export default function DekiruGrammar() {
             <div className="grid grid-cols-1 gap-4">
               {activeData.filter(i => i.pattern.includes(searchTerm) || i.meaning.includes(searchTerm)).map(item => (
                 <div key={item.id} className="bg-white border border-slate-100 rounded-2xl p-8 hover:border-slate-300 transition-all">
-                  <div className="flex justify-between items-start mb-4">
+                  <div className="mb-4">
                     <h3 className="text-2xl font-bold text-slate-900 font-kanji">{item.pattern}</h3>
-                    <span className="text-[10px] font-bold text-slate-200 uppercase">Unit {item.unit}</span>
                   </div>
                   <p className="text-slate-600 font-medium italic mb-4">{item.meaning}</p>
                   <div className="space-y-2 pt-4 border-t border-slate-50">
@@ -168,7 +152,7 @@ export default function DekiruGrammar() {
         ) : (
           <div className="max-w-3xl mx-auto space-y-8 animate-in fade-in zoom-in-95 duration-500">
             <div className="bg-white border border-slate-200 rounded-3xl p-12 md:p-16 text-center shadow-sm">
-              <span className="text-[10px] font-black text-slate-300 uppercase tracking-widest mb-6 block">Unit {currentItem.unit} • #{currentItem.id}</span>
+              <span className="text-[10px] font-black text-slate-300 uppercase tracking-widest mb-6 block">#{currentItem.id}</span>
               <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-8 font-kanji">{currentItem.pattern}</h2>
               <div className="h-px w-20 bg-slate-100 mx-auto mb-8" />
               <h3 className="text-2xl font-bold italic text-slate-600 mb-4">{currentItem.meaning}</h3>

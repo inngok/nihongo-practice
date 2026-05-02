@@ -48,17 +48,17 @@ export default function Shizen() {
   // Keyboard navigation
   useEffect(() => {
     const handleKey = (e) => {
-      if (viewMode === 'flashcard') {
-        if (e.code === 'ArrowRight') nextCard();
-        if (e.code === 'ArrowLeft') prevCard();
-        if (e.code === 'Space' || e.code === 'ArrowUp' || e.code === 'ArrowDown') {
-          e.preventDefault();
-          setIsFlipped(f => !f);
-          return;
-        }
-      } else if (viewMode === 'quiz' && !feedback) {
-        if (e.key === 'Enter') checkAnswer();
+      if (viewMode === 'quiz' && !feedback && e.key === 'Enter') return checkAnswer();
+      if (viewMode !== 'flashcard') return;
+
+      const flipKeys = ['Space', 'ArrowUp', 'ArrowDown'];
+      if (flipKeys.includes(e.code)) {
+        e.preventDefault();
+        return setIsFlipped(f => !f);
       }
+
+      const moveActions = { ArrowRight: nextCard, ArrowLeft: prevCard };
+      moveActions[e.code]?.();
     };
     window.addEventListener('keydown', handleKey);
     return () => window.removeEventListener('keydown', handleKey);
