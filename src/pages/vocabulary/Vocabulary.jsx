@@ -40,6 +40,15 @@ export default function Vocabulary() {
       label: 'GIAO TIẾP',
       badge: 'STORY',
       path: '/vocabulary/dekiru'
+    },
+    {
+      id: 'shizen',
+      num: '05',
+      title: 'Từ láy Shizen',
+      japanese: 'N3 擬態語・擬音語',
+      label: 'CHUYÊN SÂU',
+      badge: 'TỪ LÁY',
+      path: '/vocabulary/shizen'
     }
   ];
 

@@ -13,6 +13,14 @@ export default function Kanji() {
       label: 'TRÌNH ĐỘ N3',
       path: '/kanji/set-4'
     },
+    {
+      id: 'dekiru-kanji',
+      num: '05',
+      title: 'Hán tự Dekiru',
+      japanese: 'Dekiru Nihongo Kanji',
+      label: 'GIAO TIẾP',
+      path: '/kanji/dekiru'
+    },
   ];
 
   return (

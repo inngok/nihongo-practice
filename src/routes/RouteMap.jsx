@@ -26,6 +26,9 @@ const DekiruVocab = lazy(() => import("../pages/vocabulary/DekiruVocab/DekiruVoc
 const Translator = lazy(() => import("../pages/translator/Translator"));
 const Tips = lazy(() => import("../pages/tips/Tips"));
 const ConfusingGrammar = lazy(() => import("../pages/grammar/ConfusingGrammar"));
+const Shizen = lazy(() => import("../pages/vocabulary/Shizen/Shizen"));
+const DekiruKanji = lazy(() => import("../pages/kanji/DekiruKanji/DekiruKanji"));
+const DekiruGrammar = lazy(() => import("../pages/grammar/DekiruGrammar/DekiruGrammar"));
 
 const PageLoader = () => (
   <div className="min-h-[calc(100vh-80px)] mt-20 flex items-center justify-center bg-white">
@@ -44,7 +47,11 @@ const Layout = () => {
     location.pathname === '/vocabulary/try-n3' ||
     location.pathname === '/vocabulary/mimikara' ||
     location.pathname === '/vocabulary/dekiru' ||
+    location.pathname === '/vocabulary/shizen' ||
+    location.pathname === '/grammar/dekiru' ||
+    location.pathname.startsWith('/grammar/dekiru/') ||
     location.pathname === '/kanji/set-4' ||
+    location.pathname === '/kanji/dekiru' ||
     location.pathname.startsWith('/exam-') ||
     location.pathname === '/dong-du' ||
     location.pathname === '/translator' ||
@@ -95,8 +102,12 @@ export default function RouteMap() {
         <Route path="/vocabulary/try-n3" element={<TryN3 />} />
         <Route path="/vocabulary/mimikara" element={<MimikaraVocab />} />
         <Route path="/vocabulary/dekiru" element={<DekiruVocab />} />
+        <Route path="/grammar/dekiru" element={<DekiruGrammar />} />
+        <Route path="/grammar/dekiru/:type" element={<DekiruGrammar />} />
+        <Route path="/vocabulary/shizen" element={<Shizen />} />
         <Route path="/kanji" element={<Kanji />} />
         <Route path="/kanji/set-4" element={<KanjiSet4 />} />
+        <Route path="/kanji/dekiru" element={<DekiruKanji />} />
         <Route path="/exam-pc7" element={<ExamPC7 />} />
         <Route path="/exam-pc7/vocab-comprehensive" element={<ExamVocab type="comprehensive" />} />
         <Route path="/exam-pc7/kanji-comprehensive" element={<ExamVocab type="kanji-comprehensive" />} />

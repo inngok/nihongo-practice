@@ -19,7 +19,7 @@ export default function Grammar() {
       title: 'Dekiru',
       japanese: 'できる日本語',
       label: 'GIAO TIẾP ỨNG DỤNG',
-      path: '#'
+      path: '/grammar/dekiru'
     },
   ];
 

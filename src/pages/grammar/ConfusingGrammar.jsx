@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, AlertCircle, Info, CheckCircle2, Gauge, BookOpen, Star, Crown, HelpCircle } from 'lucide-react';
 import { keigoMasterGuide } from './data/keigoData';
+import { verbPairsData } from './data/verbPairsData';
 
 const confusionData = [
   {
@@ -81,22 +82,28 @@ export default function ConfusingGrammar() {
         {/* Header Section */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-12 border-b border-slate-100 pb-8">
           <div className="space-y-2">
-            <h1 className="text-3xl md:text-4xl font-black tracking-tight text-slate-900 uppercase">Phân Biệt & Kính Ngữ</h1>
+            <h1 className="text-3xl md:text-4xl font-black tracking-tight text-slate-900 uppercase">
+              {activeTab === 'confusion' ? 'Phân Biệt Ngữ Pháp' : activeTab === 'verbs' ? verbPairsData.title : 'Kính Ngữ Master'}
+            </h1>
             <p className="text-sm text-slate-500 max-w-xl font-medium leading-relaxed">
-              Tài liệu tổng hợp tinh hoa ngữ pháp N3. Phân biệt các mẫu dễ nhầm lẫn và làm chủ hệ thống Kính ngữ chuyên sâu.
+              {activeTab === 'confusion' 
+                ? 'Phân biệt các mẫu ngữ pháp dễ nhầm lẫn trong kỳ thi JLPT N3.' 
+                : activeTab === 'verbs' 
+                ? verbPairsData.description 
+                : 'Làm chủ hệ thống Kính ngữ chuyên sâu: Tôn kính ngữ, Khiêm nhường ngữ và Lịch sự ngữ.'}
             </p>
           </div>
 
           {/* Tab Switcher */}
-          <div className="flex p-1 bg-slate-100 rounded-xl w-full md:w-auto">
-            {['confusion', 'keigo'].map((tab) => (
+          <div className="flex p-1 bg-slate-100 rounded-xl w-full md:w-auto overflow-x-auto no-scrollbar">
+            {['confusion', 'verbs', 'keigo'].map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className={`flex-1 md:flex-none px-6 py-2 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all
+                className={`whitespace-nowrap px-4 md:px-6 py-2 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all
                   ${activeTab === tab ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
               >
-                {tab === 'confusion' ? 'Phân Biệt' : 'Kính Ngữ Master'}
+                {tab === 'confusion' ? 'Phân Biệt' : tab === 'verbs' ? 'Tự/Tha Động Từ' : 'Kính Ngữ Master'}
               </button>
             ))}
           </div>
@@ -136,6 +143,58 @@ export default function ConfusingGrammar() {
                 </div>
               </div>
             ))}
+          </div>
+        ) : activeTab === 'verbs' ? (
+          <div className="space-y-8 animate-in fade-in duration-500">
+            {/* Intro Notes */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {verbPairsData.usageNotes.map((note, idx) => (
+                <div key={idx} className="p-6 bg-slate-50 border border-slate-100 rounded-2xl space-y-3">
+                  <div className="flex items-center gap-2">
+                    <Info className="w-4 h-4 text-slate-900" />
+                    <h4 className="text-[11px] font-bold uppercase tracking-wider text-slate-900">{note.title}</h4>
+                  </div>
+                  <p className="text-xs text-slate-600 leading-relaxed font-medium">{note.content}</p>
+                  <div className="text-[10px] font-bold text-slate-400 italic bg-white p-2.5 rounded-lg border border-slate-100/50">
+                    {note.example}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Rules and Pairs */}
+            <div className="space-y-6">
+              {verbPairsData.rules.map((rule) => (
+                <div key={rule.id} className="bg-white border border-slate-100 rounded-2xl overflow-hidden shadow-sm hover:border-slate-200 transition-all">
+                  <div className="p-6 border-b border-slate-50 bg-slate-50/30">
+                    <div className="flex justify-between items-start mb-4">
+                       <code className="text-lg font-black text-slate-900">{rule.pattern}</code>
+                       <span className="text-[9px] font-bold bg-slate-900 text-white px-2 py-0.5 rounded uppercase tracking-widest">{rule.example}</span>
+                    </div>
+                    <p className="text-xs text-slate-500 font-medium leading-relaxed">{rule.note}</p>
+                  </div>
+                  <div className="p-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                      {rule.pairs.map((pair, pIdx) => (
+                        <div key={pIdx} className="group p-4 border border-slate-50 rounded-xl hover:bg-slate-900 hover:text-white transition-all duration-300">
+                          <div className="flex flex-col gap-2">
+                            <div className="flex items-center gap-2">
+                               <span className="text-[8px] font-bold uppercase opacity-40">Tự</span>
+                               <span className="text-sm font-bold">{pair.intransitive}</span>
+                            </div>
+                            <div className="w-full h-[1px] bg-slate-100 opacity-20" />
+                            <div className="flex items-center gap-2">
+                               <span className="text-[8px] font-bold uppercase opacity-40">Tha</span>
+                               <span className="text-sm font-bold">{pair.transitive}</span>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         ) : (
           <div className="space-y-6 animate-in fade-in duration-500">
@@ -265,6 +324,8 @@ export default function ConfusingGrammar() {
       <style dangerouslySetInnerHTML={{ __html: `
         @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
         .animate-in { animation: fade-in 0.4s ease-out forwards; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
       `}} />
     </div>
   );

@@ -31,58 +31,54 @@ const examModules = [
 
 export default function ExamPC8() {
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white pb-20 font-sans">
       {/* Header Area */}
-      <div className="pt-24 pb-12 px-6 md:px-12 max-w-7xl mx-auto border-b border-slate-50 relative overflow-hidden">
-
-
+      <div className="pt-20 pb-10 px-6 max-w-4xl mx-auto">
         <Link
           to="/dong-du"
-          className="relative z-10 inline-flex items-center gap-2 text-[10px] font-black tracking-[0.2em] text-slate-400 hover:text-slate-900 transition-colors uppercase mb-8"
+          className="inline-flex items-center gap-1.5 text-[10px] font-bold tracking-wider text-slate-400 hover:text-black transition-colors uppercase mb-8 group"
         >
-          <ChevronLeft className="w-3 h-3" /> Quay lại Đông Du
+          <ChevronLeft className="w-3 h-3 transition-transform group-hover:-translate-x-0.5" /> 
+          Trở về
         </Link>
-        <div className="relative z-10 flex flex-col md:flex-row md:items-end justify-between gap-8">
-          <div className="space-y-4">
-            <span className="text-[10px] tracking-[0.4em] font-bold text-slate-300 uppercase">Chương trình đặc biệt</span>
-            <h1 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tighter leading-tight">
-              Ôn thi PC8
-            </h1>
-            <p className="text-slate-400 font-medium text-sm md:text-base max-w-xl italic leading-relaxed">
-              Nội dung ôn luyện chuyên sâu cho kỳ thi Phổ cập 8 (PC8).
-            </p>
-          </div>
+        <div className="space-y-2">
+          <h1 className="text-3xl font-bold text-slate-900 tracking-tight">
+            Ôn thi PC8
+          </h1>
+          <p className="text-slate-400 text-sm font-medium">
+            Chọn nội dung ôn luyện chuyên sâu.
+          </p>
         </div>
       </div>
 
       {/* Modules Grid */}
-      <div className="px-6 md:px-12 py-20 max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div className="px-6 max-w-4xl mx-auto py-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {examModules.map((module) => (
             <Link
               key={module.id}
               to={module.path}
-              className={`group p-8 md:p-10 rounded-[2.5rem] md:rounded-[3rem] border transition-all duration-500 flex flex-col items-start justify-center gap-4 md:gap-6 ${module.status === 'ready'
-                ? 'bg-white border-slate-100 shadow-[0_10px_40px_-15px_rgba(0,0,0,0.05)] hover:shadow-[0_30px_70px_-20px_rgba(0,0,0,0.08)] hover:border-slate-200'
-                : 'bg-slate-50/50 border-transparent opacity-60 cursor-not-allowed'
+              className={`group p-8 rounded-3xl border transition-all duration-300 flex flex-col items-start gap-4 ${module.status === 'ready'
+                ? 'bg-white border-slate-100 hover:border-black hover:shadow-lg active:scale-[0.98]'
+                : 'bg-slate-50 border-transparent opacity-60 cursor-not-allowed'
                 }`}
               onClick={(e) => module.status === 'soon' && e.preventDefault()}
             >
-              <div className="space-y-3 flex-grow">
+              <div className="space-y-2">
                 <div className="flex items-center gap-3">
-                  <h3 className="text-2xl md:text-3xl font-black text-slate-900">{module.title}</h3>
+                  <h3 className="text-xl font-bold text-slate-900">{module.title}</h3>
                   {module.status === 'soon' && (
-                    <span className="text-[9px] font-black tracking-widest text-slate-400 border border-slate-200 px-2 py-1 rounded-full uppercase">Sắp có</span>
+                    <span className="text-[8px] font-bold tracking-wider text-slate-400 border border-slate-200 px-2 py-0.5 rounded-full uppercase">Soon</span>
                   )}
                 </div>
-                <p className="text-sm md:text-base text-slate-500 leading-relaxed font-medium italic">
+                <p className="text-sm text-slate-400 font-medium">
                   {module.description}
                 </p>
               </div>
 
               {module.status === 'ready' && (
-                <div className="mt-4 text-[10px] font-black tracking-[0.2em] text-slate-900 uppercase underline underline-offset-4 group-hover:text-slate-500 transition-colors">
-                  Bắt đầu ôn tập
+                <div className="mt-2 text-[10px] font-bold tracking-widest text-black uppercase underline underline-offset-8 decoration-slate-100 group-hover:decoration-black transition-all">
+                  Bắt đầu
                 </div>
               )}
             </Link>
