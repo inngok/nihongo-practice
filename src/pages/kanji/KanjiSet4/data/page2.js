@@ -33,7 +33,7 @@ export const page2Data = [
   { kanji: '偏', hano: 'Thiên', meaning: 'thiên lệch' },
   { kanji: '備', hano: 'Bị', meaning: 'chuẩn bị' },
   { kanji: '偉', hano: 'Vĩ', meaning: 'vĩ đại' },
-  { kanji: '傘', hano: 'Tản', meaning: 'ô, dù' },
+  { kanji: '傘', hano: 'Tán', meaning: 'ô, dù' },
   { kanji: '働', hano: 'Động', meaning: 'làm việc' },
   { kanji: '傷', hano: 'Thương', meaning: 'vết thương' },
   { kanji: '傾', hano: 'Khuynh', meaning: 'khuynh hướng' },

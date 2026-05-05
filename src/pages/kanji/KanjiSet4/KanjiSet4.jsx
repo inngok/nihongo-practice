@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, BookOpen, Brain, CheckCircle, ChevronLeft, ChevronRight, RotateCcw, HelpCircle, Trophy, List } from 'lucide-react';
+
 
 // Import data from the central data folder
 import { kanjiData } from './data';
@@ -262,7 +262,7 @@ export default function KanjiSet4() {
   };
 
   return (
-    <div className="min-h-screen w-full bg-white flex flex-col items-center pt-24 md:pt-32 px-4 md:px-12 selection:bg-black selection:text-white">
+    <div className={`min-h-screen w-full bg-white flex flex-col items-center ${viewMode === 'list' ? 'pt-24 md:pt-32' : 'pt-16 md:pt-24'} pb-20 md:pb-32 px-4 md:px-12 selection:bg-black selection:text-white`}>
       
       {/* Header Section */}
       <div className={`w-full max-w-6xl mb-8 flex justify-between items-end ${viewMode !== 'list' ? 'hidden sm:flex' : 'flex'}`}>
@@ -274,7 +274,7 @@ export default function KanjiSet4() {
       <div className="w-full max-w-6xl relative z-10">
         
         {/* Navigation & Header */}
-        <div className="flex flex-col lg:flex-row lg:items-end justify-between mb-16 gap-10">
+        <div className={`flex flex-col lg:flex-row lg:items-end justify-between ${viewMode === 'list' ? 'mb-16' : 'mb-8'} gap-10`}>
           <div className="space-y-8 flex-grow min-w-0">
             <div className="flex items-center gap-4 flex-wrap">
               <button 
@@ -530,8 +530,8 @@ export default function KanjiSet4() {
              </div>
 
              <div className="text-center space-y-6 w-full">
-                <div className="space-y-4 relative group">
-                  <div className="text-[7rem] md:text-[9rem] font-medium text-slate-900 leading-none select-none drop-shadow-sm font-kanji">
+                <div className="space-y-2 relative group">
+                  <div className="text-[5rem] md:text-[7rem] font-medium text-slate-900 leading-none select-none drop-shadow-sm font-kanji">
                     {studyData[quizIndex].kanji}
                   </div>
                   <div className="flex flex-col items-center">
@@ -571,7 +571,6 @@ export default function KanjiSet4() {
                            </span>
                            {option}
                          </span>
-                         {feedback && isCorrect && <CheckCircle className="w-5 h-5 text-emerald-500 flex-shrink-0 ml-2" />}
                        </button>
                      );
                    })}
@@ -597,7 +596,7 @@ export default function KanjiSet4() {
             key={`${activePage}-${viewMode}`}
             className="max-w-2xl mx-auto flex flex-col items-center animate-in fade-in slide-in-from-bottom-2 duration-700"
           >
-             <div className="w-full max-w-lg mb-12 flex items-end justify-between px-6 py-4 bg-slate-50/50 rounded-3xl border border-slate-100 backdrop-blur-sm">
+             <div className="w-full max-w-lg mb-6 flex items-end justify-between px-6 py-4 bg-slate-50/50 rounded-3xl border border-slate-100 backdrop-blur-sm">
                 <div className="flex flex-col">
                   <span className="text-[10px] font-black text-slate-300 uppercase tracking-[0.2em] mb-1">Mục tiêu</span>
                   <span className="text-xl font-black text-slate-900 italic tracking-tighter">{quizIndex + 1} <span className="text-slate-200 text-sm">/ {studyData.length}</span></span>
@@ -608,9 +607,9 @@ export default function KanjiSet4() {
                 </div>
              </div>
 
-             <div className="text-center space-y-8 w-full">
-                <div className="space-y-4 relative group">
-                  <div className="text-[8rem] md:text-[10rem] font-medium text-slate-900 leading-none select-none drop-shadow-sm transition-transform group-hover:scale-105 duration-500 font-kanji">
+             <div className="text-center space-y-4 w-full">
+                <div className="space-y-2 relative group">
+                  <div className="text-[6rem] md:text-[8rem] font-medium text-slate-900 leading-none select-none drop-shadow-sm transition-transform group-hover:scale-105 duration-500 font-kanji">
                     {studyData[quizIndex].kanji}
                   </div>
                   <div className="flex flex-col items-center">
@@ -626,7 +625,7 @@ export default function KanjiSet4() {
                      onChange={(e) => setUserInput(e.target.value)}
                      disabled={!!feedback}
                      placeholder="Ví dụ: Nhất"
-                     className={`w-full text-center py-6 text-3xl font-black border-b-4 outline-none transition-all uppercase ${
+                     className={`w-full text-center py-4 text-2xl font-black border-b-4 outline-none transition-all uppercase ${
                        feedback === 'correct' ? 'border-emerald-500 text-emerald-600 bg-emerald-50/30' : 
                        feedback === 'incorrect' ? 'border-red-500 text-red-600 bg-red-50/30' : 
                        'border-slate-900 focus:border-slate-400'
@@ -686,54 +685,47 @@ export default function KanjiSet4() {
                onClick={() => setShowResults(false)}
              />
              
-             {/* Compact Result Modal */}
-             <div className="relative w-full max-w-sm bg-white rounded-[2.5rem] shadow-[0_30px_100px_-10px_rgba(0,0,0,0.3)] p-8 md:p-10 text-center animate-in zoom-in duration-300">
-                
-                {/* Floating Icon */}
-                <div className="w-16 h-16 bg-black rounded-2xl flex items-center justify-center mx-auto shadow-2xl absolute -top-8 left-1/2 -translate-x-1/2 rotate-3 border-4 border-white">
-                  <Brain className="w-8 h-8 text-white" />
-                </div>
-
-                <div className="mt-8 space-y-6">
-                  <div className="space-y-1">
-                    <h2 className="text-3xl font-black italic uppercase tracking-tighter text-slate-900 leading-none">Hoàn thành!</h2>
-                    <p className="text-slate-400 font-bold uppercase tracking-widest text-[9px]">Kết quả luyện tập của bạn</p>
-                  </div>
-
-                  <div className="py-6 border-y border-slate-50">
-                    <div className="text-7xl font-black text-slate-950 tracking-tighter italic">
-                      {score + (feedback === 'correct' ? 1 : 0)}
-                      <span className="text-2xl font-black text-slate-200 italic align-top ml-1">/ {studyData.length}</span>
-                    </div>
-                  </div>
-
-                  <p className="text-slate-500 text-[13px] font-medium italic leading-relaxed px-2">
-                    {score === studyData.length ? 'Tuyệt đỉnh! Bạn đã chinh phục hoàn toàn bài học này.' : 
-                     score > studyData.length / 2 ? 'Rất tốt! Hãy tiếp tục rèn luyện thêm nhé.' : 
-                     'Đừng nản lòng! Hãy ôn lại và thử sức một lần nữa nhé.'}
-                  </p>
-
-                  <div className="grid grid-cols-1 gap-3 pt-2">
-                    <button 
-                      onClick={() => handleRestart()}
-                      className="w-full py-4.5 bg-black text-white rounded-2xl text-[11px] font-black uppercase tracking-[0.3em] hover:scale-[1.02] active:scale-95 transition-all shadow-xl shadow-black/10 flex items-center justify-center gap-3"
-                    >
-                      <RotateCcw className="w-4 h-4" />
-                      Luyện tập lại
-                    </button>
-                    <button 
-                      onClick={() => {
-                          setShowResults(false);
-                          setViewMode('list');
-                      }}
-                      className="w-full py-4.5 bg-slate-50 text-slate-400 rounded-2xl text-[11px] font-black uppercase tracking-[0.3em] hover:text-black transition-all flex items-center justify-center gap-3"
-                    >
-                      <List className="w-4 h-4" />
-                      Danh sách Hán tự
-                    </button>
-                  </div>
-                </div>
-             </div>
+              {/* Compact Result Modal */}
+              <div className="relative w-full max-w-sm bg-white rounded-[2.5rem] shadow-[0_30px_100px_-10px_rgba(0,0,0,0.3)] p-8 md:p-10 text-center animate-in zoom-in duration-300">
+                 
+                 <div className="mt-4 space-y-6">
+                   <div className="space-y-1">
+                     <h2 className="text-3xl font-black italic uppercase tracking-tighter text-slate-900 leading-none">Hoàn thành!</h2>
+                     <p className="text-slate-400 font-bold uppercase tracking-widest text-[9px]">Kết quả luyện tập của bạn</p>
+                   </div>
+ 
+                   <div className="py-6 border-y border-slate-50">
+                     <div className="text-7xl font-black text-slate-950 tracking-tighter italic">
+                       {score + (feedback === 'correct' ? 1 : 0)}
+                       <span className="text-2xl font-black text-slate-200 italic align-top ml-1">/ {studyData.length}</span>
+                     </div>
+                   </div>
+ 
+                   <p className="text-slate-500 text-[13px] font-medium italic leading-relaxed px-2">
+                     {score === studyData.length ? 'Tuyệt đỉnh! Bạn đã chinh phục hoàn toàn bài học này.' : 
+                      score > studyData.length / 2 ? 'Rất tốt! Hãy tiếp tục rèn luyện thêm nhé.' : 
+                      'Đừng nản lòng! Hãy ôn lại và thử sức một lần nữa nhé.'}
+                   </p>
+ 
+                   <div className="grid grid-cols-1 gap-3 pt-2">
+                     <button 
+                       onClick={() => handleRestart()}
+                       className="w-full py-4.5 bg-black text-white rounded-2xl text-[11px] font-black uppercase tracking-[0.3em] hover:scale-[1.02] active:scale-95 transition-all shadow-xl shadow-black/10"
+                     >
+                       Luyện tập lại
+                     </button>
+                     <button 
+                       onClick={() => {
+                           setShowResults(false);
+                           setViewMode('list');
+                       }}
+                       className="w-full py-4.5 bg-slate-50 text-slate-400 rounded-2xl text-[11px] font-black uppercase tracking-[0.3em] hover:text-black transition-all"
+                     >
+                       Danh sách Hán tự
+                     </button>
+                   </div>
+                 </div>
+              </div>
            </div>
         )}
 
