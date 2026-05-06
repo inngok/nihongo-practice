@@ -59,6 +59,16 @@ export default function ExamVocab({ type = 'comprehensive' }) {
     return rawData;
   }, [type, dayParam, weekParam, isAll]);
 
+  const availableDays = useMemo(() => {
+    const rawData = examVocabData[type] || { words: [] };
+    if (type.includes('kanji-pc8') && weekParam) {
+      const weekWords = rawData.words.filter(w => String(w.week) === String(weekParam));
+      return [...new Set(weekWords.map(w => w.day))].sort((a, b) => a - b);
+    }
+    return [];
+  }, [type, weekParam]);
+
+
   // Actions
   const startQuiz = useCallback((type = 'jp-to-vn') => {
     const data = isShuffle ? [...currentData.words].sort(() => Math.random() - 0.5) : [...currentData.words];
@@ -163,7 +173,7 @@ export default function ExamVocab({ type = 'comprehensive' }) {
               {/* Day Selector */}
               {type.includes('kanji-pc8') && (
                 <div className="flex flex-wrap items-center gap-2 pt-2">
-                  {[1, 2, 3, 4, 5, 6, ...(weekParam === '2' ? [7] : [])].map((d) => (
+                  {availableDays.map((d) => (
                     <button
                       key={d}
                       onClick={() => navigate(`/exam-pc8/kanji/study?week=${weekParam}&day=${d}`)}
