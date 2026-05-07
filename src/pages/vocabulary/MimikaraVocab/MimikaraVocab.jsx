@@ -1,12 +1,14 @@
-import React, { useState, useMemo, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useMemo, useEffect, useCallback, useRef, useDeferredValue } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { mimikaraData } from './data';
-import { List, Brain, CheckCircle } from 'lucide-react';
+import { List, Brain, CheckCircle, Search, RotateCcw } from 'lucide-react';
 
 export default function MimikaraVocab() {
   const navigate = useNavigate();
   const [activeLesson, setActiveLesson] = useState(1);
   const [viewMode, setViewMode] = useState('list'); // 'list', 'flashcard', 'quiz'
+  const [searchTerm, setSearchTerm] = useState('');
+  const deferredSearchTerm = useDeferredValue(searchTerm);
 
   // Flashcard State
   const [cardIndex, setCardIndex] = useState(0);
@@ -32,6 +34,17 @@ export default function MimikaraVocab() {
   const currentData = useMemo(() => {
     return mimikaraData[activeLesson] || { title: '', words: [] };
   }, [activeLesson]);
+
+  const filteredWords = useMemo(() => {
+    const words = currentData.words || [];
+    if (!deferredSearchTerm.trim()) return words;
+    const term = deferredSearchTerm.toLowerCase();
+    return words.filter(word => 
+      (word.kanji && word.kanji.toLowerCase().includes(term)) ||
+      (word.kana && word.kana.toLowerCase().includes(term)) ||
+      (word.meaning && word.meaning.toLowerCase().includes(term))
+    );
+  }, [currentData.words, deferredSearchTerm]);
 
   // Actions
   const startQuiz = useCallback((type = 'jp-to-vn') => {
@@ -270,8 +283,22 @@ export default function MimikaraVocab() {
 
         {viewMode === 'list' && (
           <div className="w-full border-t border-slate-100 pt-8 animate-in fade-in duration-700">
+            {/* Search Bar */}
+            <div className="relative max-w-md mx-auto w-full mb-6">
+              <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
+                <Search className="w-5 h-5 text-slate-400" />
+              </div>
+              <input
+                type="text"
+                placeholder="Tìm kiếm từ vựng, cách đọc, ý nghĩa..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-100 rounded-2xl text-sm font-medium text-slate-900 focus:outline-none focus:border-slate-300 focus:ring-4 focus:ring-slate-100 transition-all placeholder:font-normal placeholder:text-slate-400"
+              />
+            </div>
+
             <div className="grid grid-cols-1 gap-1">
-              {currentData.words.map((word, index) => (
+              {filteredWords.map((word, index) => (
                 <div key={index} className="group flex flex-col md:flex-row md:items-center py-4 px-4 hover:bg-slate-50 transition-all rounded-2xl border border-transparent hover:border-slate-100">
                   <div className="w-10 text-[10px] font-black text-slate-200 group-hover:text-slate-400 mb-2 md:mb-0">{(index + 1).toString().padStart(2, '0')}</div>
                   <div className="flex-grow grid grid-cols-1 md:grid-cols-3 gap-2 md:gap-8 items-center">
@@ -289,6 +316,13 @@ export default function MimikaraVocab() {
                   </div>
                 </div>
               ))}
+              
+              {currentData.words.length === 0 && (
+                <div className="py-20 text-center text-slate-400 font-medium italic">Dữ liệu đang được cập nhật...</div>
+              )}
+              {currentData.words.length > 0 && filteredWords.length === 0 && (
+                <div className="py-20 text-center text-slate-400 font-medium italic">Không tìm thấy kết quả phù hợp.</div>
+              )}
             </div>
           </div>
         )}

@@ -1,6 +1,6 @@
-import React, { useState, useMemo, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useMemo, useEffect, useCallback, useRef, useDeferredValue } from 'react';
 import { useNavigate } from 'react-router-dom';
-
+import { Search } from 'lucide-react';
 
 // Import data from the central data folder
 import { kanjiData } from './data';
@@ -9,6 +9,8 @@ export default function KanjiSet4() {
   const navigate = useNavigate();
   const [activePage, setActivePage] = useState('all');
   const [viewMode, setViewMode] = useState('list'); // 'list', 'flashcard', 'quiz'
+  const [searchTerm, setSearchTerm] = useState('');
+  const deferredSearchTerm = useDeferredValue(searchTerm);
   const [flashcardIndex, setFlashcardIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
   const [isShuffle, setIsShuffle] = useState(false);
@@ -42,6 +44,17 @@ export default function KanjiSet4() {
     }
     return kanjiData[activePage] || [];
   }, [activePage]);
+
+  // Filtered data for list view
+  const filteredData = useMemo(() => {
+    if (!deferredSearchTerm.trim()) return currentData;
+    const term = deferredSearchTerm.toLowerCase();
+    return currentData.filter(item => 
+      (item.kanji && item.kanji.toLowerCase().includes(term)) ||
+      (item.hano && item.hano.toLowerCase().includes(term)) ||
+      (item.meaning && item.meaning.toLowerCase().includes(term))
+    );
+  }, [currentData, deferredSearchTerm]);
   
   // Sync studyData whenever currentData or isShuffle changes
   // This ensures that switching pages while in Flashcard/Quiz mode updates the data correctly
@@ -367,12 +380,26 @@ export default function KanjiSet4() {
         
         {/* List View */}
         {viewMode === 'list' && (
-          <div 
-            key={activePage}
-            className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6 animate-in fade-in duration-700"
-          >
-            {currentData.length > 0 ? (
-              currentData.map((item, index) => (
+          <div className="w-full flex flex-col gap-6 animate-in fade-in duration-700">
+            {/* Search Bar */}
+            <div className="relative max-w-md mx-auto w-full">
+              <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
+                <Search className="w-5 h-5 text-slate-400" />
+              </div>
+              <input
+                type="text"
+                placeholder="Tìm kiếm Hán tự, Hán Việt, ý nghĩa..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-100 rounded-2xl text-sm font-medium text-slate-900 focus:outline-none focus:border-slate-300 focus:ring-4 focus:ring-slate-100 transition-all placeholder:font-normal placeholder:text-slate-400"
+              />
+            </div>
+
+            <div 
+              key={activePage}
+              className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6"
+            >
+              {filteredData.map((item, index) => (
                 <div 
                   key={index}
                   className="group relative bg-white border border-slate-100 rounded-[2rem] p-6 flex flex-col items-center justify-center gap-3 hover:border-slate-300 hover:shadow-[0_20px_50px_-15px_rgba(0,0,0,0.06)] transition-all duration-500 cursor-default"
@@ -394,12 +421,19 @@ export default function KanjiSet4() {
                     </p>
                   </div>
                 </div>
-              ))
-            ) : (
-              <div className="col-span-full py-20 text-center text-slate-400 font-medium italic">
-                Chưa có dữ liệu cho trang này.
-              </div>
-            )}
+              ))}
+              
+              {currentData.length === 0 && (
+                <div className="col-span-full py-20 text-center text-slate-400 font-medium italic">
+                  Chưa có dữ liệu cho trang này.
+                </div>
+              )}
+              {currentData.length > 0 && filteredData.length === 0 && (
+                <div className="col-span-full py-20 text-center text-slate-400 font-medium italic">
+                  Không tìm thấy kết quả phù hợp.
+                </div>
+              )}
+            </div>
           </div>
         )}
 

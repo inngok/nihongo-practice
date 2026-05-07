@@ -1,16 +1,30 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useDeferredValue } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ChevronDown, ChevronUp, ChevronLeft } from 'lucide-react';
+import { ChevronDown, ChevronUp, ChevronLeft, Search } from 'lucide-react';
 import { dekiruKanjiData } from './dekiruKanjiData';
 
 export default function DekiruKanji() {
   const navigate = useNavigate();
   const [activeLesson, setActiveLesson] = useState(7);
   const [expandedKanji, setExpandedKanji] = useState({});
+  const [searchTerm, setSearchTerm] = useState('');
+  const deferredSearchTerm = useDeferredValue(searchTerm);
 
   const currentData = useMemo(() => {
     return dekiruKanjiData[activeLesson] || { title: '', kanji: [] };
   }, [activeLesson]);
+
+  const filteredKanji = useMemo(() => {
+    const kanjis = currentData.kanji || [];
+    if (!deferredSearchTerm.trim()) return kanjis;
+    const term = deferredSearchTerm.toLowerCase();
+    return kanjis.filter(item => 
+      (item.char && item.char.toLowerCase().includes(term)) ||
+      (item.meaning && item.meaning.toLowerCase().includes(term)) ||
+      (item.onyomi && item.onyomi.toLowerCase().includes(term)) ||
+      (item.kunyomi && item.kunyomi.toLowerCase().includes(term))
+    );
+  }, [currentData.kanji, deferredSearchTerm]);
 
   const toggleExpand = (char) => {
     setExpandedKanji(prev => ({
@@ -56,9 +70,23 @@ export default function DekiruKanji() {
            </div>
         </div>
 
+        {/* Search Bar */}
+        <div className="relative max-w-md mx-auto w-full mb-8">
+          <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
+            <Search className="w-5 h-5 text-slate-400" />
+          </div>
+          <input
+            type="text"
+            placeholder="Tìm kiếm Hán tự, ý nghĩa, âm On/Kun..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-100 rounded-2xl text-sm font-medium text-slate-900 focus:outline-none focus:border-slate-300 focus:ring-4 focus:ring-slate-100 transition-all placeholder:font-normal placeholder:text-slate-400"
+          />
+        </div>
+
         {/* Kanji List */}
         <div className="grid grid-cols-1 gap-6">
-          {currentData.kanji.map((item, idx) => (
+          {filteredKanji.map((item, idx) => (
             <div 
               key={idx} 
               className="bg-white border border-slate-200 rounded-3xl overflow-hidden hover:border-slate-400 transition-all group"
@@ -121,6 +149,11 @@ export default function DekiruKanji() {
         {currentData.kanji.length === 0 && (
           <div className="py-40 text-center text-slate-400 font-medium italic bg-slate-50 rounded-3xl border border-slate-100">
             Dữ liệu đang được cập nhật...
+          </div>
+        )}
+        {currentData.kanji.length > 0 && filteredKanji.length === 0 && (
+          <div className="py-20 text-center text-slate-400 font-medium italic bg-slate-50 rounded-3xl border border-slate-100">
+            Không tìm thấy kết quả phù hợp.
           </div>
         )}
       </div>
