@@ -48,9 +48,9 @@ export default function KanjiSet4() {
   // Filtered data for list view
   const filteredData = useMemo(() => {
     if (!deferredSearchTerm.trim()) return currentData;
-    const term = deferredSearchTerm.toLowerCase();
+    const term = deferredSearchTerm.toLowerCase().trim();
     return currentData.filter(item => 
-      (item.kanji && item.kanji.toLowerCase().includes(term)) ||
+      (item.kanji && (item.kanji.toLowerCase().includes(term) || term.includes(item.kanji.toLowerCase()))) ||
       (item.hano && item.hano.toLowerCase().includes(term)) ||
       (item.meaning && item.meaning.toLowerCase().includes(term))
     );

@@ -17,9 +17,9 @@ export default function DekiruKanji() {
   const filteredKanji = useMemo(() => {
     const kanjis = currentData.kanji || [];
     if (!deferredSearchTerm.trim()) return kanjis;
-    const term = deferredSearchTerm.toLowerCase();
+    const term = deferredSearchTerm.toLowerCase().trim();
     return kanjis.filter(item => 
-      (item.char && item.char.toLowerCase().includes(term)) ||
+      (item.char && (item.char.toLowerCase().includes(term) || term.includes(item.char.toLowerCase()))) ||
       (item.meaning && item.meaning.toLowerCase().includes(term)) ||
       (item.onyomi && item.onyomi.toLowerCase().includes(term)) ||
       (item.kunyomi && item.kunyomi.toLowerCase().includes(term))
