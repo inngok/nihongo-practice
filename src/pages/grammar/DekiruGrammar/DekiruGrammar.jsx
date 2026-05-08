@@ -3,6 +3,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { Search, RotateCcw, Brain, Volume2 } from 'lucide-react';
 import { jpd316 } from '../data/jpd316Data';
 import { jpd326 } from '../data/jpd326Data';
+import { jpd336 } from '../data/jpd336Data';
+
 
 const MemorizeCard = ({ item }) => {
   const [revealed, setRevealed] = useState(false);
@@ -60,6 +62,7 @@ export default function DekiruGrammar() {
   const dataMap = {
     jpd316: jpd316,
     jpd326: jpd326,
+    jpd336: jpd336,
   };
 
   const activeData = useMemo(() => {
@@ -253,7 +256,8 @@ export default function DekiruGrammar() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {[
               { id: 'jpd316', title: 'Bài 1-5', japanese: 'Unit 1〜5', label: 'N3' },
-              { id: 'jpd326', title: 'Bài 6-10', japanese: 'Unit 6〜10', label: 'N3' }
+              { id: 'jpd326', title: 'Bài 6-10', japanese: 'Unit 6〜10', label: 'N3' },
+              { id: 'jpd336', title: 'Bài 11-15', japanese: 'Unit 11〜15', label: 'N3' }
             ].map((item, idx) => (
               <div
                 key={item.id}
@@ -399,10 +403,29 @@ export default function DekiruGrammar() {
                       <span className="text-2xl font-medium text-slate-900 leading-tight font-kanji">{item.pattern}</span>
                       <span className="text-xs text-slate-400 mt-1">{item.explanation}</span>
                     </div>
-                    <div className="flex items-center md:justify-center">
-                      <span className="text-xs font-bold text-slate-400 uppercase tracking-widest italic font-kanji text-left md:text-center max-w-xs block truncate">
-                        {item.examples && item.examples.length > 0 ? item.examples[0].jp : ''}
-                      </span>
+                    <div className="flex items-center md:justify-center gap-2">
+                      {item.examples && item.examples.length > 0 ? (
+                        <>
+                          <button
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              speakExample(item.examples[0].jp);
+                            }}
+                            className="p-2 bg-slate-100 hover:bg-slate-900 hover:text-white rounded-lg text-slate-500 transition-all flex items-center justify-center shrink-0"
+                            title="Nghe câu ví dụ"
+                          >
+                            <Volume2 className="w-3.5 h-3.5" />
+                          </button>
+                          <span className="text-xs font-bold text-slate-400 uppercase tracking-widest italic font-kanji text-left md:text-center max-w-xs block truncate">
+                            {item.examples[0].jp}
+                          </span>
+                        </>
+                      ) : (
+                        <span className="text-xs font-bold text-slate-300 uppercase tracking-widest italic font-kanji text-left md:text-center">
+                          ---
+                        </span>
+                      )}
                     </div>
                     <div className="flex items-center md:justify-end">
                       <span className="text-sm md:text-base font-bold text-slate-600 bg-slate-50/50 group-hover:bg-white group-hover:shadow-sm px-4 py-1.5 rounded-xl border border-transparent group-hover:border-slate-100 transition-all italic text-right">

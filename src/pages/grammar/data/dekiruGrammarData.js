@@ -1,4 +1,7 @@
+import { jpd336 } from './jpd336Data';
+
 export const dekiruGrammarData = {
+  jpd336: jpd336,
   jpd316: [
     {
       id: 1,
