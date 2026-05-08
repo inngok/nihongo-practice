@@ -55,23 +55,23 @@ export default function ScrollToTopButton() {
   };
 
   return (
-    <div className="fixed bottom-10 right-10 z-[1500] flex flex-col gap-3">
+    <div className="fixed bottom-6 right-6 md:bottom-10 md:right-10 z-[1500] flex flex-col gap-2 md:gap-3">
       {showTop && (
         <button
           onClick={scrollToTop}
-          className="w-14 h-14 bg-black text-white rounded-2xl shadow-2xl flex items-center justify-center hover:scale-110 active:scale-95 transition-all animate-in slide-in-from-bottom duration-500 border-2 border-white/20"
+          className="w-10 h-10 md:w-14 md:h-14 bg-black text-white rounded-xl md:rounded-2xl shadow-2xl flex items-center justify-center hover:scale-110 active:scale-95 transition-all animate-in slide-in-from-bottom duration-500 border-2 border-white/20"
           aria-label="Scroll to top"
         >
-          <ChevronUp className="w-6 h-6" />
+          <ChevronUp className="w-5 h-5 md:w-6 md:h-6" />
         </button>
       )}
       {showBottom && (
         <button
           onClick={scrollToBottom}
-          className="w-14 h-14 bg-black text-white rounded-2xl shadow-2xl flex items-center justify-center hover:scale-110 active:scale-95 transition-all animate-in slide-in-from-bottom duration-500 border-2 border-white/20"
+          className="w-10 h-10 md:w-14 md:h-14 bg-black text-white rounded-xl md:rounded-2xl shadow-2xl flex items-center justify-center hover:scale-110 active:scale-95 transition-all animate-in slide-in-from-bottom duration-500 border-2 border-white/20"
           aria-label="Scroll to bottom"
         >
-          <ChevronDown className="w-6 h-6" />
+          <ChevronDown className="w-5 h-5 md:w-6 md:h-6" />
         </button>
       )}
     </div>
