@@ -1,16 +1,20 @@
-import React, { useState, useMemo, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useMemo, useEffect, useCallback, useRef, useDeferredValue } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { mimikaraData } from './data';
-import { List, Brain, CheckCircle } from 'lucide-react';
+import { List, Brain, CheckCircle, Search, RotateCcw } from 'lucide-react';
 
 export default function MimikaraVocab() {
   const navigate = useNavigate();
   const [activeLesson, setActiveLesson] = useState(1);
   const [viewMode, setViewMode] = useState('list'); // 'list', 'flashcard', 'quiz'
+  const [searchTerm, setSearchTerm] = useState('');
+  const deferredSearchTerm = useDeferredValue(searchTerm);
 
   // Flashcard State
   const [cardIndex, setCardIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
+
+
 
   // Quiz State
   const [quizData, setQuizData] = useState([]);
@@ -23,7 +27,7 @@ export default function MimikaraVocab() {
   const [isShuffle, setIsShuffle] = useState(true);
   const [showResults, setShowResults] = useState(false);
   const inputRef = useRef(null);
-  
+
   // Swipe Support for Flashcards
   const [touchStartX, setTouchStartX] = useState(0);
   const [touchEndX, setTouchEndX] = useState(0);
@@ -32,6 +36,40 @@ export default function MimikaraVocab() {
   const currentData = useMemo(() => {
     return mimikaraData[activeLesson] || { title: '', words: [] };
   }, [activeLesson]);
+
+  const filteredWords = useMemo(() => {
+    const words = currentData.words || [];
+    if (!deferredSearchTerm.trim()) return words;
+    const term = deferredSearchTerm.toLowerCase();
+    return words.filter(word => 
+      (word.kanji && word.kanji.toLowerCase().includes(term)) ||
+      (word.kana && word.kana.toLowerCase().includes(term)) ||
+      (word.meaning && word.meaning.toLowerCase().includes(term))
+    );
+  }, [currentData.words, deferredSearchTerm]);
+
+  // Load cardIndex from localStorage on lesson change
+  useEffect(() => {
+    const savedIndex = localStorage.getItem(`mimikara_vocab_progress_lesson_${activeLesson}`);
+    if (savedIndex !== null) {
+      const parsed = parseInt(savedIndex, 10);
+      if (parsed >= 0 && parsed < (currentData.words?.length || 0)) {
+        setCardIndex(parsed);
+      } else {
+        setCardIndex(0);
+      }
+    } else {
+      setCardIndex(0);
+    }
+    setIsFlipped(false);
+  }, [activeLesson, currentData.words]);
+
+  // Save cardIndex to localStorage on cardIndex change
+  useEffect(() => {
+    if (viewMode === 'flashcard' && currentData.words?.length > 0) {
+      localStorage.setItem(`mimikara_vocab_progress_lesson_${activeLesson}`, cardIndex.toString());
+    }
+  }, [cardIndex, activeLesson, viewMode, currentData.words]);
 
   // Actions
   const startQuiz = useCallback((type = 'jp-to-vn') => {
@@ -270,8 +308,22 @@ export default function MimikaraVocab() {
 
         {viewMode === 'list' && (
           <div className="w-full border-t border-slate-100 pt-8 animate-in fade-in duration-700">
+            {/* Search Bar */}
+            <div className="relative max-w-md mx-auto w-full mb-6">
+              <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
+                <Search className="w-5 h-5 text-slate-400" />
+              </div>
+              <input
+                type="text"
+                placeholder="Tìm kiếm từ vựng, cách đọc, ý nghĩa..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-100 rounded-2xl text-sm font-medium text-slate-900 focus:outline-none focus:border-slate-300 focus:ring-4 focus:ring-slate-100 transition-all placeholder:font-normal placeholder:text-slate-400"
+              />
+            </div>
+
             <div className="grid grid-cols-1 gap-1">
-              {currentData.words.map((word, index) => (
+              {filteredWords.map((word, index) => (
                 <div key={index} className="group flex flex-col md:flex-row md:items-center py-4 px-4 hover:bg-slate-50 transition-all rounded-2xl border border-transparent hover:border-slate-100">
                   <div className="w-10 text-[10px] font-black text-slate-200 group-hover:text-slate-400 mb-2 md:mb-0">{(index + 1).toString().padStart(2, '0')}</div>
                   <div className="flex-grow grid grid-cols-1 md:grid-cols-3 gap-2 md:gap-8 items-center">
@@ -289,6 +341,13 @@ export default function MimikaraVocab() {
                   </div>
                 </div>
               ))}
+              
+              {currentData.words.length === 0 && (
+                <div className="py-20 text-center text-slate-400 font-medium italic">Dữ liệu đang được cập nhật...</div>
+              )}
+              {currentData.words.length > 0 && filteredWords.length === 0 && (
+                <div className="py-20 text-center text-slate-400 font-medium italic">Không tìm thấy kết quả phù hợp.</div>
+              )}
             </div>
           </div>
         )}
@@ -302,8 +361,25 @@ export default function MimikaraVocab() {
             onTouchEnd={handleTouchEnd}
           >
             <div className="w-full flex justify-between items-center mb-10 px-4">
-              <span className="text-[10px] font-black text-slate-400 tracking-[0.2em] uppercase">Tiến trình: {cardIndex + 1} / {currentData.words.length}</span>
-              <div className="h-1 bg-slate-100 w-32 md:w-64 rounded-full overflow-hidden"><div className="h-full bg-black transition-all" style={{ width: `${((cardIndex + 1) / currentData.words.length) * 100}%` }}></div></div>
+              <div className="flex items-center gap-3">
+                <span className="text-[10px] font-black text-slate-400 tracking-[0.2em] uppercase">
+                  Tiến trình: {cardIndex + 1} / {currentData.words.length}
+                </span>
+                {cardIndex > 0 && (
+                  <button 
+                    onClick={() => {
+                      setCardIndex(0);
+                      setIsFlipped(false);
+                    }}
+                    className="text-[9px] font-black uppercase text-red-500 hover:text-red-700 tracking-wider transition-all underline decoration-red-200 underline-offset-4"
+                  >
+                    Reset
+                  </button>
+                )}
+              </div>
+              <div className="h-1 bg-slate-100 w-32 md:w-64 rounded-full overflow-hidden">
+                <div className="h-full bg-black transition-all" style={{ width: `${((cardIndex + 1) / currentData.words.length) * 100}%` }}></div>
+              </div>
             </div>
             <div 
               className="group perspective w-full aspect-[9/11] sm:aspect-[16/10] md:max-h-[400px] cursor-pointer" 

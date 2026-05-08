@@ -1,5 +1,8 @@
+import { jpd336 } from './jpd336Data';
+
 export const dekiruGrammarData = {
-  jdp316: [
+  jpd336: jpd336,
+  jpd316: [
     {
       id: 1,
       pattern: "～において / ～における",
@@ -491,7 +494,7 @@ export const dekiruGrammarData = {
       examples: []
     }
   ],
-  jdp326: [
+  jpd326: [
     {
       id: 1,
       unit: 6,

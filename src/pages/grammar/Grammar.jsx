@@ -10,7 +10,7 @@ export default function Grammar() {
       num: '01',
       title: 'Mimikara N3',
       japanese: '耳から覚える文法',
-      label: 'TRÌNH ĐỘ N3 - N1',
+      label: 'TRÌNH ĐỘ N3',
       path: '/grammar/mimikara'
     },
     {
@@ -18,7 +18,7 @@ export default function Grammar() {
       num: '02',
       title: 'Dekiru',
       japanese: 'できる日本語',
-      label: 'GIAO TIẾP ỨNG DỤNG',
+      label: 'TRÌNH ĐỘ N3',
       path: '/grammar/dekiru'
     },
   ];

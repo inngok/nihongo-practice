@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useCallback } from 'react';
 import { ChevronLeft, CheckCircle, XCircle, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { sentenceSortData } from '../data/sentenceSortData';
+import { sentenceSortData } from './sentenceSortData';
 
 export default function SentenceSort() {
   const [currentIndex, setCurrentIndex] = useState(0);

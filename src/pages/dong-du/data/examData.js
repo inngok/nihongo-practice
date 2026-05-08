@@ -1,6 +1,8 @@
 import { kanjiComprehensiveData } from './kanjiComprehensiveData';
 import { kanjiPC8Data } from './kanjiPC8Data';
 import { kanjiPC8DataWeek2 } from './kanjiPC8DataWeek2';
+import { kanjiPC8DataWeek3 } from './kanjiPC8DataWeek3';
+import { kanjiPC8DataWeek4 } from './kanjiPC8DataWeek4';
 
 export const examVocabData = {
   "comprehensive": {
@@ -88,6 +90,6 @@ export const examVocabData = {
   "kanji-pc8": {
     title: "Hán tự tổng hợp PC8",
     japanese: "漢字総合 - PC8対策",
-    words: [...kanjiPC8Data, ...kanjiPC8DataWeek2]
+    words: [...kanjiPC8Data, ...kanjiPC8DataWeek2, ...kanjiPC8DataWeek3, ...kanjiPC8DataWeek4]
   }
 };

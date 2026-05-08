@@ -11,7 +11,6 @@ export default function Vocabulary() {
       title: 'Soumatome',
       japanese: 'Soumatome N3',
       label: 'TRÌNH ĐỘ N3',
-      badge: 'LIST',
       path: '/vocabulary/soumatome'
     },
     {
@@ -19,8 +18,7 @@ export default function Vocabulary() {
       num: '02',
       title: 'Try! N3',
       japanese: 'Giáo trình Try! N3',
-      label: 'QUAN TRỌNG',
-      badge: 'BOOK',
+      label: 'TRÌNH ĐỘ N3',
       path: '/vocabulary/try-n3'
     },
     {
@@ -28,8 +26,7 @@ export default function Vocabulary() {
       num: '03',
       title: 'Mimikara',
       japanese: 'Mimikara Oboeru N3',
-      label: 'CƠ BẢN',
-      badge: 'LISTEN',
+      label: 'TRÌNH ĐỘ N3',
       path: '/vocabulary/mimikara'
     },
     {
@@ -37,8 +34,7 @@ export default function Vocabulary() {
       num: '04',
       title: 'Dekiru',
       japanese: 'Dekiru Nihongo N3',
-      label: 'GIAO TIẾP',
-      badge: 'STORY',
+      label: 'TRÌNH ĐỘ N3',
       path: '/vocabulary/dekiru'
     },
     {
@@ -46,8 +42,7 @@ export default function Vocabulary() {
       num: '05',
       title: 'Từ láy Shizen',
       japanese: 'N3 擬態語・擬音語',
-      label: 'CHUYÊN SÂU',
-      badge: 'TỪ LÁY',
+      label: 'TRÌNH ĐỘ N3',
       path: '/vocabulary/shizen'
     }
   ];
@@ -86,12 +81,7 @@ export default function Vocabulary() {
             >
               {/* Top Row */}
               <div className="flex justify-between items-center mb-10">
-                <div className="flex items-center gap-3">
-                  <span className="text-sm font-bold text-slate-300">{set.num}</span>
-                  <span className="text-[9px] font-bold tracking-widest px-2 py-1 bg-slate-50 text-slate-400 rounded-md uppercase">
-                    {set.badge}
-                  </span>
-                </div>
+                <span className="text-sm font-bold text-slate-300">{set.num}</span>
                 {/* Arrow Icon xuất hiện khi hover */}
                 <span className="text-slate-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300 -translate-x-2 group-hover:translate-x-0">
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
