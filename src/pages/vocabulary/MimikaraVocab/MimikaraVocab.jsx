@@ -14,6 +14,29 @@ export default function MimikaraVocab() {
   const [cardIndex, setCardIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
 
+  // Load cardIndex from localStorage on lesson change
+  useEffect(() => {
+    const savedIndex = localStorage.getItem(`mimikara_vocab_progress_lesson_${activeLesson}`);
+    if (savedIndex !== null) {
+      const parsed = parseInt(savedIndex, 10);
+      if (parsed >= 0 && parsed < (currentData.words?.length || 0)) {
+        setCardIndex(parsed);
+      } else {
+        setCardIndex(0);
+      }
+    } else {
+      setCardIndex(0);
+    }
+    setIsFlipped(false);
+  }, [activeLesson, currentData.words]);
+
+  // Save cardIndex to localStorage on cardIndex change
+  useEffect(() => {
+    if (viewMode === 'flashcard' && currentData.words?.length > 0) {
+      localStorage.setItem(`mimikara_vocab_progress_lesson_${activeLesson}`, cardIndex.toString());
+    }
+  }, [cardIndex, activeLesson, viewMode, currentData.words]);
+
   // Quiz State
   const [quizData, setQuizData] = useState([]);
   const [quizIndex, setQuizIndex] = useState(0);
@@ -25,7 +48,7 @@ export default function MimikaraVocab() {
   const [isShuffle, setIsShuffle] = useState(true);
   const [showResults, setShowResults] = useState(false);
   const inputRef = useRef(null);
-  
+
   // Swipe Support for Flashcards
   const [touchStartX, setTouchStartX] = useState(0);
   const [touchEndX, setTouchEndX] = useState(0);
@@ -336,8 +359,25 @@ export default function MimikaraVocab() {
             onTouchEnd={handleTouchEnd}
           >
             <div className="w-full flex justify-between items-center mb-10 px-4">
-              <span className="text-[10px] font-black text-slate-400 tracking-[0.2em] uppercase">Tiến trình: {cardIndex + 1} / {currentData.words.length}</span>
-              <div className="h-1 bg-slate-100 w-32 md:w-64 rounded-full overflow-hidden"><div className="h-full bg-black transition-all" style={{ width: `${((cardIndex + 1) / currentData.words.length) * 100}%` }}></div></div>
+              <div className="flex items-center gap-3">
+                <span className="text-[10px] font-black text-slate-400 tracking-[0.2em] uppercase">
+                  Tiến trình: {cardIndex + 1} / {currentData.words.length}
+                </span>
+                {cardIndex > 0 && (
+                  <button 
+                    onClick={() => {
+                      setCardIndex(0);
+                      setIsFlipped(false);
+                    }}
+                    className="text-[9px] font-black uppercase text-red-500 hover:text-red-700 tracking-wider transition-all underline decoration-red-200 underline-offset-4"
+                  >
+                    Reset
+                  </button>
+                )}
+              </div>
+              <div className="h-1 bg-slate-100 w-32 md:w-64 rounded-full overflow-hidden">
+                <div className="h-full bg-black transition-all" style={{ width: `${((cardIndex + 1) / currentData.words.length) * 100}%` }}></div>
+              </div>
             </div>
             <div 
               className="group perspective w-full aspect-[9/11] sm:aspect-[16/10] md:max-h-[400px] cursor-pointer" 

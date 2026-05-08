@@ -49,6 +49,29 @@ export default function DekiruGrammar() {
   // Flashcard State
   const [isFlipped, setIsFlipped] = useState(false);
 
+  // Load currentIndex from localStorage
+  useEffect(() => {
+    const savedIndex = localStorage.getItem(`dekiru_grammar_progress_${type}_unit_${selectedUnit}`);
+    if (savedIndex !== null) {
+      const parsed = parseInt(savedIndex, 10);
+      if (parsed >= 0 && parsed < activeData.length) {
+        setCurrentIndex(parsed);
+      } else {
+        setCurrentIndex(0);
+      }
+    } else {
+      setCurrentIndex(0);
+    }
+    setIsFlipped(false);
+  }, [type, selectedUnit, activeData.length]);
+
+  // Save currentIndex to localStorage on change
+  useEffect(() => {
+    if (viewMode === 'flashcard' && activeData.length > 0) {
+      localStorage.setItem(`dekiru_grammar_progress_${type}_unit_${selectedUnit}`, currentIndex.toString());
+    }
+  }, [currentIndex, type, selectedUnit, viewMode, activeData.length]);
+
   // Study States
   const [quizData, setQuizData] = useState([]);
   const [quizIndex, setQuizIndex] = useState(0);
@@ -454,7 +477,22 @@ export default function DekiruGrammar() {
         {viewMode === 'flashcard' && activeData.length > 0 && (
           <div className="max-w-4xl mx-auto flex flex-col items-center animate-in fade-in zoom-in-95 duration-500 py-12">
             <div className="w-full flex justify-between items-center mb-10 px-4">
-              <span className="text-[10px] font-black text-slate-400 tracking-[0.2em] uppercase">Tiến trình: {currentIndex + 1} / {activeData.length}</span>
+              <div className="flex items-center gap-3">
+                <span className="text-[10px] font-black text-slate-400 tracking-[0.2em] uppercase">
+                  Tiến trình: {currentIndex + 1} / {activeData.length}
+                </span>
+                {currentIndex > 0 && (
+                  <button 
+                    onClick={() => {
+                      setCurrentIndex(0);
+                      setIsFlipped(false);
+                    }}
+                    className="text-[9px] font-black uppercase text-red-500 hover:text-red-700 tracking-wider transition-all underline decoration-red-200 underline-offset-4"
+                  >
+                    Reset
+                  </button>
+                )}
+              </div>
               <div className="h-1 bg-slate-100 w-32 md:w-64 rounded-full overflow-hidden">
                  <div className="h-full bg-black transition-all" style={{ width: `${((currentIndex + 1) / activeData.length) * 100}%` }}></div>
               </div>
