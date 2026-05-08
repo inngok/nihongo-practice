@@ -351,8 +351,9 @@ export default function DekiruVocab() {
         <div className="mb-12">
           <button
             onClick={() => viewMode === 'list' ? navigate('/vocabulary') : resetView('list')}
-            className="px-6 py-2 border-2 border-slate-900 text-[10px] font-black uppercase tracking-widest hover:bg-slate-900 hover:text-white transition-all mb-8 shadow-sm"
+            className="group flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest text-slate-400 hover:text-slate-900 transition-colors mb-8 cursor-pointer"
           >
+            <span className="transition-transform group-hover:-translate-x-1">←</span>
             {viewMode === 'list' ? 'Quay lại' : 'Thoát luyện tập'}
           </button>
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useMemo, useCallback, useRef, useDeferredValue } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Brain, CheckCircle, Layers, List, Search,
@@ -54,6 +54,8 @@ export default function Mimikara() {
     const unitNum = parseInt(selectedUnit);
     return grammarData.filter(i => i.unit === unitNum);
   }, [selectedUnit]);
+
+  const deferredSearch = useDeferredValue(searchTerm);
 
   const currentItem = useMemo(() => studyData[currentIndex] || {}, [studyData, currentIndex]);
 
@@ -175,9 +177,9 @@ export default function Mimikara() {
       return;
     }
 
-    if (!feedback) {
-      if (!userInput.trim()) return;
-      
+    if (!showHint) {
+      setShowHint(true);
+    } else if (!feedback) {
       const normalize = (str) => str.trim().toLowerCase().replace(/[〜~、。？?\.．,，]/g, '');
       const cleanInput = normalize(userInput);
       const answer = normalize(currentItem.answer);
@@ -195,7 +197,7 @@ export default function Mimikara() {
     } else {
       handleNext();
     }
-  }, [activeMode, feedback, userInput, currentItem, completedIds, handleNext]);
+  }, [activeMode, feedback, showHint, userInput, currentItem, completedIds, handleNext]);
 
   const playAudio = useCallback((text) => {
     if (!text) return;
@@ -384,55 +386,53 @@ export default function Mimikara() {
     </div>
   ), [selectedUnit, switchMode]);
 
+  const filteredList = useMemo(() => {
+    const term = deferredSearch.toLowerCase().trim();
+    if (!term) return activeData;
+    const normalize = (str) => str.toLowerCase().replace(/[\s~〜、。]/g, '');
+    const normalizedTerm = normalize(term);
+    return activeData.filter(i =>
+      i.pattern.toLowerCase().includes(term) ||
+      normalize(i.pattern).includes(normalizedTerm) ||
+      i.meaning.toLowerCase().includes(term) ||
+      (i.romaji && (
+        i.romaji.toLowerCase().includes(term) ||
+        normalize(i.romaji).includes(normalizedTerm)
+      ))
+    );
+  }, [activeData, deferredSearch]);
+
   const ListScreen = useMemo(() => (
     <div className="flex flex-col gap-8 animate-in">
       <div className="relative">
-        <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 w-5 h-5" />
+        <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 w-5 h-5 pointer-events-none" />
         <input
           type="text"
           placeholder="Tìm kiếm..."
           value={searchTerm}
           onChange={e => setSearchTerm(e.target.value)}
-          className="w-full pl-12 pr-4 py-4 border-b-2 border-slate-100 focus:border-black outline-none font-medium"
+          className="w-full pl-12 pr-4 py-4 border-b-2 border-slate-100 focus:border-black outline-none font-medium transition-colors duration-200"
         />
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {activeData
-          .filter(i => {
-            const term = searchTerm.toLowerCase().trim();
-            if (!term) return true;
-
-            const normalize = (str) => str.toLowerCase().replace(/[\s~〜、。]/g, '');
-            const normalizedTerm = normalize(term);
-
-            return (
-              i.pattern.toLowerCase().includes(term) ||
-              normalize(i.pattern).includes(normalizedTerm) ||
-              i.meaning.toLowerCase().includes(term) ||
-              (i.romaji && (
-                i.romaji.toLowerCase().includes(term) ||
-                normalize(i.romaji).includes(normalizedTerm)
-              ))
-            );
-          })
-          .map(item => (
-            <div
-              key={item.id}
-              onClick={() => { setPrevMode('list'); setStudyData([item]); setActiveMode('flashcard'); setCurrentIndex(0); }}
-              className="p-8 border border-slate-100 rounded-[2rem] hover:border-black transition-all cursor-pointer group"
-            >
-              <div className="flex justify-between mb-4">
-                <span className="text-[10px] font-black text-slate-300">U{item.unit} • #{item.id}</span>
-                {completedIds.includes(item.id) && <Check className="w-4 h-4 text-emerald-500" />}
-              </div>
-              <h3 className="text-2xl font-medium italic mb-2 font-kanji">{item.pattern}</h3>
-              {item.romaji && <p className="text-[10px] font-bold text-slate-300 uppercase tracking-widest mb-2">{item.romaji}</p>}
-              <p className="text-slate-500 font-bold text-sm italic">{item.meaning}</p>
+        {filteredList.map(item => (
+          <div
+            key={item.id}
+            onClick={() => { setPrevMode('list'); setStudyData([item]); setActiveMode('flashcard'); setCurrentIndex(0); }}
+            className="p-8 border border-slate-100 rounded-[2rem] hover:border-black transition-all duration-200 cursor-pointer group press-active"
+          >
+            <div className="flex justify-between mb-4">
+              <span className="text-[10px] font-black text-slate-300">U{item.unit} • #{item.id}</span>
+              {completedIds.includes(item.id) && <Check className="w-4 h-4 text-emerald-500" />}
             </div>
-          ))}
+            <h3 className="text-2xl font-medium italic mb-2 font-kanji">{item.pattern}</h3>
+            {item.romaji && <p className="text-[10px] font-bold text-slate-300 uppercase tracking-widest mb-2">{item.romaji}</p>}
+            <p className="text-slate-500 font-bold text-sm italic">{item.meaning}</p>
+          </div>
+        ))}
       </div>
     </div>
-  ), [activeData, searchTerm, completedIds]);
+  ), [filteredList, searchTerm, completedIds]);
 
   const StudyScreen = (
     <div 
@@ -517,9 +517,15 @@ export default function Mimikara() {
           quiz: (
             <div className="text-center space-y-12">
               <div className="space-y-4">
-                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest bg-slate-50 border border-slate-100 rounded-full px-4 py-1.5 inline-block mx-auto mb-2 shadow-sm">
-                  Gợi ý: {currentItem.isMainQuiz ? currentItem.quiz?.hint : currentItem.meaning}
-                </p>
+                {showHint ? (
+                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest bg-slate-50 border border-slate-100 rounded-full px-4 py-1.5 inline-block mx-auto mb-2 shadow-sm animate-in fade-in zoom-in-95 duration-300">
+                    Gợi ý: {currentItem.isMainQuiz ? currentItem.quiz?.hint : currentItem.meaning}
+                  </p>
+                ) : (
+                  <p className="text-[9px] font-black text-slate-300 uppercase tracking-widest bg-slate-50/50 border border-dashed border-slate-200 rounded-full px-4 py-1.5 inline-block mx-auto mb-2 select-none">
+                    Nhấn Enter để xem gợi ý
+                  </p>
+                )}
                 <p className="text-slate-400 italic">"{currentItem.translation}"</p>
               </div>
               <h3 className="text-3xl md:text-4xl font-bold italic leading-relaxed">
@@ -563,42 +569,48 @@ export default function Mimikara() {
                     <p className="text-[10px] font-black text-slate-300 uppercase tracking-widest">Phím Space để nghe lại</p>
                   </div>
 
-              <div className="space-y-4">
-                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest bg-slate-50 border border-slate-100 rounded-full px-4 py-1.5 inline-block mx-auto mb-2 shadow-sm">
-                  Gợi ý: {currentItem.isMainQuiz ? currentItem.quiz?.hint : currentItem.meaning}
-                </p>
-                <p className="text-slate-400 italic">"{currentItem.translation}"</p>
-              </div>
-              <h3 className="text-2xl md:text-3xl font-bold italic leading-relaxed">
-                {renderSentenceWithBlank()}
-              </h3>
-            
-            <div className="space-y-4 w-full">
-              <form 
-                onSubmit={(e) => { e.preventDefault(); handleSubmit(); }}
-                className="w-full max-w-md mx-auto"
-              >
-                <input
-                  ref={inputRef}
-                  value={userInput}
-                  onChange={e => !feedback && setUserInput(e.target.value)}
-                  placeholder="Nghe và điền ngữ pháp..."
-                  className={`w-full py-6 px-10 rounded-full border-2 outline-none text-center text-xl font-bold transition-all shadow-xl ${
-                    feedback === 'correct' ? 'border-emerald-500' : 
-                    feedback === 'incorrect' ? 'border-red-500' : 'border-black/5 focus:border-black'
-                  }`}
-                />
-              </form>
-              {feedback === 'incorrect' && (
-                <div className="text-center">
-                  <p className="text-red-500 font-black text-xs uppercase animate-bounce mt-4">Sai rồi! Đáp án là: {currentItem.answer}</p>
-                </div>
+                  <div className="space-y-4">
+                    {showHint ? (
+                      <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest bg-slate-50 border border-slate-100 rounded-full px-4 py-1.5 inline-block mx-auto mb-2 shadow-sm animate-in fade-in zoom-in-95 duration-300">
+                        Gợi ý: {currentItem.isMainQuiz ? currentItem.quiz?.hint : currentItem.meaning}
+                      </p>
+                    ) : (
+                      <p className="text-[9px] font-black text-slate-300 uppercase tracking-widest bg-slate-50/50 border border-dashed border-slate-200 rounded-full px-4 py-1.5 inline-block mx-auto mb-2 select-none">
+                        Nhấn Enter để xem gợi ý
+                      </p>
+                    )}
+                    <p className="text-slate-400 italic">"{currentItem.translation}"</p>
+                  </div>
+                  <h3 className="text-2xl md:text-3xl font-bold italic leading-relaxed">
+                    {renderSentenceWithBlank()}
+                  </h3>
+                
+                  <div className="space-y-4 w-full">
+                    <form 
+                      onSubmit={(e) => { e.preventDefault(); handleSubmit(); }}
+                      className="w-full max-w-md mx-auto"
+                    >
+                      <input
+                        ref={inputRef}
+                        value={userInput}
+                        onChange={e => !feedback && setUserInput(e.target.value)}
+                        placeholder="Nghe và điền ngữ pháp..."
+                        className={`w-full py-6 px-10 rounded-full border-2 outline-none text-center text-xl font-bold transition-all shadow-xl ${
+                          feedback === 'correct' ? 'border-emerald-500' : 
+                          feedback === 'incorrect' ? 'border-red-500' : 'border-black/5 focus:border-black'
+                        }`}
+                      />
+                    </form>
+                    {feedback === 'incorrect' && (
+                      <div className="text-center">
+                        <p className="text-red-500 font-black text-xs uppercase animate-bounce mt-4">Sai rồi! Đáp án là: {currentItem.answer}</p>
+                      </div>
+                    )}
+                  </div>
+                </>
               )}
             </div>
-          </>
-        )}
-      </div>
-    ),
+          ),
     multiple_choice: (
       <div className="text-center space-y-12 w-full max-w-2xl mx-auto">
         <div className="space-y-4">
@@ -674,7 +686,11 @@ export default function Mimikara() {
           className="flex-1 py-4 bg-black text-white rounded-2xl text-[10px] font-black uppercase hover:shadow-2xl transition-all flex items-center justify-center gap-2 disabled:bg-slate-100 disabled:text-slate-400 disabled:shadow-none"
         >
           {['quiz', 'listening'].includes(activeMode) && !feedback ? (
-            <>KIỂM TRA <Check className="w-4 h-4" /></>
+            !showHint ? (
+              <>GỢI Ý <HelpCircle className="w-4 h-4" /></>
+            ) : (
+              <>KIỂM TRA <Check className="w-4 h-4" /></>
+            )
           ) : activeMode === 'multiple_choice' && !feedback ? (
             <>CHỌN ĐÁP ÁN BÊN TRÊN</>
           ) : (
@@ -718,9 +734,10 @@ export default function Mimikara() {
               switchMode('menu');
             }
           }}
-          className="px-4 md:px-8 py-2 md:py-3 border-2 border-black text-[10px] md:text-xs font-black uppercase hover:bg-black hover:text-white transition-all"
+          className="group flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest text-slate-400 hover:text-slate-900 transition-colors"
         >
-          {activeMode === 'menu' ? 'Thoát' : 'Quay lại'}
+          <span className="transition-transform group-hover:-translate-x-1">←</span>
+          {activeMode === 'menu' ? 'Quay lại' : 'Thoát luyện tập'}
         </button>
       </div>
 

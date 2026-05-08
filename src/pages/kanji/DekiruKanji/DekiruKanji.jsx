@@ -5,7 +5,7 @@ import { dekiruKanjiData } from './dekiruKanjiData';
 
 export default function DekiruKanji() {
   const navigate = useNavigate();
-  const [activeLesson, setActiveLesson] = useState(7);
+  const [activeLesson, setActiveLesson] = useState(10);
   const [expandedKanji, setExpandedKanji] = useState({});
   const [searchTerm, setSearchTerm] = useState('');
   const deferredSearchTerm = useDeferredValue(searchTerm);
@@ -42,9 +42,10 @@ export default function DekiruKanji() {
            <div className="space-y-6">
              <button
                onClick={() => navigate('/kanji')}
-               className="group flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest text-slate-400 hover:text-slate-900 transition-colors"
+               className="group flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest text-slate-400 hover:text-slate-900 transition-colors mb-8"
              >
-               ← Quay lại
+               <span className="transition-transform group-hover:-translate-x-1">←</span>
+               Quay lại
              </button>
 
              <div className="border-l-4 border-slate-900 pl-6 py-1">

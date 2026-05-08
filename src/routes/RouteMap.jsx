@@ -66,8 +66,8 @@ const Layout = () => {
       {/* Slogan - Top Right Corner Badge */}
       <div className="fixed right-6 top-6 z-[1001] hidden lg:block pointer-events-none select-none">
         <div className="bg-white/80 backdrop-blur-md border border-slate-100 px-4 py-2 rounded-xl shadow-sm flex items-center gap-3">
-          <p className="text-[9px] font-bold uppercase tracking-[0.1em] text-slate-400 italic whitespace-nowrap">
-            "If you can dream it, you can do it"
+          <p className="text-[10px] font-bold tracking-[0.1em] text-slate-400 italic whitespace-nowrap font-kanji">
+            「夢見ることができれば、実現できる」
           </p>
         </div>
       </div>

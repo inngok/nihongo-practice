@@ -2,35 +2,92 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ─── Base Reset ─────────────────────────────────────────────── */
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
 html, body {
   overflow-x: hidden;
   width: 100%;
   margin: 0;
   padding: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
+/* ─── Typography ─────────────────────────────────────────────── */
 .font-kanji {
   font-family: 'M PLUS Rounded 1c', sans-serif !important;
+  font-display: swap;
 }
 
+/* ─── 3D Card Utilities ──────────────────────────────────────── */
 @layer utilities {
   .perspective {
-    perspective: 1000px;
+    perspective: 1200px;
   }
   .preserve-3d {
     transform-style: preserve-3d;
   }
   .backface-hidden {
     backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
   }
   .rotate-y-180 {
     transform: rotateY(180deg);
   }
-  .no-scrollbar::-webkit-scrollbar {
-    display: none;
-  }
+
+  /* ─── Scrollbar hide ─────────────────────────────────────── */
+  .no-scrollbar::-webkit-scrollbar { display: none; }
   .no-scrollbar {
-    -ms-overflow-style: none; /* IE and Edge */
-    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  /* ─── GPU Acceleration hints ─────────────────────────────── */
+  .gpu {
+    transform: translateZ(0);
+    will-change: transform;
+  }
+
+  /* ─── Smooth fade-in for views ───────────────────────────── */
+  .animate-in {
+    animation: fadeSlideIn 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+  .animate-in-fast {
+    animation: fadeSlideIn 0.2s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  @keyframes fadeSlideIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ─── Card flip — hardware accelerated ──────────────────── */
+  .card-flip {
+    transition: transform 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform;
+    transform-style: preserve-3d;
+  }
+
+  /* ─── Interactive button press feel ─────────────────────── */
+  .press-active:active {
+    transform: scale(0.97);
+    transition: transform 0.1s ease;
+  }
+
+  /* ─── Smooth border transitions ─────────────────────────── */
+  .border-smooth {
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  /* ─── Input smooth focus ring ────────────────────────────── */
+  input:focus {
+    outline: none;
   }
 }
+
