@@ -49,29 +49,6 @@ export default function DekiruGrammar() {
   // Flashcard State
   const [isFlipped, setIsFlipped] = useState(false);
 
-  // Load currentIndex from localStorage
-  useEffect(() => {
-    const savedIndex = localStorage.getItem(`dekiru_grammar_progress_${type}_unit_${selectedUnit}`);
-    if (savedIndex !== null) {
-      const parsed = parseInt(savedIndex, 10);
-      if (parsed >= 0 && parsed < activeData.length) {
-        setCurrentIndex(parsed);
-      } else {
-        setCurrentIndex(0);
-      }
-    } else {
-      setCurrentIndex(0);
-    }
-    setIsFlipped(false);
-  }, [type, selectedUnit, activeData.length]);
-
-  // Save currentIndex to localStorage on change
-  useEffect(() => {
-    if (viewMode === 'flashcard' && activeData.length > 0) {
-      localStorage.setItem(`dekiru_grammar_progress_${type}_unit_${selectedUnit}`, currentIndex.toString());
-    }
-  }, [currentIndex, type, selectedUnit, viewMode, activeData.length]);
-
   // Study States
   const [quizData, setQuizData] = useState([]);
   const [quizIndex, setQuizIndex] = useState(0);
@@ -117,6 +94,29 @@ export default function DekiruGrammar() {
   }, [type]);
 
   const currentItem = activeData[currentIndex] || {};
+
+  // Load currentIndex from localStorage
+  useEffect(() => {
+    const savedIndex = localStorage.getItem(`dekiru_grammar_progress_${type}_unit_${selectedUnit}`);
+    if (savedIndex !== null) {
+      const parsed = parseInt(savedIndex, 10);
+      if (parsed >= 0 && parsed < activeData.length) {
+        setCurrentIndex(parsed);
+      } else {
+        setCurrentIndex(0);
+      }
+    } else {
+      setCurrentIndex(0);
+    }
+    setIsFlipped(false);
+  }, [type, selectedUnit, activeData.length]);
+
+  // Save currentIndex to localStorage on change
+  useEffect(() => {
+    if (viewMode === 'flashcard' && activeData.length > 0) {
+      localStorage.setItem(`dekiru_grammar_progress_${type}_unit_${selectedUnit}`, currentIndex.toString());
+    }
+  }, [currentIndex, type, selectedUnit, viewMode, activeData.length]);
 
   // Blanking Example Logic
   const getBlankedExample = useCallback((item) => {

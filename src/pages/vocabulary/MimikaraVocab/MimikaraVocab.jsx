@@ -14,28 +14,7 @@ export default function MimikaraVocab() {
   const [cardIndex, setCardIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
 
-  // Load cardIndex from localStorage on lesson change
-  useEffect(() => {
-    const savedIndex = localStorage.getItem(`mimikara_vocab_progress_lesson_${activeLesson}`);
-    if (savedIndex !== null) {
-      const parsed = parseInt(savedIndex, 10);
-      if (parsed >= 0 && parsed < (currentData.words?.length || 0)) {
-        setCardIndex(parsed);
-      } else {
-        setCardIndex(0);
-      }
-    } else {
-      setCardIndex(0);
-    }
-    setIsFlipped(false);
-  }, [activeLesson, currentData.words]);
 
-  // Save cardIndex to localStorage on cardIndex change
-  useEffect(() => {
-    if (viewMode === 'flashcard' && currentData.words?.length > 0) {
-      localStorage.setItem(`mimikara_vocab_progress_lesson_${activeLesson}`, cardIndex.toString());
-    }
-  }, [cardIndex, activeLesson, viewMode, currentData.words]);
 
   // Quiz State
   const [quizData, setQuizData] = useState([]);
@@ -68,6 +47,29 @@ export default function MimikaraVocab() {
       (word.meaning && word.meaning.toLowerCase().includes(term))
     );
   }, [currentData.words, deferredSearchTerm]);
+
+  // Load cardIndex from localStorage on lesson change
+  useEffect(() => {
+    const savedIndex = localStorage.getItem(`mimikara_vocab_progress_lesson_${activeLesson}`);
+    if (savedIndex !== null) {
+      const parsed = parseInt(savedIndex, 10);
+      if (parsed >= 0 && parsed < (currentData.words?.length || 0)) {
+        setCardIndex(parsed);
+      } else {
+        setCardIndex(0);
+      }
+    } else {
+      setCardIndex(0);
+    }
+    setIsFlipped(false);
+  }, [activeLesson, currentData.words]);
+
+  // Save cardIndex to localStorage on cardIndex change
+  useEffect(() => {
+    if (viewMode === 'flashcard' && currentData.words?.length > 0) {
+      localStorage.setItem(`mimikara_vocab_progress_lesson_${activeLesson}`, cardIndex.toString());
+    }
+  }, [cardIndex, activeLesson, viewMode, currentData.words]);
 
   // Actions
   const startQuiz = useCallback((type = 'jp-to-vn') => {
