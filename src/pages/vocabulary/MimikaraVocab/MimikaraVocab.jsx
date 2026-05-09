@@ -102,6 +102,11 @@ export default function MimikaraVocab() {
     return () => window.removeEventListener('keydown', handleKey);
   }, [viewMode, cardIndex, feedback, userInput]);
 
+  // Reset flashcard flip state when cardIndex changes
+  useEffect(() => {
+    setIsFlipped(false);
+  }, [cardIndex]);
+
   // Flashcard logic
   const nextCard = () => { if (cardIndex < currentData.words.length - 1) { setCardIndex(i => i + 1); setIsFlipped(false); } };
   const prevCard = () => { if (cardIndex > 0) { setCardIndex(i => i - 1); setIsFlipped(false); } };
@@ -383,7 +388,8 @@ export default function MimikaraVocab() {
               </div>
             </div>
             <div 
-              className="group perspective w-full aspect-[9/11] sm:aspect-[16/10] md:max-h-[400px] cursor-pointer" 
+              key={cardIndex}
+              className="group perspective w-full aspect-[9/11] sm:aspect-[16/10] md:max-h-[400px] cursor-pointer animate-in fade-in zoom-in-95 duration-300" 
               style={{
                 transform: `translateX(${dragOffset}px) rotate(${dragOffset * 0.05}deg)`,
                 transition: dragOffset === 0 ? 'transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)' : 'none',

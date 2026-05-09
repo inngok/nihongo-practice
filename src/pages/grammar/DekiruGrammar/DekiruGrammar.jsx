@@ -80,6 +80,7 @@ export default function DekiruGrammar() {
   const [feedback, setFeedback] = useState(null); // 'correct' | 'incorrect'
   const [showResults, setShowResults] = useState(false);
   const [quizOptions, setQuizOptions] = useState([]);
+  const [selectedOption, setSelectedOption] = useState(null);
   const inputRef = useRef(null);
 
   const dataMap = {
@@ -197,6 +198,7 @@ export default function DekiruGrammar() {
     setScore(0);
     setUserInput('');
     setFeedback(null);
+    setSelectedOption(null);
     setShowResults(false);
     
     if (modeStr === 'quiz' || modeStr === 'listening') {
@@ -226,6 +228,7 @@ export default function DekiruGrammar() {
       
       isCorrect = input === expected || validAnswers.some(v => v.includes(input) && input.length >= 2);
     } else if (answer) {
+      setSelectedOption(answer);
       isCorrect = answer.id === current.id;
     }
 
@@ -243,6 +246,7 @@ export default function DekiruGrammar() {
       setQuizIndex(nextIdx);
       setUserInput('');
       setFeedback(null);
+      setSelectedOption(null);
       if (activeMode === 'quiz' || activeMode === 'listening') {
         setQuizOptions(generateOptions(quizData, quizData[nextIdx]));
       }
@@ -272,6 +276,11 @@ export default function DekiruGrammar() {
     window.addEventListener('keydown', handleKey);
     return () => window.removeEventListener('keydown', handleKey);
   }, [viewMode, activeMode, feedback, userInput, showResults, quizIndex, currentIndex, activeData.length]);
+
+  // Reset flashcard flip state when currentIndex changes
+  useEffect(() => {
+    setIsFlipped(false);
+  }, [currentIndex]);
 
   useEffect(() => {
     if (viewMode === 'practice' && (activeMode === 'practice' || activeMode === 'listening') && !feedback) {
@@ -504,7 +513,7 @@ export default function DekiruGrammar() {
               </div>
             </div>
             
-            <div className="group perspective w-full aspect-[4/5] sm:aspect-[16/10] md:max-h-[400px] cursor-pointer" onClick={() => setIsFlipped(!isFlipped)}>
+            <div key={currentIndex} className="group perspective w-full aspect-[4/5] sm:aspect-[16/10] md:max-h-[400px] cursor-pointer animate-in fade-in zoom-in-95 duration-300" onClick={() => setIsFlipped(!isFlipped)}>
               <div className={`relative w-full h-full duration-500 preserve-3d shadow-xl rounded-[2.5rem] md:rounded-[3rem] ${isFlipped ? 'rotate-y-180' : ''}`}>
                 <div className="absolute inset-0 backface-hidden bg-white border border-slate-100 rounded-[2.5rem] md:rounded-[3rem] flex flex-col items-center justify-center p-12">
                   <span className="text-[10px] font-black text-slate-300 uppercase tracking-widest mb-6 block">#{currentItem.id}</span>
@@ -550,8 +559,13 @@ export default function DekiruGrammar() {
               {quizOptions.map((opt, i) => {
                 let btnClass = "p-6 border border-slate-200 rounded-2xl text-xl font-kanji font-bold hover:border-slate-400 transition-all text-slate-800 bg-white";
                 if (feedback) {
-                   if (opt.id === quizData[quizIndex].id) btnClass = "p-6 border-2 border-emerald-500 bg-emerald-50 text-emerald-700 rounded-2xl text-xl font-kanji font-bold";
-                   else btnClass = "p-6 border border-slate-100 opacity-50 bg-slate-50 text-slate-400 rounded-2xl text-xl font-kanji font-bold";
+                   if (opt.id === quizData[quizIndex].id) {
+                     btnClass = "p-6 border-2 border-emerald-500 bg-emerald-50 text-emerald-700 rounded-2xl text-xl font-kanji font-bold shadow-sm";
+                   } else if (selectedOption && opt.id === selectedOption.id) {
+                     btnClass = "p-6 border-2 border-red-500 bg-red-50 text-red-700 rounded-2xl text-xl font-kanji font-bold shadow-sm";
+                   } else {
+                     btnClass = "p-6 border border-slate-100 opacity-50 bg-slate-50 text-slate-400 rounded-2xl text-xl font-kanji font-bold";
+                   }
                 }
                 return (
                   <button key={i} disabled={!!feedback} onClick={() => checkAnswer(opt)} className={btnClass}>

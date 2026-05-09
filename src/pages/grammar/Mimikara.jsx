@@ -49,6 +49,11 @@ export default function Mimikara() {
     if (activeMode === 'quiz' && !feedback) inputRef.current?.focus();
   }, [currentIndex, activeMode, feedback]);
 
+  // Reset flashcard flip state when currentIndex changes
+  useEffect(() => {
+    setIsFlipped(false);
+  }, [currentIndex]);
+
   const activeData = useMemo(() => {
     if (selectedUnit === 'all') return grammarData;
     const unitNum = parseInt(selectedUnit);
@@ -462,7 +467,8 @@ export default function Mimikara() {
         {{
           cards: (
             <div 
-              className="group perspective w-full aspect-[9/11] sm:aspect-[16/9] cursor-pointer" 
+              key={currentIndex}
+              className="group perspective w-full aspect-[9/11] sm:aspect-[16/9] cursor-pointer animate-in fade-in zoom-in-95 duration-300" 
               style={{
                 transform: `translateX(${dragOffset}px) rotate(${dragOffset * 0.05}deg)`,
                 transition: dragOffset === 0 ? 'transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)' : 'none'

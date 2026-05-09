@@ -186,6 +186,11 @@ export default function KanjiSet4() {
     return () => window.removeEventListener('keydown', handleKey);
   }, [viewMode, flashcardIndex, isFlipped, feedback, userInput, mcqOptions]);
 
+  // Reset flashcard flip state when flashcardIndex changes
+  useEffect(() => {
+    setIsFlipped(false);
+  }, [flashcardIndex]);
+
   // Focus input on quiz
   useEffect(() => {
     if (viewMode === 'quiz' && !feedback) {
@@ -320,25 +325,23 @@ export default function KanjiSet4() {
             </div>
             
             <div className="space-y-4">
-              <div className="flex items-center gap-3 flex-wrap">
-                <span className="text-slate-300 font-bold text-[10px] tracking-[0.3em] uppercase">Set 04</span>
-                <div className="flex flex-wrap gap-2 items-center max-w-full">
-                   <button
-                     onClick={() => switchPage('all')}
-                     className={`px-4 py-1.5 text-[9px] font-black tracking-widest uppercase rounded-full transition-all ${activePage === 'all' ? 'bg-black text-white' : 'bg-slate-50 text-slate-400 hover:bg-slate-100'}`}
-                   >
-                     Tất cả
-                   </button>
-                   {availablePages.map(page => (
-                     <button
-                       key={page}
-                       onClick={() => switchPage(page)}
-                       className={`px-4 py-1.5 text-[9px] font-black tracking-widest uppercase rounded-full transition-all ${activePage === page ? 'bg-black text-white' : 'bg-slate-50 text-slate-400 hover:bg-slate-100'}`}
-                     >
-                       Trang {page}
-                     </button>
-                   ))}
-                </div>
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="text-slate-300 font-bold text-[10px] tracking-[0.3em] uppercase mr-1">Set 04</span>
+                <button
+                  onClick={() => switchPage('all')}
+                  className={`px-3 py-1 text-[9px] font-black tracking-widest uppercase rounded-full transition-all ${activePage === 'all' ? 'bg-black text-white' : 'bg-slate-50 text-slate-400 hover:bg-slate-100'}`}
+                >
+                  All
+                </button>
+                {availablePages.map(page => (
+                  <button
+                    key={page}
+                    onClick={() => switchPage(page)}
+                    className={`w-9 h-9 text-[10px] font-black rounded-full transition-all flex items-center justify-center ${activePage === page ? 'bg-black text-white shadow-sm' : 'bg-slate-50 text-slate-400 hover:bg-slate-100'}`}
+                  >
+                    {page}
+                  </button>
+                ))}
               </div>
               <h1 className="text-3xl sm:text-4xl md:text-6xl font-black text-slate-900 tracking-tighter leading-tight flex flex-wrap items-baseline gap-2 md:gap-4">
                 Hán tự 4

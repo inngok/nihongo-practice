@@ -100,6 +100,11 @@ export default function ExamVocab({ type = 'comprehensive' }) {
     return () => window.removeEventListener('keydown', handleKey);
   }, [viewMode, cardIndex, feedback, userInput]);
 
+  // Reset flashcard flip state when cardIndex changes
+  useEffect(() => {
+    setIsFlipped(false);
+  }, [cardIndex]);
+
   // Flashcard logic
   const nextCard = () => { if (cardIndex < currentData.words.length - 1) { setCardIndex(i => i + 1); setIsFlipped(false); } };
   const prevCard = () => { if (cardIndex > 0) { setCardIndex(i => i - 1); setIsFlipped(false); } };
@@ -282,7 +287,7 @@ export default function ExamVocab({ type = 'comprehensive' }) {
               </button>
             </div>
 
-            <div className="perspective w-full aspect-[4/3] sm:aspect-[16/10] cursor-pointer" onClick={() => setIsFlipped(!isFlipped)}>
+            <div key={cardIndex} className="perspective w-full aspect-[4/3] sm:aspect-[16/10] cursor-pointer animate-in fade-in zoom-in-95 duration-300" onClick={() => setIsFlipped(!isFlipped)}>
               <div className={`relative w-full h-full duration-500 preserve-3d ${isFlipped ? 'rotate-y-180' : ''}`}>
                 {/* Front */}
                 <div className="absolute inset-0 backface-hidden bg-white border border-slate-100 rounded-3xl flex flex-col items-center justify-center p-8 active:scale-[0.98] transition-transform shadow-sm">

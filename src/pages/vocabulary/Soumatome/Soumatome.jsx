@@ -87,6 +87,11 @@ export default function Soumatome() {
     return () => window.removeEventListener('keydown', handleKey);
   }, [viewMode, cardIndex, feedback, userInput]);
 
+  // Reset flashcard flip state when cardIndex changes
+  useEffect(() => {
+    setIsFlipped(false);
+  }, [cardIndex]);
+
   // Flashcard logic
   const nextCard = () => { if (cardIndex < currentData.words.length - 1) { setCardIndex(i => i + 1); setIsFlipped(false); } };
   const prevCard = () => { if (cardIndex > 0) { setCardIndex(i => i - 1); setIsFlipped(false); } };
@@ -312,7 +317,7 @@ export default function Soumatome() {
               <span className="text-[10px] font-black text-slate-400 tracking-[0.2em] uppercase">Tiến trình: {cardIndex + 1} / {currentData.words.length}</span>
               <div className="h-1 bg-slate-100 w-32 md:w-64 rounded-full overflow-hidden"><div className="h-full bg-black transition-all" style={{ width: `${((cardIndex + 1) / currentData.words.length) * 100}%` }}></div></div>
             </div>
-            <div className="group perspective w-full aspect-[4/5] sm:aspect-[16/10] md:max-h-[400px] cursor-pointer" onClick={() => setIsFlipped(!isFlipped)}>
+            <div key={cardIndex} className="group perspective w-full aspect-[4/5] sm:aspect-[16/10] md:max-h-[400px] cursor-pointer animate-in fade-in zoom-in-95 duration-300" onClick={() => setIsFlipped(!isFlipped)}>
               <div className={`relative w-full h-full duration-500 preserve-3d shadow-xl rounded-[3rem] ${isFlipped ? 'rotate-y-180' : ''}`}>
                 <div className="absolute inset-0 backface-hidden bg-white border border-slate-100 rounded-[3rem] flex flex-col items-center justify-center p-12">
                   <div className="text-6xl md:text-8xl font-black text-slate-900 text-center leading-tight">{currentData.words[cardIndex].kanji}</div>
