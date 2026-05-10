@@ -22,6 +22,16 @@ const weeks = [
     week: 4,
     days: [1, 2, 3, 4, 5, 6, 7, 8],
     status: 'ready'
+  },
+  {
+    week: 5,
+    days: [1, 2, 3, 4, 5, 6, 7, 8],
+    status: 'ready'
+  },
+  {
+    week: 6,
+    days: [1, 2, 3, 4, 5, 6, 7, 8],
+    status: 'ready'
   }
 ];
 
