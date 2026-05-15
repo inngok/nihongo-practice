@@ -5,7 +5,7 @@ import { dekiruKanjiData } from './dekiruKanjiData';
 
 export default function DekiruKanji() {
   const navigate = useNavigate();
-  const [activeLesson, setActiveLesson] = useState(10);
+  const [activeLesson, setActiveLesson] = useState(6);
   const [expandedKanji, setExpandedKanji] = useState({});
   const [searchTerm, setSearchTerm] = useState('');
   const deferredSearchTerm = useDeferredValue(searchTerm);
