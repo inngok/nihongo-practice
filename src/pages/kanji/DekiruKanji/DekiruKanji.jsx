@@ -18,7 +18,7 @@ export default function DekiruKanji() {
     const kanjis = currentData.kanji || [];
     if (!deferredSearchTerm.trim()) return kanjis;
     const term = deferredSearchTerm.toLowerCase().trim();
-    return kanjis.filter(item => 
+    return kanjis.filter(item =>
       (item.char && (item.char.toLowerCase().includes(term) || term.includes(item.char.toLowerCase()))) ||
       (item.meaning && item.meaning.toLowerCase().includes(term)) ||
       (item.onyomi && item.onyomi.toLowerCase().includes(term)) ||
@@ -36,39 +36,39 @@ export default function DekiruKanji() {
   return (
     <div className="min-h-screen bg-white pt-32 pb-20 px-6">
       <div className="max-w-5xl mx-auto relative z-10">
-        
+
         {/* Navigation & Header */}
         <div className="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-8">
-           <div className="space-y-6">
-             <button
-               onClick={() => navigate('/kanji')}
-               className="group flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest text-slate-400 hover:text-slate-900 transition-colors mb-8"
-             >
-               <span className="transition-transform group-hover:-translate-x-1">←</span>
-               Quay lại
-             </button>
+          <div className="space-y-6">
+            <button
+              onClick={() => navigate('/kanji')}
+              className="group flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest text-slate-400 hover:text-slate-900 transition-colors mb-8"
+            >
+              <span className="transition-transform group-hover:-translate-x-1">←</span>
+              Quay lại
+            </button>
 
-             <div className="border-l-4 border-slate-900 pl-6 py-1">
-               <h1 className="text-4xl font-extrabold text-slate-900 tracking-tight mb-1">
-                 {currentData.title || 'Hán tự Dekiru'}
-               </h1>
-               <p className="text-xs text-slate-400 font-medium uppercase tracking-widest">
-                 Giáo trình Dekiru Nihongo
-               </p>
-             </div>
-           </div>
+            <div className="border-l-4 border-slate-900 pl-6 py-1">
+              <h1 className="text-4xl font-extrabold text-slate-900 tracking-tight mb-1">
+                {currentData.title || 'Hán tự Dekiru'}
+              </h1>
+              <p className="text-xs text-slate-400 font-medium uppercase tracking-widest">
+                Giáo trình Dekiru Nihongo
+              </p>
+            </div>
+          </div>
 
-           <div className="flex flex-wrap gap-2">
-             {Object.keys(dekiruKanjiData).map(num => (
-               <button
-                 key={num}
-                 onClick={() => setActiveLesson(parseInt(num))}
-                 className={`px-3 md:px-4 py-1.5 md:py-2 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all ${activeLesson === parseInt(num) ? 'bg-slate-900 text-white' : 'bg-slate-50 text-slate-400 hover:bg-slate-100'}`}
-               >
-                 Bài {num}
-               </button>
-             ))}
-           </div>
+          <div className="flex flex-wrap gap-2">
+            {Object.keys(dekiruKanjiData).map(num => (
+              <button
+                key={num}
+                onClick={() => setActiveLesson(parseInt(num))}
+                className={`px-3 md:px-4 py-1.5 md:py-2 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all ${activeLesson === parseInt(num) ? 'bg-slate-900 text-white' : 'bg-slate-50 text-slate-400 hover:bg-slate-100'}`}
+              >
+                Bài {num}
+              </button>
+            ))}
+          </div>
         </div>
 
         {/* Search Bar */}
@@ -88,18 +88,18 @@ export default function DekiruKanji() {
         {/* Kanji List */}
         <div className="grid grid-cols-1 gap-6">
           {filteredKanji.map((item, idx) => (
-            <div 
-              key={idx} 
+            <div
+              key={idx}
               className="bg-white border border-slate-200 rounded-3xl overflow-hidden hover:border-slate-400 transition-all group"
             >
-              <div 
+              <div
                 className="p-8 md:p-12 flex flex-col md:flex-row items-center md:items-start gap-12 cursor-pointer"
                 onClick={() => toggleExpand(item.char)}
               >
                 <div className="text-8xl md:text-9xl font-medium text-slate-900 font-kanji leading-none group-hover:scale-105 transition-transform duration-500">
                   {item.char}
                 </div>
-                
+
                 <div className="flex-grow space-y-6 text-center md:text-left">
                   <div>
                     <span className="text-[10px] font-black text-slate-200 uppercase tracking-widest mb-2 block">Ý nghĩa</span>
@@ -158,8 +158,9 @@ export default function DekiruKanji() {
           </div>
         )}
       </div>
-      
-      <style dangerouslySetInnerHTML={{ __html: `
+
+      <style dangerouslySetInnerHTML={{
+        __html: `
         .font-kanji { font-family: "Sawarabi Mincho", serif; }
         @keyframes fade-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .animate-in { animation: fade-in 0.4s ease-out forwards; }
